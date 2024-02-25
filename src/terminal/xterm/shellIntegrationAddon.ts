@@ -98,34 +98,6 @@ const enum VSCodeOscPt {
 	CommandLine = 'E',
 
 	/**
-	 * Similar to prompt start but for line continuations.
-	 *
-	 * WARNING: This sequence is unfinalized, DO NOT use this in your shell integration script.
-	 */
-	ContinuationStart = 'F',
-
-	/**
-	 * Similar to command start but for line continuations.
-	 *
-	 * WARNING: This sequence is unfinalized, DO NOT use this in your shell integration script.
-	 */
-	ContinuationEnd = 'G',
-
-	/**
-	 * The start of the right prompt.
-	 *
-	 * WARNING: This sequence is unfinalized, DO NOT use this in your shell integration script.
-	 */
-	RightPromptStart = 'H',
-
-	/**
-	 * The end of the right prompt.
-	 *
-	 * WARNING: This sequence is unfinalized, DO NOT use this in your shell integration script.
-	 */
-	RightPromptEnd = 'I',
-
-	/**
 	 * Set an arbitrary property: `OSC 633 ; P ; <Property>=<Value> ST`, only known properties will
 	 * be handled.
 	 *
@@ -156,9 +128,10 @@ export class ShellIntegrationAddon implements ITerminalAddon {
     activate(terminal: Terminal) {
         this.terminal = terminal
         terminal.parser.registerOscHandler(ShellIntegrationOscPs.VSCode, data => {
-			console.log('ShellIntegrationAddon.OSC.raw')
+			console.log('ShellIntegrationAddon.Osc.VSCode.data', data)
 			return this.handleVsCodeSequence(data)
 		})
+		console.log('ShellIntegrationAddon activated')
     }
     
     dispose() {}
@@ -168,13 +141,23 @@ export class ShellIntegrationAddon implements ITerminalAddon {
         const sequenceCommand = argsIndex === -1 ? data : data.substring(0, argsIndex);
 		// Cast to strict checked index access
 		const args: (string | undefined)[] = argsIndex === -1 ? [] : data.substring(argsIndex + 1).split(';')
-		console.log('ShellIntegrationAddon.OSC.args', args)
         switch (sequenceCommand) {
             case VSCodeOscPt.PromptStart:
                 this.handlers.forEach(it => it.onPromptStart())
+				return true
+			case VSCodeOscPt.CommandStart:
+				this.handlers.forEach(it => it.onCommandStart())
+				return true
+			case VSCodeOscPt.CommandExecuted:
+				this.handlers.forEach(it => it.onCommandExecuted())
+				return
+			case VSCodeOscPt.CommandFinished:
+				const exitCode = Number(args[0])
+				this.handlers.forEach(it => it.onCommandFinished(exitCode))
+				return
         }
 
-        return true;
+        return undefined
     }
 
 }

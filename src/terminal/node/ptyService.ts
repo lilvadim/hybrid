@@ -1,56 +1,69 @@
 import { IPty, IPtyForkOptions, spawn } from "node-pty"
-import * as os from "os"
 import * as fs from "fs"
 import * as path from "path"
-import { ShellLaunchConfig } from "../config/shellLaunchConfig"
+import { getShellIntegrationInjection } from "./terminalEnvironment"
+
+export interface IProcessEnvironment {
+    [key: string]: string | undefined
+}
+
+export interface IShellLaunchConfig {
+    executable: string,
+    env: IProcessEnvironment
+}
 
 export class PtyService {
 
-    private shellLaunchConfig: ShellLaunchConfig = {
-        executable: 'zsh'
-    }
+    private readonly _ptyById: Map<number, IPty> = new Map()
+    private _lastPtyId = 0
 
-    private lastPtyId = 0
-    private ptyById: Map<number, IPty> = new Map()
+    constructor (
+        private _shellConfig: IShellLaunchConfig
+    ) {}
 
     getPty(id: number): IPty | undefined {
-        return this.ptyById.get(id)
+        return this._ptyById.get(id)
     }
 
-    start(): number | undefined {
+    createPty(): number | undefined {
 
-        const id = this.lastPtyId++
+        const id = this._lastPtyId++
+
+        let env = process.env
+        const shellIntegrationInjection = getShellIntegrationInjection(this._shellConfig, env)
+        console.log('PtyService.start#shellIntegrationInjection', shellIntegrationInjection)
+
+        if (shellIntegrationInjection.filesToCopy) {
+            shellIntegrationInjection.filesToCopy.forEach(it => this.copyFiles(it.source, it.dest))
+        }
+
+        for (const [key, val] of Object.entries(shellIntegrationInjection.envMixin)) {
+            env[key] = val
+        }
+
+        // console.log('PtyService.start#env', env)
         const options: IPtyForkOptions = {
-            name: 'xterm_' + id,
+            name: 'xterm-256color',
             cols: 80,
             rows: 24,
             cwd: process.env.HOME,
-            env: process.env
+            env: env
         }
 
-        switch (this.shellLaunchConfig.executable) {
-            case 'zsh':
-                const zdotdir = path.join(os.tmpdir(), 'hybrid_tmp_shell')
-                options.env['ZDOTDIR'] = zdotdir
-                options.env['USER_ZDOTDIR'] = os.homedir()
+        const pty = spawn(this._shellConfig.executable, shellIntegrationInjection.args, options)
+        this._ptyById.set(id, pty)
 
-                const resourcePath = process.resourcesPath
-                this.copyFiles(path.join(resourcePath, 'sh/shellIntegration-rc.zsh'), path.join(zdotdir, '.zshrc'))
-                this.copyFiles(path.join(resourcePath, 'sh/shellIntegration-profile.zsh'), path.join(zdotdir, '.zprofile'))
-                this.copyFiles(path.join(resourcePath, 'sh/shellIntegration-env.zsh'), path.join(zdotdir, '.zshenv'))
-                this.copyFiles(path.join(resourcePath, 'sh/shellIntegration-login.zsh'), path.join(zdotdir, '.zlogin'))
-
-                const pty = spawn('zsh', [], options)
-
-                this.ptyById.set(id, pty)
-                return id
-        }
-
-        return undefined
+        return id
     }
 
     copyFiles(source: string, dest: string) {
-        fs.mkdir(path.dirname(dest), { recursive: true }, () => { })
-        fs.copyFile(source, dest, () => { })
+        fs.mkdir(path.dirname(dest), { recursive: true }, (err) => { 
+            if (!err) return
+            console.error(err)
+        })
+        fs.copyFile(source, dest, (err) => { 
+            if (!err) return
+            console.error(err)
+        })
     }
 }

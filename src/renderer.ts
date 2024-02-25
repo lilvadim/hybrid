@@ -30,22 +30,17 @@ import './index.css'
 import '@xterm/xterm/css/xterm.css'
 
 import { Terminal } from '@xterm/xterm'
-import { FitAddon } from 'xterm-addon-fit'
+// import { FitAddon } from 'xterm-addon-fit'
 import { ipcRenderer } from 'electron'
 import { ipc } from './constants/ipc'
-import { ShellIntegrationAddon } from './terminal/xterm/shellIntegrationAddon'
-import { SimpleHandler } from './terminal/xterm/shellIntegrationHandler'
+import { XtermService } from './terminal/xterm/xtermService'
 
-const xterm = new Terminal({
-  rows: 24,
-  cols: 80
-})
-const fitAddon = new FitAddon()
-const shellIntegrationAddon = new ShellIntegrationAddon(new SimpleHandler(xterm))
+const xtermService = new XtermService()
+// const fitAddon = new FitAddon()
 // xterm.loadAddon(fitAddon)
-xterm.loadAddon(shellIntegrationAddon)
+const xtermId = xtermService.createXterm((command: string) => {})
+const xterm = xtermService.getXterm(xtermId)
 xterm.open(document.getElementById('xterm'))
-// fitAddon.fit()
 
 ipcRenderer.on(ipc.term.PTY, (_, data) => xterm.write(data))
 xterm.onData(data => ipcRenderer.send(ipc.term.TERMINAL, data))

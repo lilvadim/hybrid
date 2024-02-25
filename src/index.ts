@@ -1,5 +1,4 @@
-import { app, BrowserWindow, dialog } from 'electron';
-import * as pty from 'node-pty'
+import { app, BrowserWindow } from 'electron';
 import { signals } from './constants/signal';
 import { isDev } from './util/environment'
 import * as os from 'os'
@@ -33,9 +32,9 @@ const createWindow = () => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  if (isDev()) {
-    mainWindow.webContents.openDevTools();
-  }
+  // if (isDev()) {
+  mainWindow.webContents.openDevTools();
+  // }
 };
 
 // This method will be called when Electron has finished
@@ -53,14 +52,18 @@ app.on('activate', () => {
   }
 });
 
-const ptyService = new PtyService()
-
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+const ptyService = new PtyService({
+  executable: 'zsh',
+  env: {}
+})
+
 app.on('browser-window-created', (_, window) => {
 
-  window.webContents.on('dom-ready', () => {
-    const ptyId = ptyService.start()
+  window.webContents.once('dom-ready', () => {
+    const ptyId = ptyService.createPty()
     const ptyProcess = ptyService.getPty(ptyId)
 
     ptyProcess.onExit(({ exitCode, signal }) => {
@@ -78,5 +81,5 @@ app.on('browser-window-created', (_, window) => {
 
     window.on('close', () => ptyProcess.kill(signals.SIGQUIT))
   })
-
+  
 })
