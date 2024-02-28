@@ -1,6 +1,7 @@
 import { IDecorationOptions, IMarker, Terminal } from "@xterm/xterm";
 
 export interface IShellIntegrationHandler {
+    readonly commands: ReadonlyArray<Command>
     onPromptStart(): void
     onCommandStart(): void
     onCommandExecuted(): void 
@@ -13,16 +14,43 @@ interface ICommandProperties {
     exitCode?: number,
 
     promptStartMarker?: IMarker,
-    endMarker?: IMarker,
+    finishedMarker?: IMarker,
     executedMarker?: IMarker
 }
 
 class Command {
 
     constructor(
-        private readonly terminal: Terminal,
-        readonly properties: ICommandProperties,
+        private readonly _terminal: Terminal,
+        private readonly _properties: ICommandProperties,
     ) {
+        if (!_properties || !_terminal) {
+            console.error('Cannot initialize command', { properties: _properties, _terminal })
+            throw Error('Cannot initialize command')
+        }
+    }
+
+    command(): string {
+        return this._properties.command
+    }
+
+    exitCode(): number {
+        return this._properties.exitCode
+    }
+
+    getCommandOutput(): string {
+        if (!this._properties.executedMarker || !this._properties.finishedMarker) {
+            return ''
+        }
+        const executedLine = this._properties.executedMarker.line
+        const finishedLine = this._properties.finishedMarker.line
+
+        let result: string = ''
+        for (let i = executedLine; i < finishedLine; i++) {
+            result += this._terminal.buffer.active.getLine(i)?.translateToString() ?? ''
+        }
+
+        return result
     }
 
 }
@@ -41,10 +69,10 @@ export type CommandProcessorType = (commandOldValue: string, commandNewValue: st
 
 export class ShellIntegrationHandlerImpl implements IShellIntegrationHandler {
 
-    private readonly _commands: ICommandProperties[] = []
+    private readonly _commands: Command[] = []
     private _currentCommand: ICommandProperties | undefined = undefined
 
-    readonly commands: ReadonlyArray<ICommandProperties> = this._commands
+    readonly commands: ReadonlyArray<Command> = this._commands
 
     constructor(
         private readonly _terminal: Terminal,
@@ -60,8 +88,10 @@ export class ShellIntegrationHandlerImpl implements IShellIntegrationHandler {
         }
         console.log('onCommandFinished.cursorY', this._terminal.buffer.active.cursorY)
         const marker = this._terminal.registerMarker(0)
-        this._currentCommand.endMarker = marker
+        this._currentCommand.finishedMarker = marker
         this._currentCommand.exitCode = exitCode
+        this._commands.push(new Command(this._terminal, this._currentCommand))
+
         console.log('onCommandFinished.currentCommand', this._currentCommand)
     }
 
@@ -88,6 +118,10 @@ export class ShellIntegrationHandlerImpl implements IShellIntegrationHandler {
     }
 
     onCommandExecuted(): void {
+        if (!this._currentCommand) {
+            return
+        }
+        this._currentCommand.executedMarker = this._terminal.registerMarker(0)
         console.log('onCommandExecuted')
     }
 
@@ -118,8 +152,6 @@ export class ShellIntegrationHandlerImpl implements IShellIntegrationHandler {
     }
 
     private _onEnter() {
-        this._commands.push(this._currentCommand)
-        console.log('onEnter.commands', this._commands)
     }
 
 }
