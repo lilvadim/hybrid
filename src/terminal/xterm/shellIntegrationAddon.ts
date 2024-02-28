@@ -116,18 +116,17 @@ const enum VSCodeOscPt {
 
 export class ShellIntegrationAddon implements ITerminalAddon {
 
-    private handlers: IShellIntegrationHandler[] = []
+    private readonly _handlers: IShellIntegrationHandler[] = []
+	private _terminal: Terminal
 
     constructor(handler: IShellIntegrationHandler, ...handlers: IShellIntegrationHandler[]) {
-        this.handlers.push(handler)
-        this.handlers.push(...handlers)
+        this._handlers.push(handler)
+        this._handlers.push(...handlers)
     }
 
-    private terminal: Terminal
-
     activate(terminal: Terminal) {
-        this.terminal = terminal
-        terminal.parser.registerOscHandler(ShellIntegrationOscPs.VSCode, data => {
+        this._terminal = terminal
+        this._terminal.parser.registerOscHandler(ShellIntegrationOscPs.VSCode, data => {
 			console.log('ShellIntegrationAddon.Osc.VSCode.data', data)
 			return this.handleVsCodeSequence(data)
 		})
@@ -143,17 +142,17 @@ export class ShellIntegrationAddon implements ITerminalAddon {
 		const args: (string | undefined)[] = argsIndex === -1 ? [] : data.substring(argsIndex + 1).split(';')
         switch (sequenceCommand) {
             case VSCodeOscPt.PromptStart:
-                this.handlers.forEach(it => it.onPromptStart())
+                this._handlers.forEach(it => it.onPromptStart())
 				return true
 			case VSCodeOscPt.CommandStart:
-				this.handlers.forEach(it => it.onCommandStart())
+				this._handlers.forEach(it => it.onCommandStart())
 				return true
 			case VSCodeOscPt.CommandExecuted:
-				this.handlers.forEach(it => it.onCommandExecuted())
+				this._handlers.forEach(it => it.onCommandExecuted())
 				return
 			case VSCodeOscPt.CommandFinished:
 				const exitCode = Number(args[0])
-				this.handlers.forEach(it => it.onCommandFinished(exitCode))
+				this._handlers.forEach(it => it.onCommandFinished(exitCode))
 				return
         }
 

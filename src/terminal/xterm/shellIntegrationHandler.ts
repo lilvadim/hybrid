@@ -35,18 +35,23 @@ function promptDecorationOptions(marker: IMarker, promptEndX: number): IDecorati
     }
 }
 
-export type CommandProcessorType = (command: string) => void
+const ENTER_SEQ = '\x0d'
+
+export type CommandProcessorType = (commandOldValue: string, commandNewValue: string) => void
 
 export class ShellIntegrationHandlerImpl implements IShellIntegrationHandler {
 
-    private _commands: ICommandProperties[]
+    private readonly _commands: ICommandProperties[] = []
     private _currentCommand: ICommandProperties | undefined = undefined
+
+    readonly commands: ReadonlyArray<ICommandProperties> = this._commands
 
     constructor(
         private readonly _terminal: Terminal,
         private readonly _onCommand: CommandProcessorType 
     ) {
         _terminal.onWriteParsed(() => this._onWriteParsed())
+        _terminal.onData(data => this._onData(data))
     }
 
     onCommandFinished(exitCode: number): void {
@@ -87,7 +92,7 @@ export class ShellIntegrationHandlerImpl implements IShellIntegrationHandler {
     }
 
     private _onWriteParsed() {
-        if (!this._currentCommand) {
+        if (!this._currentCommand || !this._currentCommand.startX) {
             return
         }
         const lineY = this._currentCommand.promptStartMarker.line
@@ -99,10 +104,22 @@ export class ShellIntegrationHandlerImpl implements IShellIntegrationHandler {
         const commandText = line.translateToString(
             true, 
             this._currentCommand.startX
-         )
+        )
+        const commandOldValue = this._currentCommand.command
         this._currentCommand.command = commandText.trimRight()
-        this._onCommand(this._currentCommand.command)
+        this._onCommand(commandOldValue, this._currentCommand.command)
         console.log('onWriteParsed.currentCommand', this._currentCommand)
+    }
+
+    private _onData(data: string) {
+        if (data === ENTER_SEQ) {
+            this._onEnter()
+        }
+    }
+
+    private _onEnter() {
+        this._commands.push(this._currentCommand)
+        console.log('onEnter.commands', this._commands)
     }
 
 }
