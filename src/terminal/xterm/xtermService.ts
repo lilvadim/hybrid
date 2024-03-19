@@ -1,6 +1,6 @@
 import { Terminal } from "@xterm/xterm";
 import { ShellIntegrationAddon } from "./shellIntegrationAddon";
-import {  CommandProcessorType, ShellIntegrationHandlerImpl } from "./shellIntegrationHandler";
+import {  CommandProcessorType, ShellIntegrationHandler } from "./shellIntegrationHandler";
 
 
 export class XtermService {
@@ -17,7 +17,7 @@ export class XtermService {
             cols: 80
         })
 
-        const shellIntegrationAddon = new ShellIntegrationAddon(new ShellIntegrationHandlerImpl(xterm, commandProcessor))
+        const shellIntegrationAddon = new ShellIntegrationAddon(new ShellIntegrationHandler(xterm, commandProcessor))
         xterm.loadAddon(shellIntegrationAddon)
 
         this._xtermById.set(id, xterm)

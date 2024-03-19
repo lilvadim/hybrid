@@ -119,8 +119,7 @@ export class ShellIntegrationAddon implements ITerminalAddon {
     private readonly _handlers: IShellIntegrationHandler[] = []
 	private _terminal: Terminal
 
-    constructor(handler: IShellIntegrationHandler, ...handlers: IShellIntegrationHandler[]) {
-        this._handlers.push(handler)
+    constructor(...handlers: IShellIntegrationHandler[]) {
         this._handlers.push(...handlers)
     }
 

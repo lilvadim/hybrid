@@ -26,21 +26,14 @@
  * ```
  */
 
+import { TerminalRenderer } from './hybrid/renderer'
 import './index.css'
 import '@xterm/xterm/css/xterm.css'
 
-import { Terminal } from '@xterm/xterm'
-// import { FitAddon } from 'xterm-addon-fit'
-import { ipcRenderer } from 'electron'
-import { ipc } from './constants/ipc'
-import { XtermService } from './terminal/xterm/xtermService'
+const start = () => {
+    const terminalRenderer = new TerminalRenderer()
+    const container = document.getElementById('xterm')
+    terminalRenderer.render(container)
+}
 
-const xtermService = new XtermService()
-// const fitAddon = new FitAddon()
-// xterm.loadAddon(fitAddon)
-const xtermId = xtermService.createXterm((command: string) => {})
-const xterm = xtermService.getXterm(xtermId)
-xterm.open(document.getElementById('xterm'))
-
-ipcRenderer.on(ipc.term.PTY, (_, data) => xterm.write(data))
-xterm.onData(data => ipcRenderer.send(ipc.term.TERMINAL, data))
+start()

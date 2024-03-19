@@ -1,5 +1,7 @@
 import { IDecorationOptions, IMarker, Terminal } from "@xterm/xterm";
 
+const ENTER_SEQ = '\x0d'
+
 export interface IShellIntegrationHandler {
     readonly commands: ReadonlyArray<Command>
     onPromptStart(): void
@@ -30,15 +32,15 @@ class Command {
         }
     }
 
-    command(): string {
+    get command(): string {
         return this._properties.command
     }
 
-    exitCode(): number {
+    get exitCode(): number {
         return this._properties.exitCode
     }
 
-    getCommandOutput(): string {
+    commandOutput(): string {
         if (!this._properties.executedMarker || !this._properties.finishedMarker) {
             return ''
         }
@@ -58,28 +60,27 @@ class Command {
 function promptDecorationOptions(marker: IMarker, promptEndX: number): IDecorationOptions {
     return {
         marker: marker,
-        backgroundColor: '#005588',
+        // backgroundColor: '#005588',
+        foregroundColor: '#5fb9f5',
         width: promptEndX
     }
 }
 
-const ENTER_SEQ = '\x0d'
+export type CommandProcessorType = (commandOldValue: string, commandNewValue: string) => any
 
-export type CommandProcessorType = (commandOldValue: string, commandNewValue: string) => void
-
-export class ShellIntegrationHandlerImpl implements IShellIntegrationHandler {
+export class ShellIntegrationHandler implements IShellIntegrationHandler {
 
     private readonly _commands: Command[] = []
     private _currentCommand: ICommandProperties | undefined = undefined
 
-    readonly commands: ReadonlyArray<Command> = this._commands
+    get commands(): readonly Command[] { return this._commands }
 
     constructor(
         private readonly _terminal: Terminal,
         private readonly _onCommand: CommandProcessorType 
     ) {
         _terminal.onWriteParsed(() => this._onWriteParsed())
-        _terminal.onData(data => this._onData(data))
+        // _terminal.onData(data => this._onData(data))
     }
 
     onCommandFinished(exitCode: number): void {
@@ -145,13 +146,13 @@ export class ShellIntegrationHandlerImpl implements IShellIntegrationHandler {
         console.log('onWriteParsed.currentCommand', this._currentCommand)
     }
 
-    private _onData(data: string) {
-        if (data === ENTER_SEQ) {
-            this._onEnter()
-        }
-    }
+    // private _onData(data: string) {
+    //     if (data === ENTER_SEQ) {
+    //         this._onEnter()
+    //     }
+    // }
 
-    private _onEnter() {
-    }
+    // private _onEnter() {
+    // }
 
 }
