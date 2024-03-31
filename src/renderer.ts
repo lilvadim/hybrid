@@ -26,7 +26,7 @@
  * ```
  */
 
-import { TerminalRenderer } from './hybrid/renderer'
+import { TerminalRenderer } from './hybrid/terminalRenderer'
 import './index.css'
 import '@xterm/xterm/css/xterm.css'
 

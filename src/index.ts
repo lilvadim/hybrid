@@ -76,8 +76,8 @@ app.on('browser-window-created', (_, window) => {
       }
     })
 
-    ptyProcess.onData(data => window.webContents.send(ipc.term.PTY, data))
-    window.webContents.ipc.on(ipc.term.TERMINAL, (_, data) => ptyProcess.write(data))
+    ptyProcess.onData(data => window.webContents.send(ipc.term.pty, data))
+    window.webContents.ipc.on(ipc.term.terminal, (_, data) => ptyProcess.write(data))
 
     window.on('close', () => ptyProcess.kill(signals.SIGQUIT))
   })

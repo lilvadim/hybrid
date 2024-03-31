@@ -16,7 +16,7 @@ export function either(options: CommandOptions): Either {
 
 export function opt(value: OptionDescriptionType): Option {
     if (typeof value === 'string') {
-        return new Option(value)
+        return new Option([value])
     }
     if (Array.isArray(value)) {
         if (value.length === 0) {
@@ -27,23 +27,38 @@ export function opt(value: OptionDescriptionType): Option {
         }
     }
     if (typeof value === 'object' && !Array.isArray(value)) {
+        if (typeof value.option === 'string') {
+            value.option = [value.option]
+        }
         return new Option(value.option, value.description, value.values)
     }
 }
 
-export class Option implements IOption {
+const optionWithArgRegexp = /.*<[^\s<>]*>.*/
+
+const optionFormatRegexp = /(-|--)[^\s<>]+(\s<[^\s<>]*>)*/
+
+export class Option {
     readonly tag: Tag.OPTION
+    readonly hasValue: boolean
     constructor(
-        readonly option: string | string[],
+        readonly optionPatterns: string[],
         readonly description?: string,
         readonly values?: string[],
-    ) { }
+    ) { 
+        const validOptionFormat = this.optionPatterns.every(value => optionFormatRegexp.test(value))
+        if (!validOptionFormat) {
+            throw new Error(optionPatterns + ': Invalid option format')
+        }
+        const hasValue = values.length > 0 || this.optionPatterns.every(value => optionWithArgRegexp.test(value)) 
+        this.hasValue = hasValue
+    }
 }
 
 export interface IOption {
     option: string | string[],
     description?: string,
-    values?: string[]
+    values?: string[],
 }
 
 type OptionDescriptionType = string | string[] | IOption

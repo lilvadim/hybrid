@@ -1,26 +1,16 @@
 import { IDecorationOptions, IMarker, Terminal } from "@xterm/xterm";
+import { ICommand, ICommandProperties, IShellIntegration } from "./shellIntegration";
 
 const ENTER_SEQ = '\x0d'
 
 export interface IShellIntegrationHandler {
-    readonly commands: ReadonlyArray<Command>
     onPromptStart(): void
     onCommandStart(): void
     onCommandExecuted(): void 
     onCommandFinished(exitCode: number): void 
 }
 
-interface ICommandProperties {
-    startX?: number,
-    command: string,
-    exitCode?: number,
-
-    promptStartMarker?: IMarker,
-    finishedMarker?: IMarker,
-    executedMarker?: IMarker
-}
-
-class Command {
+class Command implements ICommand {
 
     constructor(
         private readonly _terminal: Terminal,
@@ -32,15 +22,15 @@ class Command {
         }
     }
 
-    get command(): string {
+    command(): string {
         return this._properties.command
     }
 
-    get exitCode(): number {
+    exitCode(): number {
         return this._properties.exitCode
     }
 
-    commandOutput(): string {
+    output(): string {
         if (!this._properties.executedMarker || !this._properties.finishedMarker) {
             return ''
         }
@@ -68,19 +58,28 @@ function promptDecorationOptions(marker: IMarker, promptEndX: number): IDecorati
 
 export type CommandProcessorType = (commandOldValue: string, commandNewValue: string) => any
 
-export class ShellIntegrationHandler implements IShellIntegrationHandler {
+export class ShellIntegrationHandler implements IShellIntegrationHandler, IShellIntegration {
 
     private readonly _commands: Command[] = []
     private _currentCommand: ICommandProperties | undefined = undefined
-
-    get commands(): readonly Command[] { return this._commands }
 
     constructor(
         private readonly _terminal: Terminal,
         private readonly _onCommand: CommandProcessorType 
     ) {
         _terminal.onWriteParsed(() => this._onWriteParsed())
-        // _terminal.onData(data => this._onData(data))
+    }
+
+    commands(): readonly Command[] { 
+        return this._commands 
+    }
+
+    currentCommandProperties(): Readonly<ICommandProperties> {
+        return this._currentCommand
+    }
+
+    currentCursorXPosition(): number {
+        return this._terminal.buffer.active.cursorX
     }
 
     onCommandFinished(exitCode: number): void {
@@ -156,3 +155,5 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler {
     // }
 
 }
+
+export { IShellIntegration };

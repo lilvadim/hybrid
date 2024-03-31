@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>HybridTerm</title>
-  </head>
-  <body>
-    <div id="root">
-      <div id="command-control-container"></div>
-      <div id="xterm"></div>
-    </div>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>HybridTerm</title>
+</head>
+
+<body>
+  <div id="root">
+    <div id="command-control-container"></div>
+    <div id="xterm"></div>
+    <button onclick="window.hybrid.registerCommand({
+      command: 'ls',
+      options: [{
+        optionPatterns: [{ pattern: '-l' }],
+        hasValue: false
+      }],
+    })">Register Command</button>
+    <button onclick="window.hybrid.addOption({ option: { option: '-l' }, commandDescriptor: { command: 'ls' } })">Add -l</button>
+    <button onclick="window.hybrid.clearCurrentCommand()">Clear line</button>
+    <button onclick="window.hybrid.removeOption({ option: { option: '-l' }, commandDescriptor: { command: 'ls' } })">Remove -l</button>
+  </div>
+</body>
+
 </html>

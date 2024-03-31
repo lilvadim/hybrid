@@ -1,6 +1,9 @@
 export const ipc = {
     term: {
-        TERMINAL: 'term-terminal',
-        PTY: 'term-pty',
+        terminal: 'term-terminal',
+        pty: 'term-pty',
+    },
+    api: {
+        addOption: 'add-option'
     }
 }

@@ -12,7 +12,7 @@ export const ls: CommandOptions = {
     ],
     format: [
         opt('author'),
-        opt({ option: '-block-size', values: ['K', 'M', 'G', 'T', 'KB', 'MB', 'GB', 'TB'], description: 'Units to use' }),
+        opt({ option: '-block-size=%s', values: ['K', 'M', 'G', 'T', 'KB', 'MB', 'GB', 'TB'], description: 'Units to use' }),
         opt('-i'),
         opt('-s'),
         opt('-k'),
