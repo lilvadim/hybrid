@@ -65,6 +65,9 @@ app.on('browser-window-created', (_, window) => {
   window.webContents.once('dom-ready', () => {
     const ptyId = ptyService.createPty()
     const ptyProcess = ptyService.getPty(ptyId)
+    if (!ptyProcess) {
+      throw new Error("no pty process")
+    }
 
     ptyProcess.onExit(({ exitCode, signal }) => {
       console.debug('App#exit', { exitCode, signal })

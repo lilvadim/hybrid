@@ -2,8 +2,8 @@ import { IMarker } from "@xterm/xterm"
 
 export interface IShellIntegration {
     commands(): readonly ICommand[]
-    currentCommandProperties(): Readonly<ICommandProperties>
-    currentCursorXPosition(): number
+    currentCommandProperties(): Readonly<ICommandProperties> | undefined
+    currentCursorXPosition(): number | undefined
 }
 
 export interface ICommandProperties {

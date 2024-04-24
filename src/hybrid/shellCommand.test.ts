@@ -116,7 +116,7 @@ test('tokenize unclosed quotes', () => {
     expect(actual).toEqual(expected)
 })
 
-test('tokenize many whitespaces', () => {
+test('tokenize many white spaces', () => {
     const testString = 'ls\t-l      "Dir Name"'
     const expected = ['ls', '-l', 'Dir Name']
     const actual = tokenize(testString)

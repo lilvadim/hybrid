@@ -22,6 +22,7 @@ export function getShellIntegrationInjection(
     }
     let args: string[] = []
 
+    const resourcePath = process.resourcesPath
     switch (shell) {
         case 'zsh':
             const zdotdir = path.join(os.tmpdir(), 'hybrid-zsh')
@@ -29,7 +30,6 @@ export function getShellIntegrationInjection(
             envMixin['ZDOTDIR'] = zdotdir
             envMixin['USER_ZDOTDIR'] = env.ZDOTDIR ?? os.homedir()
 
-            const resourcePath = process.resourcesPath
             console.log(resourcePath)
             const filesToCopy: IShellIntegrationInjection['filesToCopy'] = [
                 {

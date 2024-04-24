@@ -7,10 +7,10 @@
 </head>
 
 <body>
-  <div id="root">
-    <div id="command-control-container"></div>
+  <div class="container" id="root">
+    <div id="command-frame-container"></div>
     <div id="xterm"></div>
-    <button onclick="window.hybrid.registerCommand({
+    <button class="btn btn-primary" onclick="window.hybrid.registerCommand({
       command: 'ls',
       options: [{
         optionPatterns: [{ pattern: '-l' }],

@@ -4,7 +4,7 @@ import { ITerminal } from "../terminal/xterm/terminalService";
 import { ipcRenderer } from "electron";
 import { ipc } from "../constants/ipc";
 import { ICommandDescription, ICommandOption, isOption, parseString, translateToString } from "./shellCommand";
-import { CommandDescriptionRegistry, CommandDescriptor } from "./commandDescriptionRegistry";
+import { CommandDescriptionRegistry, ICommandDescriptor } from "./commandDescriptionRegistry";
 
 export interface IAddOptionParameters {
     option: string, 
@@ -37,7 +37,7 @@ export class TerminalController {
         this._commandDescriptionRegistry.registerDescription(commandDescription)
     }
 
-    addOption(parameters: { option: ICommandOption, commandDescriptor: CommandDescriptor }) {
+    addOption(parameters: { option: ICommandOption, commandDescriptor: ICommandDescriptor }) {
         console.log('TerminalController.addOption', parameters)
         if (!parameters || !parameters.option || !parameters.option.option || !isOption(parameters.option.option)) {
             console.warn('TerminalController.addOption', 'option is undefined')
@@ -50,7 +50,7 @@ export class TerminalController {
             return
         }
 
-        const commandLine = this._shellIntegration.currentCommandProperties().command
+        const commandLine = this._shellIntegration.currentCommandProperties()?.command ?? undefined
         if (!commandLine) {
             console.warn('TerminalController.addOption', { commandLine })
             return
@@ -64,7 +64,7 @@ export class TerminalController {
         this._replaceCurrentCommand(updatedCommandLine)    
     }
 
-    removeOption(parameters: { option: ICommandOption, commandDescriptor: CommandDescriptor }) {
+    removeOption(parameters: { option: ICommandOption, commandDescriptor: ICommandDescriptor }) {
         console.log('TerminalController.removeOption', { parameters })
         if (!parameters || !parameters.option || !parameters.option.option) {
             console.warn('TerminalController.registerOption', 'option is undefined')
@@ -77,7 +77,7 @@ export class TerminalController {
             return
         }
 
-        const commandLine = this._shellIntegration.currentCommandProperties().command
+        const commandLine = this._shellIntegration.currentCommandProperties()?.command ?? undefined
         if (!commandLine) {
             console.warn('TerminalController.addOption', { commandLine })
             return
@@ -98,9 +98,14 @@ export class TerminalController {
 
     private _replaceCurrentCommand(command: string) {
         const cursor = this._shellIntegration.currentCursorXPosition()
-        const start = this._shellIntegration.currentCommandProperties().startX
+        const start = this._shellIntegration.currentCommandProperties()?.startX ?? undefined
 
-        const commandLength = cursor - start
+        if (!cursor) {
+            console.warn('no cursor')
+            return
+        }
+
+        const commandLength = cursor - (start ?? 0)
 
         for (let i = 0; i < commandLength; i++) {
             ptyWrite('\b \b')

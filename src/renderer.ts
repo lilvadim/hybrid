@@ -29,11 +29,19 @@
 import { TerminalRenderer } from './hybrid/terminalRenderer'
 import './index.css'
 import '@xterm/xterm/css/xterm.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const start = () => {
     const terminalRenderer = new TerminalRenderer()
-    const container = document.getElementById('xterm')
-    terminalRenderer.render(container)
+    const xtermContainer = document.getElementById('xterm')
+    if (!xtermContainer) {
+        throw new Error("xterm container not found")
+    }
+    const commandFrameContainer = document.getElementById('command-frame-container')
+    if (!commandFrameContainer) {
+        throw new Error("command frame container not found")
+    }
+    terminalRenderer.render(xtermContainer, commandFrameContainer)
 }
 
 start()

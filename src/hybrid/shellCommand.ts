@@ -20,7 +20,7 @@ export interface IShellCommand {
     executable: ICommandExecutable,
     options: ICommandOption[], 
     args: ICommandArgument[],
-    invalidTokens: string[]
+    invalidTokens: IToken[]
 }
 
 export interface IIndex {
@@ -39,6 +39,10 @@ export interface ICommandOption extends IIndex {
 }
 
 export interface ICommandArgument extends IIndex {
+    value: string
+}
+
+export interface IToken extends IIndex {
     value: string
 }
 
@@ -61,8 +65,8 @@ export function translateToString(shellCommand: IShellCommand): string {
         buffer += quotes + argument.value + quotes + ' '
     }
 
-    for (let token of shellCommand.invalidTokens) {
-        buffer += token + ' '
+    for (let token of shellCommand.invalidTokens.sort(byIndex)) {
+        buffer += token.value + ' '
     }
 
     return buffer.trim()
@@ -138,6 +142,7 @@ export function parseString(commandString: string, commandDescription: ICommandD
 
     const options: ICommandOption[] = []
     const args: ICommandArgument[] = []
+    const invalidTokens: string[] = []
     const offset = executable.subcommand ? 2 : 1
     const restTokens: readonly string[] = tokens.slice(offset)
     for (let i = 0; i < restTokens.length; i++) {
@@ -149,6 +154,10 @@ export function parseString(commandString: string, commandDescription: ICommandD
             }
             const nextToken = restTokens[i + 1]
             const optionDesc = findOption(token, optionDescriptions)
+            if (!optionDesc) {
+                invalidTokens.push(token)
+                continue
+            }
             if (optionDesc.hasValue && optionDesc.tokenCount > 1 && nextToken && !isOption(nextToken)) {
                 option.value = nextToken
                 option.spaceSep = true
@@ -175,7 +184,7 @@ export function parseString(commandString: string, commandDescription: ICommandD
 export function findOption(
     token: string, 
     options: readonly (ICommandOptionDescription & { tokenCount: number })[]
-): ICommandOptionDescription & { tokenCount: number } {
+): ICommandOptionDescription & { tokenCount: number } | undefined {
     return options
         .find(optionDesc => optionDesc.optionPatterns
             .map(pattern => removeArgs(pattern).trim())

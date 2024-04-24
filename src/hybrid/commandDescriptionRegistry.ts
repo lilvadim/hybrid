@@ -1,6 +1,6 @@
 import { ICommandDescription } from "./shellCommand";
 
-export class CommandDescriptor {
+export interface ICommandDescriptor {
     command: string 
     subcommand?: string
 }
@@ -10,7 +10,7 @@ export class CommandDescriptionRegistry {
     private readonly _commandDescriptions: Record<string, ICommandDescription> = {}
 
     registerDescription(description: ICommandDescription) {
-        const descriptor: CommandDescriptor = {
+        const descriptor: ICommandDescriptor = {
             command: description.command,
             subcommand: description.subcommand
         } 
@@ -18,7 +18,7 @@ export class CommandDescriptionRegistry {
         this._commandDescriptions[descriptor.toString()] = description
     }
 
-    getDescription(descriptor: CommandDescriptor): ICommandDescription | undefined {
+    getDescription(descriptor: ICommandDescriptor): ICommandDescription | undefined {
         if (!descriptor.subcommand) {
             descriptor.subcommand = undefined
         }

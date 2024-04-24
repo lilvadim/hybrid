@@ -117,15 +117,13 @@ const enum VSCodeOscPt {
 export class ShellIntegrationAddon implements ITerminalAddon {
 
     private readonly _handlers: IShellIntegrationHandler[] = []
-	private _terminal: Terminal
 
     constructor(...handlers: IShellIntegrationHandler[]) {
         this._handlers.push(...handlers)
     }
 
     activate(terminal: Terminal) {
-        this._terminal = terminal
-        this._terminal.parser.registerOscHandler(ShellIntegrationOscPs.VSCode, data => {
+        terminal.parser.registerOscHandler(ShellIntegrationOscPs.VSCode, data => {
 			console.log('ShellIntegrationAddon.Osc.VSCode.data', data)
 			return this.handleVsCodeSequence(data)
 		})
@@ -148,14 +146,14 @@ export class ShellIntegrationAddon implements ITerminalAddon {
 				return true
 			case VSCodeOscPt.CommandExecuted:
 				this._handlers.forEach(it => it.onCommandExecuted())
-				return
+				return true
 			case VSCodeOscPt.CommandFinished:
 				const exitCode = Number(args[0])
 				this._handlers.forEach(it => it.onCommandFinished(exitCode))
-				return
+				return true
         }
 
-        return undefined
+        return true
     }
 
 }

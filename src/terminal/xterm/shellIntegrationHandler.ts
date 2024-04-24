@@ -27,7 +27,7 @@ class Command implements ICommand {
     }
 
     exitCode(): number {
-        return this._properties.exitCode
+        return this._properties.exitCode ?? 0
     }
 
     output(): string {
@@ -74,7 +74,7 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         return this._commands 
     }
 
-    currentCommandProperties(): Readonly<ICommandProperties> {
+    currentCommandProperties(): Readonly<ICommandProperties> | undefined {
         return this._currentCommand
     }
 
@@ -112,7 +112,9 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         }
         const cursorX = this._terminal.buffer.active.cursorX
 
-        this._terminal.registerDecoration(promptDecorationOptions(this._currentCommand.promptStartMarker, cursorX))
+        if (this._currentCommand && this._currentCommand.promptStartMarker) {
+            this._terminal.registerDecoration(promptDecorationOptions(this._currentCommand.promptStartMarker, cursorX)) 
+        }
         this._currentCommand.startX = cursorX
         console.log('onCommandStart.currentCommand', this._currentCommand)
     }
@@ -129,7 +131,10 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         if (!this._currentCommand || !this._currentCommand.startX) {
             return
         }
-        const lineY = this._currentCommand.promptStartMarker.line
+        const lineY = this._currentCommand?.promptStartMarker?.line
+        if (!lineY) {
+            return
+        }
         const line = this._terminal.buffer.active.getLine(lineY)
         if (!line) {
             console.warn('onWriteParsed', 'Line not found', lineY)
