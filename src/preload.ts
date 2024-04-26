@@ -12,7 +12,13 @@ export const hybridApi = {
     registerCommand: (commandDescription) => console.warn('api: registerCommand is not initialized'),
 
     // @ts-ignore
-    removeOption: (parameters) => console.warn('api: removeOption is not initialized')
+    removeOption: (parameters) => console.warn('api: removeOption is not initialized'),
+
+    // @ts-ignore
+    isRegisteredCommand: (parameters) => { 
+        console.warn('api: isRegisteredCommand is not initialized')
+        return false
+    },
 
 };
 

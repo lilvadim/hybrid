@@ -37,6 +37,14 @@ export class TerminalController {
         this._commandDescriptionRegistry.registerDescription(commandDescription)
     }
 
+    isRegisteredCommand(commandDescriptor: ICommandDescriptor): boolean {
+        if (!commandDescriptor) {
+            console.warn(TerminalController, 'isRegisteredCommand', 'command descriptor is undefined')
+            return false
+        }
+        return this._commandDescriptionRegistry.getDescription(commandDescriptor) ? true : false
+    }
+
     addOption(parameters: { option: ICommandOption, commandDescriptor: ICommandDescriptor }) {
         console.log('TerminalController.addOption', parameters)
         if (!parameters || !parameters.option || !parameters.option.option || !isOption(parameters.option.option)) {

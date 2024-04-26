@@ -42,6 +42,7 @@ export class TerminalRenderer {
         hybridApi.clearCurrentCommand = () => controller.clearCurrentCommand()
         hybridApi.registerCommand = (commandDescription) => controller.registerCommand(commandDescription)
         hybridApi.removeOption = (parameters) => controller.removeOption(parameters)
+        hybridApi.isRegisteredCommand = (commandDescriptor) => controller.isRegisteredCommand(commandDescriptor)
         console.log('TerminalRenderer: api initialized')
     }
   

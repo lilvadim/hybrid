@@ -14,7 +14,7 @@ export interface IOptionPattern {
     pattern: string
 }
 
-export const optionArgRegexp = /<[^<>]*>/
+export const optionArgRegexp = /<[^\s<>]*>/
 
 export interface IShellCommand {
     executable: ICommandExecutable,
