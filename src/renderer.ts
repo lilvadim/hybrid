@@ -27,9 +27,9 @@
  */
 
 import { TerminalRenderer } from './hybrid/terminalRenderer'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './index.css'
 import '@xterm/xterm/css/xterm.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
 
 const start = () => {
     const terminalRenderer = new TerminalRenderer()

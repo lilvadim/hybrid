@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="javascript">
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <div>
+      <h3>Filter</h3>
+      <div class="list-group">
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold" for="1492">-a<input class="form-check-input" name="246761244" type="radio" value=""></label>
+          </div>
+          Show hidden files
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold" for="1460">-A<input class="form-check-input" name="246761244" type="radio" value=""></label>
+          </div>
+          Do not ignore entries starting with '.', except '.' and '..'
+        </div>
+      </div>
+      <div class="list-group">
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-d<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          List directory entries instead of directory contents. Do not dereference symbolic links
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-R<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          Recurse into subdirectories
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>Format</h3>
+      <div class="list-group">
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">--author<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">--block-size=&lt;unit&gt;<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          Units to use
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-i<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          For each file, write the file's file serial number
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-s<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          Indicate the total number of file system blocks consumed by each file displayed
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-k<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          Assume block size of 1024 bytes
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-H<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          Evaluate the file information and file type for symbolic links specified on the command line to be those of the file referenced by the link, and not the link itself; however, ls shall write the name of the link itself and not the file referenced by the link 
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-L<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+        </div>
+      </div>
+      <div class="list-group">
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold" for="1462">-C<input class="form-check-input" name="803295914" type="radio" value=""></label>
+          </div>
+          Multicolumn output (short entries)
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold" for="1504">-m<input class="form-check-input" name="803295914" type="radio" value=""></label>
+          </div>
+          Comma-separated list of short entries
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>Sort</h3>
+      <div class="list-group">
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-S<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          Sort with the primary key being file size (in decreasing order) and the secondary key being filename in the collating sequence (in increasing order)
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-t<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          Sort with the primary key being time modified (most recently modified first) and the secondary key being filename in the collating sequence
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-f<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          List the entries in directory operands in the order they appear in the directory. Filter option -a will be turned on automatically. Sort option -r will be ignored
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-r<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          Reverse the order of the sort to get reverse collating sequence oldest first, or smallest file size first depending on the other options given
+        </div>
+        <div class="list-group-item">
+          <div class="form-check">
+            <label class="form-check-label mono-font-bold">-w&lt;width&gt;<input class="form-check-input" type="checkbox" value=""></label>
+          </div>
+          Set output width to the number of columns. 0 means no limit
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

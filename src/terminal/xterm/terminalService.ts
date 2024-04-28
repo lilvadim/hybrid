@@ -13,7 +13,7 @@ export class TerminalService {
     private readonly _xtermById: Map<number, ITerminal> = new Map()
     private _lastXtermId = 0
 
-    createXterm(commandProcessor: CommandProcessorType): number {
+    createXterm(): number {
         const id = this._lastXtermId++
 
         const xterm = new Terminal({
@@ -22,7 +22,7 @@ export class TerminalService {
             cols: 80
         })
 
-        const shellIntegration = new ShellIntegrationHandler(xterm, commandProcessor)
+        const shellIntegration = new ShellIntegrationHandler(xterm)
         const shellIntegrationAddon = new ShellIntegrationAddon(shellIntegration)
         xterm.loadAddon(shellIntegrationAddon)
 

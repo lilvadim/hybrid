@@ -1,5 +1,6 @@
 import { IDecorationOptions, IMarker, Terminal } from "@xterm/xterm";
 import { ICommand, ICommandProperties, IShellIntegration } from "./shellIntegration";
+import EventEmitter from "events";
 
 const ENTER_SEQ = '\x0d'
 
@@ -62,12 +63,16 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
 
     private readonly _commands: Command[] = []
     private _currentCommand: ICommandProperties | undefined = undefined
+    private readonly _event = new EventEmitter()
 
     constructor(
         private readonly _terminal: Terminal,
-        private readonly _onCommand: CommandProcessorType 
     ) {
         _terminal.onWriteParsed(() => this._onWriteParsed())
+    }
+
+    onCommandLineChange(listener: (oldCommandLine: string, newCommandLine: string) => void): void {
+        this._event.on('command-line-change', listener)
     }
 
     commands(): readonly Command[] { 
@@ -146,7 +151,7 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         )
         const commandOldValue = this._currentCommand.command
         this._currentCommand.command = commandText.trimRight()
-        this._onCommand(commandOldValue, this._currentCommand.command)
+        this._event.emit('command-line-change', commandOldValue, this._currentCommand.command)
         console.log('onWriteParsed.currentCommand', this._currentCommand)
     }
 

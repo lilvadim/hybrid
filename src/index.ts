@@ -1,6 +1,5 @@
 import { app, BrowserWindow } from 'electron';
 import { signals } from './constants/signal';
-import { isDev } from './util/environment'
 import * as os from 'os'
 import { ipc } from './constants/ipc';
 import { PtyService } from './terminal/node/ptyService';
@@ -32,9 +31,8 @@ const createWindow = () => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  // if (isDev()) {
   mainWindow.webContents.openDevTools();
-  // }
+
 };
 
 // This method will be called when Electron has finished

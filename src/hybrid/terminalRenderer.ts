@@ -1,32 +1,38 @@
 import { ipcRenderer } from "electron"
 import { ipc } from "../constants/ipc"
 import { TerminalService } from "../terminal/xterm/terminalService"
-import { CommandFrameService } from "./commandFrameService"
-import { CommandProcessor } from "./commandProcessor"
+import { CommandFrameProvider } from "./commandFrame/provider/commandFrameProvider"
+import { CommandLineProcessor } from "./commandLineProcessor"
 import { TerminalController } from "./terminalController"
-import { hybridApi } from "../preload"
-import { CommandPathResolverImpl, ICommandPathResolveConfig } from "./commandPathResolver"
-import { dirname, join } from "path"
+import { initApi } from "./api/api"
+import { CommandFramePathResolver } from "./commandFrame/provider/commandFramePathResolver"
+import { ICommandFrameProviderConfig } from "./commandFrame/provider/commandFrameProviderConfig"
+import { join } from "path"
+import { EnvironmentUtils } from "../util/environment"
+import { CommandFrameRenderer } from "./commandFrame/renderer/commandFrameRenderer"
 
 export class TerminalRenderer {
 
     private readonly _terminalService = new TerminalService()
-    private readonly _commandPathResolveConfig: ICommandPathResolveConfig = {
-        htmlFramesPaths: [join(process.resourcesPath, 'cf')]
+    private readonly _commandFrameProviderConfig: ICommandFrameProviderConfig = {
+        cache: false,
+        htmlFramesPaths: [join(EnvironmentUtils.resourcePath, 'resources', 'cf')]
     }
-    private readonly _commandPathResolver = new CommandPathResolverImpl(this._commandPathResolveConfig)
-    private readonly _commandFrameService = new CommandFrameService(this._commandPathResolver)
+    private readonly _commandFramePathResolver = new CommandFramePathResolver(this._commandFrameProviderConfig)
+    private readonly _commandFrameProvider = new CommandFrameProvider(this._commandFrameProviderConfig, this._commandFramePathResolver)
 
     constructor() {}
 
     render(xtermContainer: HTMLElement, commandFrameContainer: HTMLElement) {
-        const commandProcessor = new CommandProcessor(this._commandFrameService, commandFrameContainer)
+        const commandFrameRenderer = new CommandFrameRenderer(commandFrameContainer)
+        const commandLineProcessor = new CommandLineProcessor(this._commandFrameProvider, commandFrameRenderer)
 
-        const terminalId = this._terminalService.createXterm((commandOldValue, commandNewValue) => commandProcessor.onCommand(commandOldValue, commandNewValue))
+        const terminalId = this._terminalService.createXterm()
         const terminal = this._terminalService.getTerminal(terminalId)
         if (!terminal) {
             throw new Error('no terminal')
         }
+        terminal.shellIntegration.onCommandLineChange((oldVal, newVal) => commandLineProcessor.onCommandLineChange(oldVal, newVal))
         terminal.xterm.open(xtermContainer)
 
         ipcRenderer.on(ipc.term.pty, (_, data) => terminal.xterm.write(data))
@@ -38,11 +44,7 @@ export class TerminalRenderer {
     }
 
     private _initApi(controller: TerminalController) {
-        hybridApi.addOption = (parameters) => controller.addOption(parameters)
-        hybridApi.clearCurrentCommand = () => controller.clearCurrentCommand()
-        hybridApi.registerCommand = (commandDescription) => controller.registerCommand(commandDescription)
-        hybridApi.removeOption = (parameters) => controller.removeOption(parameters)
-        hybridApi.isRegisteredCommand = (commandDescriptor) => controller.isRegisteredCommand(commandDescriptor)
+        initApi(controller)
         console.log('TerminalRenderer: api initialized')
     }
   

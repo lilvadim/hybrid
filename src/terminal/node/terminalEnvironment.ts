@@ -1,6 +1,7 @@
 import * as path from "path"
 import * as os from "os"
 import { IProcessEnvironment, IShellLaunchConfig } from "./ptyService"
+import { EnvironmentUtils } from "../../util/environment"
 
 export interface IShellIntegrationInjection {
     args: string[],
@@ -22,7 +23,7 @@ export function getShellIntegrationInjection(
     }
     let args: string[] = []
 
-    const resourcePath = process.resourcesPath
+    const resourcePath = path.join(EnvironmentUtils.resourcePath, 'resources')
     switch (shell) {
         case 'zsh':
             const zdotdir = path.join(os.tmpdir(), 'hybrid-zsh')

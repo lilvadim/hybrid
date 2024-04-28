@@ -4,6 +4,7 @@ export interface IShellIntegration {
     commands(): readonly ICommand[]
     currentCommandProperties(): Readonly<ICommandProperties> | undefined
     currentCursorXPosition(): number | undefined
+    onCommandLineChange(listener: (oldCommandLine: string, newCommandLine: string) => void): void
 }
 
 export interface ICommandProperties {

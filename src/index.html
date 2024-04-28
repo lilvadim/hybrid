@@ -7,20 +7,25 @@
 </head>
 
 <body>
-  <div class="container" id="root">
-    <div id="command-frame-container"></div>
-    <div id="xterm"></div>
-    <button class="btn btn-primary" onclick="window.hybrid.registerCommand({
+  <div class="container">
+    <div class="row">
+      <div id="command-frame-container" class="col-4"></div>
+      <div id="xterm" class="col-8"></div>
+    </div>
+  </div>
+  <!-- <button class="btn btn-primary" onclick="window.hybrid.registerCommand({
       command: 'ls',
       options: [{
         optionPatterns: [{ pattern: '-l' }],
         hasValue: false
       }],
     })">Register Command</button>
-    <button onclick="window.hybrid.addOption({ option: { option: '-l' }, commandDescriptor: { command: 'ls' } })">Add -l</button>
-    <button onclick="window.hybrid.clearCurrentCommand()">Clear line</button>
-    <button onclick="window.hybrid.removeOption({ option: { option: '-l' }, commandDescriptor: { command: 'ls' } })">Remove -l</button>
-  </div>
+      <button onclick="window.hybrid.addOption({ option: { option: '-l' }, commandDescriptor: { command: 'ls' } })">Add
+        -l</button>
+      <button onclick="window.hybrid.clearCurrentCommand()">Clear line</button>
+      <button
+        onclick="window.hybrid.removeOption({ option: { option: '-l' }, commandDescriptor: { command: 'ls' } })">Remove
+        -l</button> -->
 </body>
 
 </html>
