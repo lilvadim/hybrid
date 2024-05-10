@@ -1,11 +1,13 @@
 import { CommandFrameRenderer } from "./commandFrame/renderer/commandFrameRenderer"
 import { CommandFrameProvider } from "./commandFrame/provider/commandFrameProvider"
+import { CommandFrameLoader } from "./commandFrame/loader/commandFrameLoader"
 
 export class CommandLineProcessor {
 
     constructor(
         private readonly _commandFrameService: CommandFrameProvider,
         private readonly _commandFrameRenderer: CommandFrameRenderer,
+        private readonly _commandFrameLoader: CommandFrameLoader,
     ) {}
 
     onCommandLineChange(commandLineOldValue: string, commandLineNewValue: string) {
@@ -20,6 +22,12 @@ export class CommandLineProcessor {
         }
         const commandFrames = this._commandFrameService.getCommandFrames(executable)
         this._commandFrameRenderer.render(commandFrames)
+        for (let frame of commandFrames) {
+            if (frame.isLoaded) {
+                continue
+            } 
+            this._commandFrameLoader.load(frame)
+        }
     }
 
 }

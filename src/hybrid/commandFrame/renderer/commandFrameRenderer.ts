@@ -1,7 +1,8 @@
+import { IHybridCommandFrameApi } from "../../../hybrid/api/api";
 import { clearChildren } from "../../../util/html";
 import { ICommandFrame } from "../commandFrame";
 
-export class CommandFrameRenderer {
+export class CommandFrameRenderer implements IHybridCommandFrameApi {
 
     constructor(
         readonly container: HTMLElement

@@ -165,5 +165,3 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
     // }
 
 }
-
-export { IShellIntegration };

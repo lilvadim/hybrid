@@ -69,6 +69,57 @@ test('parseString ls', () => {
     expect(actual).toEqual(expected)
 })
 
+test('parseString ls invalid', () => {
+    const commandLine = 'ls -m -l "Dir Name"'
+    const expected: IShellCommand = {
+        executable: {
+            executable: 'ls',
+            subcommand: undefined
+        },
+        options: [{
+            index: 2,
+            option: '-l'
+        }],
+        args: [{
+            index: 3,
+            value: 'Dir Name'
+        }],
+        invalidTokens: [{
+            index: 1,
+            value: "-m"
+        }]
+    }
+
+    const actual = parseString(commandLine, lsDesc)
+    
+    expect(actual).toEqual(expected)
+})
+
+test('translateToString ls invalid', () => {
+    const command: IShellCommand = {
+        executable: {
+            executable: 'ls',
+            subcommand: undefined
+        },
+        options: [{
+            index: 2,
+            option: '-l'
+        }],
+        args: [{
+            index: 3,
+            value: 'Dir Name'
+        }],
+        invalidTokens: [{
+            index: 1,
+            value: "-m"
+        }]
+    }
+    const expected = 'ls -l "Dir Name" -m'
+    const actual = translateToString(command)
+
+    expect(actual).toEqual(expected)
+})
+
 const gitCommitDesc: ICommandDescription = {
     command: 'git',
     subcommand: 'commit',

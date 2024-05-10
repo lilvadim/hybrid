@@ -142,22 +142,25 @@ export function parseString(commandString: string, commandDescription: ICommandD
 
     const options: ICommandOption[] = []
     const args: ICommandArgument[] = []
-    const invalidTokens: string[] = []
+    const invalidTokens: IToken[] = []
     const offset = executable.subcommand ? 2 : 1
     const restTokens: readonly string[] = tokens.slice(offset)
     for (let i = 0; i < restTokens.length; i++) {
+        const index = i + offset
         const token = restTokens[i]
         if (isOption(token)) {
             const option: ICommandOption = {
-                index: i + offset,
+                index,
                 option: token
             }
-            const nextToken = restTokens[i + 1]
+
             const optionDesc = findOption(token, optionDescriptions)
             if (!optionDesc) {
-                invalidTokens.push(token)
+                invalidTokens.push({ index, value: token })
                 continue
             }
+
+            const nextToken = restTokens[i + 1]
             if (optionDesc.hasValue && optionDesc.tokenCount > 1 && nextToken && !isOption(nextToken)) {
                 option.value = nextToken
                 option.spaceSep = true
@@ -166,7 +169,7 @@ export function parseString(commandString: string, commandDescription: ICommandD
             options.push(option)
         } else {
             const argument: ICommandArgument = {
-                index: i + offset,
+                index,
                 value: token
             }
             args.push(argument)
@@ -177,7 +180,7 @@ export function parseString(commandString: string, commandDescription: ICommandD
         executable,
         options,
         args,
-        invalidTokens: []
+        invalidTokens
     }
 }
 
@@ -191,8 +194,8 @@ export function findOption(
             .find(pattern => token.startsWith(pattern)))
 }
 
-export const optionFormatRegexp = /(-|--)[^\s<>]+/
+export const optionFormat = /(-|--)[^\s<>]+/
 
 export function isOption(token: string): boolean {
-    return optionFormatRegexp.test(token)
+    return optionFormat.test(token)
 }

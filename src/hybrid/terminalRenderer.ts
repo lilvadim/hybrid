@@ -10,6 +10,7 @@ import { ICommandFrameProviderConfig } from "./commandFrame/provider/commandFram
 import { join } from "path"
 import { EnvironmentUtils } from "../util/environment"
 import { CommandFrameRenderer } from "./commandFrame/renderer/commandFrameRenderer"
+import { CommandFrameLoader } from "./commandFrame/loader/commandFrameLoader"
 
 export class TerminalRenderer {
 
@@ -20,12 +21,13 @@ export class TerminalRenderer {
     }
     private readonly _commandFramePathResolver = new CommandFramePathResolver(this._commandFrameProviderConfig)
     private readonly _commandFrameProvider = new CommandFrameProvider(this._commandFrameProviderConfig, this._commandFramePathResolver)
+    private readonly _commandFrameLoader = new CommandFrameLoader()
 
     constructor() {}
 
     render(xtermContainer: HTMLElement, commandFrameContainer: HTMLElement) {
         const commandFrameRenderer = new CommandFrameRenderer(commandFrameContainer)
-        const commandLineProcessor = new CommandLineProcessor(this._commandFrameProvider, commandFrameRenderer)
+        const commandLineProcessor = new CommandLineProcessor(this._commandFrameProvider, commandFrameRenderer, this._commandFrameLoader)
 
         const terminalId = this._terminalService.createXterm()
         const terminal = this._terminalService.getTerminal(terminalId)
@@ -40,11 +42,11 @@ export class TerminalRenderer {
 
         const controller = new TerminalController(terminal)
 
-        this._initApi(controller)
+        this._initApi(controller, commandFrameRenderer)
     }
 
-    private _initApi(controller: TerminalController) {
-        initApi(controller)
+    private _initApi(controller: TerminalController, commandFrameRenderer: CommandFrameRenderer) {
+        initApi(controller, commandFrameRenderer)
         console.log('TerminalRenderer: api initialized')
     }
   

@@ -26,11 +26,12 @@ export class CommandFrameProvider {
         const frames: ICommandFrame[] = []
         for (let path of paths) {
             const frame = readHtmlFromFile(path)
-            console.log('CommandFrameService#getCommandFrames', 'loaded', path)
+            console.log('CommandFrameProvider#getCommandFrames', 'loaded', path)
             if (!frame) {
                 continue
             }
-            frames.push({ command, frame })
+            const isLoaded = false
+            frames.push({ command, frame, isLoaded })
         }
 
         if (this._config.cache) {

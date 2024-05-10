@@ -5,18 +5,9 @@ import { ipcRenderer } from "electron";
 import { ipc } from "../constants/ipc";
 import { ICommandDescription, ICommandOption, isOption, parseString, translateToString } from "./shell/shellCommand";
 import { CommandDescriptionRegistry, ICommandDescriptor } from "./commandDescriptionRegistry";
-import { IHybridApi } from "./api/api";
+import { IHybridTerminalApi } from "./api/api";
 
-export interface IAddOptionParameters {
-    option: string, 
-    value?: string, 
-}
-
-export interface IRemoveOptionParameters {
-    option: string
-}
-
-export class TerminalController implements IHybridApi {
+export class TerminalController implements IHybridTerminalApi {
 
     private readonly _commandDescriptionRegistry: CommandDescriptionRegistry = new CommandDescriptionRegistry()
     private readonly _xterm: Terminal
@@ -41,15 +32,15 @@ export class TerminalController implements IHybridApi {
 
     isRegisteredCommand(commandDescriptor: ICommandDescriptor): boolean {
         if (!commandDescriptor) {
-            console.warn(TerminalController, 'isRegisteredCommand', 'command descriptor is undefined')
+            console.warn('TerminalController.isRegisteredCommand', 'command descriptor is undefined')
             return false
         }
         return this._commandDescriptionRegistry.getDescription(commandDescriptor) ? true : false
     }
 
-    addOption(parameters: { option: ICommandOption, commandDescriptor: ICommandDescriptor }): boolean {
+    addOptions(parameters: { commandDescriptor: ICommandDescriptor, options: ICommandOption[] }): boolean {
         console.log('TerminalController.addOption', parameters)
-        if (!parameters || !parameters.option || !parameters.option.option || !isOption(parameters.option.option)) {
+        if (!parameters || !parameters.options) {
             console.warn('TerminalController.addOption', 'option is undefined')
             return false
         }
@@ -67,18 +58,18 @@ export class TerminalController implements IHybridApi {
         }
 
         const command = parseString(commandLine, commandDescription)
-        command.options.push(parameters.option)
-        
-        const updatedCommandLine = translateToString(command)
-        
-        this._replaceCurrentCommand(updatedCommandLine)  
+        command.options.push(...parameters.options)
 
-        return true  
+        const updatedCommandLine = translateToString(command)
+
+        this._replaceCurrentCommand(updatedCommandLine)
+
+        return true
     }
 
-    removeOption(parameters: { option: ICommandOption, commandDescriptor: ICommandDescriptor }): boolean {
+    removeOptions(parameters: { commandDescriptor: ICommandDescriptor, options: ICommandOption[] }): boolean {
         console.log('TerminalController.removeOption', { parameters })
-        if (!parameters || !parameters.option || !parameters.option.option) {
+        if (!parameters || !parameters.options) {
             console.warn('TerminalController.registerOption', 'option is undefined')
             return false
         }
@@ -96,8 +87,10 @@ export class TerminalController implements IHybridApi {
         }
 
         const command = parseString(commandLine, commandDescription)
-        const optionIndex = command.options.findIndex(value => value.option === parameters.option.option && value.value === parameters.option.value)
-        delete command.options[optionIndex]
+        for (let optionToRemove of parameters.options) {
+            const optionIndex = command.options.findIndex(value => value.option === optionToRemove.option)
+            delete command.options[optionIndex]
+        }
 
         const updatedCommandLine = translateToString(command)
 
@@ -106,8 +99,9 @@ export class TerminalController implements IHybridApi {
         return true
     }
 
-    clearCurrentCommand() {
+    clearCurrentCommand(): boolean {
         this._replaceCurrentCommand('')
+        return true
     }
 
     private _replaceCurrentCommand(command: string) {
@@ -127,7 +121,7 @@ export class TerminalController implements IHybridApi {
 
         ptyWrite(command)
     }
-   
+
 }
 
 function ptyWrite(data: string) {
