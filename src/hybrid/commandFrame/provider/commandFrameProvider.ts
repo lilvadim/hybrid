@@ -14,13 +14,11 @@ export class CommandFrameProvider {
     ) { }
 
     getCommandFrames(command: string): ICommandFrame[] {
-        if (this._config.cache) {
-            const cached = this._cache[command]
-            if (cached) {
-                return cached
-            }
+        const cached = this._cache[command]
+        if (cached) {
+            return cached
         }
-
+        
         const paths = this._pathResolver.resolve(command)
 
         const frames: ICommandFrame[] = []
