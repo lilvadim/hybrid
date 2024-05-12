@@ -1,19 +1,23 @@
 import { ICommandDescriptor } from "../commandDescriptionRegistry";
-import { ICommandFrame } from "../commandFrame/commandFrame";
+import { ICommandLineSyncEvent } from "../commandLineSyncEvent";
 import { ICommandDescription, ICommandOption } from "../shell/shellCommand";
+import { ICommandContext } from "../terminalController";
 
 export interface IHybridTerminalApi {
-    addOptions(parameters: { commandDescriptor: ICommandDescriptor, options: ICommandOption[] }): boolean
+    updateOptions(
+        parameters: {
+            addOptions: ICommandOption[],
+            removeOptions: ICommandOption[]
+        }
+    ): boolean,
     clearCurrentCommand(): boolean
     isRegisteredCommand(commandDescriptor: ICommandDescriptor): boolean,
     registerCommand(commandDescription: ICommandDescription): boolean,
-    removeOptions(parameters: { commandDescriptor: ICommandDescriptor, options: ICommandOption[] }): boolean,
+    onCommandLineSync(listener: (event: ICommandLineSyncEvent) => void): void,
+    setCommandContext(ctx: ICommandContext): void
 }
 
-export interface IHybridCommandFrameApi {
-}
-
-export function initApi(terminalApiImpl: IHybridTerminalApi, commandFrameApiImpl: IHybridCommandFrameApi) {
+export function initApi(terminalApiImpl: IHybridTerminalApi) {
     // @ts-ignore
     window.hybrid = {
         terminal: terminalApiImpl

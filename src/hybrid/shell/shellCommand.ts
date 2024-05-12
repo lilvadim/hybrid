@@ -1,3 +1,5 @@
+import { deprecate } from "util"
+import { isQuote, isWhitespace, isBlank } from "../../util/strings"
 
 export interface ICommandDescription {
     command: string,
@@ -24,7 +26,7 @@ export interface IShellCommand {
 }
 
 export interface IIndex {
-    index: number
+    index: number | undefined | null
 }
 
 export interface ICommandExecutable {
@@ -35,7 +37,6 @@ export interface ICommandExecutable {
 export interface ICommandOption extends IIndex {
     option: string,
     value?: string,
-    spaceSep?: boolean
 }
 
 export interface ICommandArgument extends IIndex {
@@ -46,15 +47,27 @@ export interface IToken extends IIndex {
     value: string
 }
 
-export function translateToString(shellCommand: IShellCommand): string {
+export const shellCommand = {
+    parsed: (commandLine: string, commandDescription: ICommandDescription): IShellCommand => parseShellCommand(commandLine, commandDescription),
+    commandLine: (command: IShellCommand): string => translateToCommandLine(command)
+}
+
+export const isNotSeparator = (value: string) => /-|\w/.test(value)
+export const isSeparator = (value: string) => !isNotSeparator(value)
+
+function translateToCommandLine(shellCommand: IShellCommand): string {
     const execSep = shellCommand.executable.subcommand ? ' ' : ''
     let buffer = shellCommand.executable.executable + execSep + (shellCommand.executable.subcommand ?? '') + ' '
 
-    const byIndex = (a: IIndex, b: IIndex) => a.index - b.index
+    const byIndex = (a: IIndex, b: IIndex) => (a.index ?? Number.MAX_VALUE) - (b.index ?? Number.MAX_VALUE)
     for (let option of shellCommand.options.sort(byIndex)) {
-        const sep = option.spaceSep ? ' ' : ''
+        if (!option) {
+            continue
+        }
+        const lastSymbol = option.option.charAt(option.option.length - 1)
         const valueTokensCount = option.value ? option.value.split(/\s/).length : 0
-        const quotes = valueTokensCount > 0 ? '"' : ''
+        const sep = (isNotSeparator(lastSymbol) && option.value) ? ' ' : ''
+        const quotes = valueTokensCount > 1 ? '"' : ''
         const value = option.value ?? ''
         buffer += option.option + sep + quotes + value + quotes + ' '
     }
@@ -69,7 +82,7 @@ export function translateToString(shellCommand: IShellCommand): string {
         buffer += token.value + ' '
     }
 
-    return buffer.trim()
+    return buffer.trimRight()
 }
 
 export function removeArgs(optionPattern: IOptionPattern): string {
@@ -80,53 +93,23 @@ export function tokenCount(optionPattern: IOptionPattern): number {
     return optionPattern.pattern.split(/\s/).length
 }
 
-export function tokenize(commandString: string): string[] {
+export function tokenize(commandLine: string): string[] {
     const tokens: string[] = []
-    
-    const stringLength = commandString.length
-    const whitespace = /\s/
-    const quote = /'|"/
-    let quoteOpened = false
-    let left = 0
-    for (let i = left; i < stringLength; i++) {
-        const currentSymbol = commandString[i]
-        const isQuote = quote.test(currentSymbol)
-        if (isQuote && !quoteOpened) {
-            quoteOpened = true
-            left = i + 1
-            continue
-        }
-        if (isQuote && quoteOpened) {
-            quoteOpened = false
-            const token = commandString.substring(left, i)
-            tokens.push(token)
-            left = i + 1
-            continue
-        }
-        if (quoteOpened) {
-            continue
-        }
-        const isWhitespace = whitespace.test(currentSymbol)
-        if (!quoteOpened && isWhitespace && left < i) {
-            const token = commandString.substring(left, i)
-            if (!whitespace.test(token)) {
-                tokens.push(token)
-            }
-            left = i + 1
-            continue
+    var escapedRegions = commandLine.split(/'|"/)
+    for (let i = 0; i < escapedRegions.length; i++) {
+        const isEscaped = i % 2 !== 0
+        if (isEscaped) {
+            tokens.push(escapedRegions[i])
+        } else {
+            tokens.push(...escapedRegions[i].split(/\s/).filter(it => !isBlank(it)))
         }
     }
-
-    if (quoteOpened) {
-        const restTokens = commandString.substring(left - 1, stringLength).split(/\s/)
-        tokens.push(...restTokens)
-    }
-    
     return tokens
 }
 
-export function parseString(commandString: string, commandDescription: ICommandDescription): IShellCommand {
-    const tokens = tokenize(commandString)
+function parseShellCommand(commandLine: string, commandDescription: ICommandDescription): IShellCommand {
+    const tokens = tokenize(commandLine)
+    console.debug(JSON.stringify(tokens))
     const executable: ICommandExecutable = {
         executable: commandDescription.command,
         subcommand: commandDescription.subcommand
@@ -149,21 +132,27 @@ export function parseString(commandString: string, commandDescription: ICommandD
         const index = i + offset
         const token = restTokens[i]
         if (isOption(token)) {
-            const option: ICommandOption = {
-                index,
-                option: token
-            }
-
             const optionDesc = findOption(token, optionDescriptions)
             if (!optionDesc) {
                 invalidTokens.push({ index, value: token })
                 continue
             }
 
+            const splittedOption = splitOption(optionDesc, token)
+            if (!splittedOption) {
+                invalidTokens.push({ index, value: token })
+                continue
+            }
+
+            const option: ICommandOption = {
+                index,
+                option: splittedOption.option,
+                value: splittedOption.value
+            }
+            
             const nextToken = restTokens[i + 1]
             if (optionDesc.hasValue && optionDesc.tokenCount > 1 && nextToken && !isOption(nextToken)) {
                 option.value = nextToken
-                option.spaceSep = true
                 i++
             }
             options.push(option)
@@ -184,7 +173,19 @@ export function parseString(commandString: string, commandDescription: ICommandD
     }
 }
 
-export function findOption(
+function splitOption(
+    optionDesc: ICommandOptionDescription,
+    optionToken: string
+): { option: string, value: string } | undefined {
+    const option = optionDesc.optionPatterns.map(it => removeArgs(it).trim()).find(it => optionToken.startsWith(it))
+    if (!option) {
+        return undefined
+    }
+    const value = optionToken.replace(RegExp('^' + option), '')
+    return { option, value }
+}
+
+function findOption(
     token: string, 
     options: readonly (ICommandOptionDescription & { tokenCount: number })[]
 ): ICommandOptionDescription & { tokenCount: number } | undefined {
@@ -194,8 +195,8 @@ export function findOption(
             .find(pattern => token.startsWith(pattern)))
 }
 
-export const optionFormat = /(-|--)[^\s<>]+/
+const optionFormat = /(-|--)[^\s<>]+/
 
 export function isOption(token: string): boolean {
-    return optionFormat.test(token)
+    return token.startsWith("-") || token.startsWith("--")
 }

@@ -6,7 +6,6 @@
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
-    "start-cfc": "electron-forge start -- cfc",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",

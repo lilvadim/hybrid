@@ -3,25 +3,89 @@ import { IShellIntegration } from "../terminal/xterm/shellIntegration";
 import { ITerminal } from "../terminal/xterm/terminalService";
 import { ipcRenderer } from "electron";
 import { ipc } from "../constants/ipc";
-import { ICommandDescription, ICommandOption, isOption, parseString, translateToString } from "./shell/shellCommand";
+import { ICommandDescription, ICommandOption, shellCommand, tokenize } from "./shell/shellCommand";
 import { CommandDescriptionRegistry, ICommandDescriptor } from "./commandDescriptionRegistry";
 import { IHybridTerminalApi } from "./api/api";
+import EventEmitter from "events";
+import { ICommandLineSyncEvent } from "./commandLineSyncEvent";
+import { arraysEq, distinctBy } from "../util/arrays";
+import { isBlank } from "../util/strings";
+
+export interface ICommandContext {
+    readonly descriptor: ICommandDescriptor
+}
 
 export class TerminalController implements IHybridTerminalApi {
 
     private readonly _commandDescriptionRegistry: CommandDescriptionRegistry = new CommandDescriptionRegistry()
     private readonly _xterm: Terminal
     private readonly _shellIntegration: IShellIntegration
+    private readonly _event = new EventEmitter()
+    private _commandContext: ICommandContext | undefined = undefined
 
     constructor(
         private readonly _terminal: ITerminal,
     ) {
         this._xterm = _terminal.xterm
         this._shellIntegration = _terminal.shellIntegration
+
+        this._shellIntegration.onCommandLineChange((oldCommandLine, newCommandLine) => this._handleSync(oldCommandLine, newCommandLine))
+    } 
+
+    setCommandContext(ctx: ICommandContext): void {
+        this._commandContext = ctx
     }
 
+    onCommandLineSync(listener: (event: ICommandLineSyncEvent) => void) {
+        this._event.on('command-line-sync', listener)
+    }
+
+    updateOptions(parameters: { addOptions: ICommandOption[], removeOptions: ICommandOption[] }): boolean {
+        console.debug('TerminalController.updateOptions', parameters)
+        if (!parameters || !this._commandContext) {
+            return false
+        }
+        if (parameters.addOptions.length === 0 && parameters.removeOptions.length === 0) {
+            return true
+        }
+
+        const descriptor = this._commandContext.descriptor
+        const commandDescription = this._commandDescriptionRegistry.getDescription(descriptor)
+        if (!commandDescription) {
+            console.debug('TerminalController.updateOptions', 'command description not found', 'command', descriptor)
+            return false
+        }
+
+        const commandLine = this._shellIntegration.currentCommandProperties()?.command ?? undefined
+        console.debug('TerminalController.updateOptions', { commandLine })
+        if (!commandLine) {
+            return false
+        }
+
+        const command = shellCommand.parsed(commandLine, commandDescription)
+
+        const options = command.options
+        parameters.removeOptions.forEach(option => {
+            const optionIndex = options.findIndex(it => option.option === it.option)
+            delete options[optionIndex]
+        })
+        parameters.addOptions.forEach(option => options.push(option))
+
+        command.options = distinctBy(options, it => JSON.stringify({ 
+            option: it.option,
+            value: it.value ?? null
+        }))
+
+        const updatedCommandLine = shellCommand.commandLine(command)
+        console.debug({ updatedCommandLine })
+
+        this._replaceCurrentCommand(updatedCommandLine)
+
+        return true
+    }
+   
     registerCommand(commandDescription: ICommandDescription): boolean {
-        console.log('TerminalController.registerCommand', { commandDescription })
+        console.debug('TerminalController.registerCommand', { commandDescription })
         if (!commandDescription) {
             console.warn('TerminalController.registerCommand', 'command description is undefined')
             return false
@@ -38,67 +102,6 @@ export class TerminalController implements IHybridTerminalApi {
         return this._commandDescriptionRegistry.getDescription(commandDescriptor) ? true : false
     }
 
-    addOptions(parameters: { commandDescriptor: ICommandDescriptor, options: ICommandOption[] }): boolean {
-        console.log('TerminalController.addOption', parameters)
-        if (!parameters || !parameters.options) {
-            console.warn('TerminalController.addOption', 'option is undefined')
-            return false
-        }
-
-        const commandDescription = this._commandDescriptionRegistry.getDescription(parameters.commandDescriptor)
-        if (!commandDescription) {
-            console.debug('TerminalController.addOption', 'command description not found', 'command', parameters.commandDescriptor)
-            return false
-        }
-
-        const commandLine = this._shellIntegration.currentCommandProperties()?.command ?? undefined
-        if (!commandLine) {
-            console.warn('TerminalController.addOption', { commandLine })
-            return false
-        }
-
-        const command = parseString(commandLine, commandDescription)
-        command.options.push(...parameters.options)
-
-        const updatedCommandLine = translateToString(command)
-
-        this._replaceCurrentCommand(updatedCommandLine)
-
-        return true
-    }
-
-    removeOptions(parameters: { commandDescriptor: ICommandDescriptor, options: ICommandOption[] }): boolean {
-        console.log('TerminalController.removeOption', { parameters })
-        if (!parameters || !parameters.options) {
-            console.warn('TerminalController.registerOption', 'option is undefined')
-            return false
-        }
-
-        const commandDescription = this._commandDescriptionRegistry.getDescription(parameters.commandDescriptor)
-        if (!commandDescription) {
-            console.debug('TerminalController.addOption', 'command description not found', 'command', parameters.commandDescriptor)
-            return false
-        }
-
-        const commandLine = this._shellIntegration.currentCommandProperties()?.command ?? undefined
-        if (!commandLine) {
-            console.warn('TerminalController.addOption', { commandLine })
-            return false
-        }
-
-        const command = parseString(commandLine, commandDescription)
-        for (let optionToRemove of parameters.options) {
-            const optionIndex = command.options.findIndex(value => value.option === optionToRemove.option)
-            delete command.options[optionIndex]
-        }
-
-        const updatedCommandLine = translateToString(command)
-
-        this._replaceCurrentCommand(updatedCommandLine)
-
-        return true
-    }
-
     clearCurrentCommand(): boolean {
         this._replaceCurrentCommand('')
         return true
@@ -113,18 +116,48 @@ export class TerminalController implements IHybridTerminalApi {
             return
         }
 
-        const commandLength = cursor - (start ?? 0)
+        const currentCommandLength = cursor - (start ?? 0)
 
-        for (let i = 0; i < commandLength; i++) {
-            ptyWrite('\b \b')
+        var sequence = ''
+        for (let i = 0; i < currentCommandLength; i++) {
+            sequence += '\b \b'
+        }
+        sequence += command
+    
+        ptyWrite(sequence)
+    }
+
+    private _handleSync(oldCommandLine: string, newCommandLine: string) {
+        const descriptor = this._commandContext?.descriptor
+        if (!descriptor) {
+            console.warn('No command context set!')
+            return
         }
 
-        ptyWrite(command)
+        const commandDescription = this._commandDescriptionRegistry.getDescription(descriptor)
+        if (!commandDescription) {
+            return
+        }
+
+        const oldTokens = oldCommandLine.split(/\s/).filter(it => !isBlank(it))
+        const newTokens = newCommandLine.split(/\s/).filter(it => !isBlank(it))
+        const oldSpaceCount = (oldCommandLine.match(/\s/g) || []).length
+        const newSpaceCount = (newCommandLine.match(/\s/g) || []).length
+        console.debug(oldSpaceCount, newSpaceCount)
+
+        if (oldTokens.length === newTokens.length && oldSpaceCount === newSpaceCount) {
+            return
+        }
+
+        const command = shellCommand.parsed(newCommandLine, commandDescription)
+        const event: ICommandLineSyncEvent = { command }
+        this._event.emit('command-line-sync', event)
+        console.debug('command-line-sync', event)
     }
 
 }
 
 function ptyWrite(data: string) {
-    ipcRenderer.send(ipc.term.terminal, data)
+    ipcRenderer.sendSync(ipc.term.terminal, data)
 }
 

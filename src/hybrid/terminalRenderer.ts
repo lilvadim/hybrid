@@ -11,6 +11,8 @@ import { join } from "path"
 import { EnvironmentUtils } from "../util/environment"
 import { CommandFrameRenderer } from "./commandFrame/renderer/commandFrameRenderer"
 import { CommandFrameLoader } from "./commandFrame/loader/commandFrameLoader"
+import { FitAddon } from "xterm-addon-fit"
+import { setTimeout } from "timers"
 
 export class TerminalRenderer {
 
@@ -23,8 +25,6 @@ export class TerminalRenderer {
     private readonly _commandFrameProvider = new CommandFrameProvider(this._commandFrameProviderConfig, this._commandFramePathResolver)
     private readonly _commandFrameLoader = new CommandFrameLoader()
 
-    constructor() {}
-
     render(xtermContainer: HTMLElement, commandFrameContainer: HTMLElement) {
         const commandFrameRenderer = new CommandFrameRenderer(commandFrameContainer)
         const commandLineProcessor = new CommandLineProcessor(this._commandFrameProvider, commandFrameRenderer, this._commandFrameLoader)
@@ -35,19 +35,27 @@ export class TerminalRenderer {
             throw new Error('no terminal')
         }
         terminal.shellIntegration.onCommandLineChange((oldVal, newVal) => commandLineProcessor.onCommandLineChange(oldVal, newVal))
+
+        const fitAddon = new FitAddon()
+        terminal.xterm.loadAddon(fitAddon)
+
         terminal.xterm.open(xtermContainer)
+        setTimeout(() => fitAddon.fit(), 200)
+
+        window.onresize = (_: UIEvent) => fitAddon.fit()
+        terminal.xterm.onResize((dimensions, _) => ipcRenderer.send(ipc.term.resize, dimensions))
 
         ipcRenderer.on(ipc.term.pty, (_, data) => terminal.xterm.write(data))
         terminal.xterm.onData(data => ipcRenderer.send(ipc.term.terminal, data))  
 
         const controller = new TerminalController(terminal)
 
-        this._initApi(controller, commandFrameRenderer)
+        this._initApi(controller)
     }
 
-    private _initApi(controller: TerminalController, commandFrameRenderer: CommandFrameRenderer) {
-        initApi(controller, commandFrameRenderer)
-        console.log('TerminalRenderer: api initialized')
+    private _initApi(controller: TerminalController) {
+        initApi(controller)
+        console.log('hybrid api initialized')
     }
   
 }

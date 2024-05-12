@@ -4,91 +4,300 @@
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
   </head>
   <body>
-    <script>window.hybrid.terminal.registerCommand({"command":"ls","subcommand":null,"options":[{"optionPatterns":[{"pattern":"--top-level"}],"hasValue":false},{"optionPatterns":[{"pattern":"--top-level"}],"hasValue":false},{"optionPatterns":[{"pattern":"-a"}],"hasValue":false},{"optionPatterns":[{"pattern":"-A"}],"hasValue":false},{"optionPatterns":[{"pattern":"-d"}],"hasValue":false},{"optionPatterns":[{"pattern":"-R"}],"hasValue":false},{"optionPatterns":[{"pattern":"--author"}],"hasValue":false},{"optionPatterns":[{"pattern":"--block-size=<unit>"}],"hasValue":true},{"optionPatterns":[{"pattern":"-i"}],"hasValue":false},{"optionPatterns":[{"pattern":"-s"}],"hasValue":false},{"optionPatterns":[{"pattern":"-k"}],"hasValue":false},{"optionPatterns":[{"pattern":"-H"}],"hasValue":false},{"optionPatterns":[{"pattern":"-L"}],"hasValue":false},{"optionPatterns":[{"pattern":"-C"}],"hasValue":false},{"optionPatterns":[{"pattern":"-m"}],"hasValue":false},{"optionPatterns":[{"pattern":"-S"}],"hasValue":false},{"optionPatterns":[{"pattern":"-t"}],"hasValue":false},{"optionPatterns":[{"pattern":"-f"}],"hasValue":false},{"optionPatterns":[{"pattern":"-r"}],"hasValue":false},{"optionPatterns":[{"pattern":"-w<width>"}],"hasValue":true}]});
-
-function option_1920375797_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"--top-level","index":null,"value":null}]});
+    <script>window.hybrid.terminal.registerCommand({"command":"ls","subcommand":null,"options":[{"optionPatterns":[{"pattern":"-a"}],"hasValue":false},{"optionPatterns":[{"pattern":"-A"}],"hasValue":false},{"optionPatterns":[{"pattern":"-d"}],"hasValue":false},{"optionPatterns":[{"pattern":"-R"}],"hasValue":false},{"optionPatterns":[{"pattern":"--author"}],"hasValue":false},{"optionPatterns":[{"pattern":"--block-size=<unit>"}],"hasValue":true},{"optionPatterns":[{"pattern":"-i"}],"hasValue":false},{"optionPatterns":[{"pattern":"-s"}],"hasValue":false},{"optionPatterns":[{"pattern":"-k"}],"hasValue":false},{"optionPatterns":[{"pattern":"-H"}],"hasValue":false},{"optionPatterns":[{"pattern":"-L"}],"hasValue":false},{"optionPatterns":[{"pattern":"-C"}],"hasValue":false},{"optionPatterns":[{"pattern":"-m"}],"hasValue":false},{"optionPatterns":[{"pattern":"-S"}],"hasValue":false},{"optionPatterns":[{"pattern":"-t"}],"hasValue":false},{"optionPatterns":[{"pattern":"-f"}],"hasValue":false},{"optionPatterns":[{"pattern":"-r"}],"hasValue":false},{"optionPatterns":[{"pattern":"-w <width>"}],"hasValue":true}]});
+var optionToId = {"-a":"option_325153081","-A":"option_57918311","-d":"option_787040724","-R":"option_580441921","--author":"option_1760082859","--block-size=":"option_1730914764","-i":"option_1447955052","-s":"option_1685350567","-k":"option_265218428","-H":"option_1214787473","-L":"option_901752766","-C":"option_489712935","-m":"option_481610448","-S":"option_367803404","-t":"option_861927284","-f":"option_179672397","-r":"option_323494753","-w":"option_1635357010"};
+window.hybrid.terminal.setCommandContext({"descriptor":{"command":"ls","subcommand":null}});
+window.hybrid.terminal.onCommandLineSync((event) => {
+    Object.values(optionToId).forEach((id) => {
+        var elem = document.getElementById(id);
+        if (elem) {
+            elem.checked = false;
+        }
+    });
+    event.command.options.forEach((option) => {
+        var elem = document.getElementById(optionToId[option.option]);
+        if (elem) {
+            elem.checked = true;
+        }
+        var elemValue = document.getElementById(optionToId[option.option] + '_value');
+        if (elemValue) {
+            elemValue.value = option.value;
+        }
+    });
+});
+function option_325153081_handler() {
+    var data = document.getElementById('option_325153081').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-a","index":null,"value":option_325153081_value()}],"removeOptions":[{"option":"-A","index":null,"value":null}]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-a","index":null,"value":option_325153081_value()}]});
+    }
 }
-function option_1516494343_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"--top-level","index":null,"value":null}]});
+function option_325153081_value() {
+    var elem = document.getElementById('option_325153081_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
 }
-function option_1839288191_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-a","index":null,"value":null}]});
-window.hybrid.terminal.removeOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-A","index":null,"value":null}]});
+function option_57918311_handler() {
+    var data = document.getElementById('option_57918311').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-A","index":null,"value":option_57918311_value()}],"removeOptions":[{"option":"-a","index":null,"value":null}]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-A","index":null,"value":option_57918311_value()}]});
+    }
 }
-function option_418681815_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-A","index":null,"value":null}]});
-window.hybrid.terminal.removeOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-a","index":null,"value":null}]});
+function option_57918311_value() {
+    var elem = document.getElementById('option_57918311_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
 }
-function option_1688975639_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-d","index":null,"value":null}]});
+function option_787040724_handler() {
+    var data = document.getElementById('option_787040724').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-d","index":null,"value":option_787040724_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-d","index":null,"value":option_787040724_value()}]});
+    }
 }
-function option_1750690194_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-R","index":null,"value":null}]});
+function option_787040724_value() {
+    var elem = document.getElementById('option_787040724_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
 }
-function option_1188216422_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"--author","index":null,"value":null}]});
+function option_580441921_handler() {
+    var data = document.getElementById('option_580441921').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-R","index":null,"value":option_580441921_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-R","index":null,"value":option_580441921_value()}]});
+    }
 }
-function option_1386009530_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"--block-size","index":null,"value":null}]});
+function option_580441921_value() {
+    var elem = document.getElementById('option_580441921_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
 }
-function option_522632546_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-i","index":null,"value":null}]});
+function option_1760082859_handler() {
+    var data = document.getElementById('option_1760082859').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"--author","index":null,"value":option_1760082859_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"--author","index":null,"value":option_1760082859_value()}]});
+    }
 }
-function option_1430554384_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-s","index":null,"value":null}]});
+function option_1760082859_value() {
+    var elem = document.getElementById('option_1760082859_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
 }
-function option_331574600_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-k","index":null,"value":null}]});
+function option_1730914764_handler() {
+    var data = document.getElementById('option_1730914764').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"--block-size=","index":null,"value":option_1730914764_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"--block-size=","index":null,"value":option_1730914764_value()}]});
+    }
 }
-function option_253658963_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-H","index":null,"value":null}]});
+function option_1730914764_value() {
+    var elem = document.getElementById('option_1730914764_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
 }
-function option_376890625_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-L","index":null,"value":null}]});
+function option_1447955052_handler() {
+    var data = document.getElementById('option_1447955052').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-i","index":null,"value":option_1447955052_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-i","index":null,"value":option_1447955052_value()}]});
+    }
 }
-function option_82216990_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-C","index":null,"value":null}]});
-window.hybrid.terminal.removeOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-m","index":null,"value":null}]});
+function option_1447955052_value() {
+    var elem = document.getElementById('option_1447955052_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
 }
-function option_7788116_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-m","index":null,"value":null}]});
-window.hybrid.terminal.removeOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-C","index":null,"value":null}]});
+function option_1685350567_handler() {
+    var data = document.getElementById('option_1685350567').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-s","index":null,"value":option_1685350567_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-s","index":null,"value":option_1685350567_value()}]});
+    }
 }
-function option_1481793628_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-S","index":null,"value":null}]});
+function option_1685350567_value() {
+    var elem = document.getElementById('option_1685350567_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
 }
-function option_1585666522_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-t","index":null,"value":null}]});
+function option_265218428_handler() {
+    var data = document.getElementById('option_265218428').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-k","index":null,"value":option_265218428_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-k","index":null,"value":option_265218428_value()}]});
+    }
 }
-function option_240182024_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-f","index":null,"value":null},{"option":"-a","index":null,"value":null}]});
-window.hybrid.terminal.removeOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-r","index":null,"value":null}]});
+function option_265218428_value() {
+    var elem = document.getElementById('option_265218428_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
 }
-function option_1201691352_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-r","index":null,"value":null}]});
-window.hybrid.terminal.removeOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-f","index":null,"value":null}]});
+function option_1214787473_handler() {
+    var data = document.getElementById('option_1214787473').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-H","index":null,"value":option_1214787473_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-H","index":null,"value":option_1214787473_value()}]});
+    }
 }
-function option_1383454473_handler() {
-window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcommand":null},"options":[{"option":"-w","index":null,"value":null}]});
+function option_1214787473_value() {
+    var elem = document.getElementById('option_1214787473_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
+}
+function option_901752766_handler() {
+    var data = document.getElementById('option_901752766').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-L","index":null,"value":option_901752766_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-L","index":null,"value":option_901752766_value()}]});
+    }
+}
+function option_901752766_value() {
+    var elem = document.getElementById('option_901752766_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
+}
+function option_489712935_handler() {
+    var data = document.getElementById('option_489712935').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-C","index":null,"value":option_489712935_value()}],"removeOptions":[{"option":"-m","index":null,"value":null}]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-C","index":null,"value":option_489712935_value()}]});
+    }
+}
+function option_489712935_value() {
+    var elem = document.getElementById('option_489712935_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
+}
+function option_481610448_handler() {
+    var data = document.getElementById('option_481610448').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-m","index":null,"value":option_481610448_value()}],"removeOptions":[{"option":"-C","index":null,"value":null}]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-m","index":null,"value":option_481610448_value()}]});
+    }
+}
+function option_481610448_value() {
+    var elem = document.getElementById('option_481610448_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
+}
+function option_367803404_handler() {
+    var data = document.getElementById('option_367803404').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-S","index":null,"value":option_367803404_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-S","index":null,"value":option_367803404_value()}]});
+    }
+}
+function option_367803404_value() {
+    var elem = document.getElementById('option_367803404_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
+}
+function option_861927284_handler() {
+    var data = document.getElementById('option_861927284').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-t","index":null,"value":option_861927284_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-t","index":null,"value":option_861927284_value()}]});
+    }
+}
+function option_861927284_value() {
+    var elem = document.getElementById('option_861927284_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
+}
+function option_179672397_handler() {
+    var data = document.getElementById('option_179672397').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-f","index":null,"value":option_179672397_value()},{"option":"-a","index":null,"value":null}],"removeOptions":[{"option":"-r","index":null,"value":null}]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-f","index":null,"value":option_179672397_value()}]});
+    }
+}
+function option_179672397_value() {
+    var elem = document.getElementById('option_179672397_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
+}
+function option_323494753_handler() {
+    var data = document.getElementById('option_323494753').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-r","index":null,"value":option_323494753_value()}],"removeOptions":[{"option":"-f","index":null,"value":null}]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-r","index":null,"value":option_323494753_value()}]});
+    }
+}
+function option_323494753_value() {
+    var elem = document.getElementById('option_323494753_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
+}
+function option_1635357010_handler() {
+    var data = document.getElementById('option_1635357010').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"option":"-w","index":null,"value":option_1635357010_value()}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"option":"-w","index":null,"value":option_1635357010_value()}]});
+    }
+}
+function option_1635357010_value() {
+    var elem = document.getElementById('option_1635357010_value');
+    if (elem) {
+        return elem.value;
+    }
+    return null;
 }
 </script>
     <div>
       <h2 class="mono-font-bold">ls</h2>
-      <div class="list-group-item">
-        <div class="list-group">
-          <div class="list-group-item">
-            <div class="form-check">
-              <label class="form-check-label mono-font-bold" onclick="option_1920375797_handler();">--top-level<input class="form-check-input" type="checkbox" value=""></label>
-            </div>
-          </div>
-          <div class="list-group-item">
-            <div class="form-check">
-              <label class="form-check-label mono-font-bold" onclick="option_1516494343_handler();">--top-level<input class="form-check-input" type="checkbox" value=""></label>
-            </div>
-          </div>
-        </div>
-      </div>
       <div>
         <h3>Filter</h3>
         <div class="list-group list-group-flush">
@@ -96,13 +305,13 @@ window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcomma
             <div class="list-group">
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" for="option_1839288191">-a<input class="form-check-input" name="option_choice_1393647328" type="radio" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_325153081" onchange="option_325153081_handler()">-a<input class="form-check-input" id="option_325153081" name="option_choice_722334906" type="radio" value=""></label>
                 </div>
                 Show hidden files
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" for="option_418681815">-A<input class="form-check-input" name="option_choice_1393647328" type="radio" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_57918311" onchange="option_57918311_handler()">-A<input class="form-check-input" id="option_57918311" name="option_choice_722334906" type="radio" value=""></label>
                 </div>
                 Do not ignore entries starting with '.', except '.' and '..'
               </div>
@@ -112,13 +321,13 @@ window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcomma
             <div class="list-group">
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_1688975639_handler();">-d<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_787040724" onchange="option_787040724_handler()">-d<input class="form-check-input" id="option_787040724" name="option_toggles_1868854372" type="checkbox" value=""></label>
                 </div>
                 List directory entries instead of directory contents. Do not dereference symbolic links
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_1750690194_handler();">-R<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_580441921" onchange="option_580441921_handler()">-R<input class="form-check-input" id="option_580441921" name="option_toggles_1868854372" type="checkbox" value=""></label>
                 </div>
                 Recurse into subdirectories
               </div>
@@ -133,42 +342,48 @@ window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcomma
             <div class="list-group">
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_1188216422_handler();">--author<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_1760082859" onchange="option_1760082859_handler()">--author<input class="form-check-input" id="option_1760082859" name="option_toggles_307252553" type="checkbox" value=""></label>
                 </div>
+                With -l, print the author of each file
               </div>
               <div class="list-group-item">
-                <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_1386009530_handler();">--block-size=&lt;unit&gt;<input class="form-check-input" type="checkbox" value=""></label>
+                <div class="input-group">
+                  <div class="input-group-text">
+                    <div class="form-check">
+                      <label class="form-check-label mono-font-bold" onchange="option_1730914764_handler()">--block-size=<input class="form-check-input" id="option_1730914764" name="option_toggles_307252553" type="checkbox" value=""></label>
+                    </div>
+                  </div>
+                  <select class="form-select" id="option_1730914764_value"><option selected></option><option value="K">K</option><option value="M">M</option><option value="G">G</option><option value="T">T</option><option value="KB">KB</option><option value="MB">MB</option><option value="GB">GB</option><option value="TB">TB</option></select>
                 </div>
                 Units to use
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_522632546_handler();">-i<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_1447955052" onchange="option_1447955052_handler()">-i<input class="form-check-input" id="option_1447955052" name="option_toggles_307252553" type="checkbox" value=""></label>
                 </div>
                 For each file, write the file's file serial number
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_1430554384_handler();">-s<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_1685350567" onchange="option_1685350567_handler()">-s<input class="form-check-input" id="option_1685350567" name="option_toggles_307252553" type="checkbox" value=""></label>
                 </div>
                 Indicate the total number of file system blocks consumed by each file displayed
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_331574600_handler();">-k<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_265218428" onchange="option_265218428_handler()">-k<input class="form-check-input" id="option_265218428" name="option_toggles_307252553" type="checkbox" value=""></label>
                 </div>
                 Assume block size of 1024 bytes
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_253658963_handler();">-H<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_1214787473" onchange="option_1214787473_handler()">-H<input class="form-check-input" id="option_1214787473" name="option_toggles_307252553" type="checkbox" value=""></label>
                 </div>
                 Evaluate the file information and file type for symbolic links specified on the command line to be those of the file referenced by the link, and not the link itself; however, ls shall write the name of the link itself and not the file referenced by the link 
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_376890625_handler();">-L<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_901752766" onchange="option_901752766_handler()">-L<input class="form-check-input" id="option_901752766" name="option_toggles_307252553" type="checkbox" value=""></label>
                 </div>
               </div>
             </div>
@@ -177,13 +392,13 @@ window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcomma
             <div class="list-group">
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" for="option_82216990">-C<input class="form-check-input" name="option_choice_1662314855" type="radio" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_489712935" onchange="option_489712935_handler()">-C<input class="form-check-input" id="option_489712935" name="option_choice_1728158149" type="radio" value=""></label>
                 </div>
                 Multicolumn output (short entries)
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" for="option_7788116">-m<input class="form-check-input" name="option_choice_1662314855" type="radio" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_481610448" onchange="option_481610448_handler()">-m<input class="form-check-input" id="option_481610448" name="option_choice_1728158149" type="radio" value=""></label>
                 </div>
                 Comma-separated list of short entries
               </div>
@@ -198,31 +413,36 @@ window.hybrid.terminal.addOptions({"commandDescriptor":{"command":"ls","subcomma
             <div class="list-group">
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_1481793628_handler();">-S<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_367803404" onchange="option_367803404_handler()">-S<input class="form-check-input" id="option_367803404" name="option_toggles_1987166253" type="checkbox" value=""></label>
                 </div>
                 Sort with the primary key being file size (in decreasing order) and the secondary key being filename in the collating sequence (in increasing order)
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_1585666522_handler();">-t<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_861927284" onchange="option_861927284_handler()">-t<input class="form-check-input" id="option_861927284" name="option_toggles_1987166253" type="checkbox" value=""></label>
                 </div>
                 Sort with the primary key being time modified (most recently modified first) and the secondary key being filename in the collating sequence
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_240182024_handler();">-f<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_179672397" onchange="option_179672397_handler()">-f<input class="form-check-input" id="option_179672397" name="option_toggles_1987166253" type="checkbox" value=""></label>
                 </div>
                 List the entries in directory operands in the order they appear in the directory. Filter option -a will be turned on automatically. Sort option -r will be ignored
               </div>
               <div class="list-group-item">
                 <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_1201691352_handler();">-r<input class="form-check-input" type="checkbox" value=""></label>
+                  <label class="form-check-label mono-font-bold" for="option_323494753" onchange="option_323494753_handler()">-r<input class="form-check-input" id="option_323494753" name="option_toggles_1987166253" type="checkbox" value=""></label>
                 </div>
                 Reverse the order of the sort to get reverse collating sequence oldest first, or smallest file size first depending on the other options given
               </div>
               <div class="list-group-item">
-                <div class="form-check">
-                  <label class="form-check-label mono-font-bold" onclick="option_1383454473_handler();">-w&lt;width&gt;<input class="form-check-input" type="checkbox" value=""></label>
+                <div class="input-group">
+                  <div class="input-group-text">
+                    <div class="form-check">
+                      <label class="form-check-label mono-font-bold" onchange="option_1635357010_handler()">-w<input class="form-check-input" id="option_1635357010" name="option_toggles_1987166253" type="checkbox" value=""></label>
+                    </div>
+                  </div>
+                  <input class="form-control" id="option_1635357010_value" placeholder="width" type="text">
                 </div>
                 Set output width to the number of columns. 0 means no limit
               </div>

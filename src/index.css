@@ -8,8 +8,22 @@
   font-weight: bold;
 }
 
-.xterm {
+#xterm {
+  max-height: 100vh;
+  height: 100vh;
+  background-color: black;
   * {
-    font-family: 'Roboto Mono', Roboto Mono, monospace;
+    font-family: 'Roboto Mono', Roboto Mono, monospace
   }
+}
+
+#hybrid-root {
+  height: 100vh;
+  overflow: hidden;
+}
+
+#command-frame-container {
+  max-height: 100vh;
+  height: 100vh;
+  overflow-y: auto;
 }

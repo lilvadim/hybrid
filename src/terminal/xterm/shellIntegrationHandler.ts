@@ -1,8 +1,7 @@
 import { IDecorationOptions, IMarker, Terminal } from "@xterm/xterm";
 import { ICommand, ICommandProperties, IShellIntegration } from "./shellIntegration";
+import { setTimeout } from "timers";
 import EventEmitter from "events";
-
-const ENTER_SEQ = '\x0d'
 
 export interface IShellIntegrationHandler {
     onPromptStart(): void
@@ -68,7 +67,7 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
     constructor(
         private readonly _terminal: Terminal,
     ) {
-        _terminal.onWriteParsed(() => this._onWriteParsed())
+        _terminal.onWriteParsed(() => setTimeout(() => this._onWriteParsed(), 50))
     }
 
     onCommandLineChange(listener: (oldCommandLine: string, newCommandLine: string) => void): void {
@@ -91,24 +90,24 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         if (!this._currentCommand) {
             return
         }
-        console.log('onCommandFinished.cursorY', this._terminal.buffer.active.cursorY)
+        console.debug('onCommandFinished.cursorY', this._terminal.buffer.active.cursorY)
         const marker = this._terminal.registerMarker(0)
         this._currentCommand.finishedMarker = marker
         this._currentCommand.exitCode = exitCode
         this._commands.push(new Command(this._terminal, this._currentCommand))
 
-        console.log('onCommandFinished.currentCommand', this._currentCommand)
+        console.debug('onCommandFinished.currentCommand', this._currentCommand)
     }
 
     onPromptStart(): void {
-        console.log('onPromptStart.cursorY', this._terminal.buffer.active.cursorY)
+        console.debug('onPromptStart.cursorY', this._terminal.buffer.active.cursorY)
         const marker = this._terminal.registerMarker(0)
-        console.log('onPromptStart.lineY', marker.line)
+        console.debug('onPromptStart.lineY', marker.line)
         this._currentCommand = {
             promptStartMarker: marker,
             command: ""
         }
-        console.log('onPromptStart.currentCommand', this._currentCommand)
+        console.debug('onPromptStart.currentCommand', this._currentCommand)
     }
 
     onCommandStart(): void {
@@ -121,7 +120,7 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
             this._terminal.registerDecoration(promptDecorationOptions(this._currentCommand.promptStartMarker, cursorX)) 
         }
         this._currentCommand.startX = cursorX
-        console.log('onCommandStart.currentCommand', this._currentCommand)
+        console.debug('onCommandStart.currentCommand', this._currentCommand)
     }
 
     onCommandExecuted(): void {
@@ -129,7 +128,7 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
             return
         }
         this._currentCommand.executedMarker = this._terminal.registerMarker(0)
-        console.log('onCommandExecuted')
+        console.debug('onCommandExecuted')
     }
 
     private _onWriteParsed() {
@@ -145,23 +144,22 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
             console.warn('onWriteParsed', 'Line not found', lineY)
             return
         }
+        const startX = this._currentCommand.startX
         const commandText = line.translateToString(
             true, 
             this._currentCommand.startX
         )
+        const cursorX = this._terminal.buffer.normal.cursorX 
+
+        const trimmedCommandText = commandText.trimEnd()
+        const trimmedToCursorCommandText = commandText.substring(0, cursorX - startX)
+        
+        const commandNewValue = trimmedCommandText.length > trimmedToCursorCommandText.length ? trimmedCommandText : trimmedToCursorCommandText
         const commandOldValue = this._currentCommand.command
-        this._currentCommand.command = commandText.trimRight()
-        this._event.emit('command-line-change', commandOldValue, this._currentCommand.command)
-        console.log('onWriteParsed.currentCommand', this._currentCommand)
+        this._currentCommand.command = commandNewValue
+
+        this._event.emit('command-line-change', commandOldValue, commandNewValue)
+        console.debug('onWriteParsed.currentCommand', this._currentCommand)
     }
-
-    // private _onData(data: string) {
-    //     if (data === ENTER_SEQ) {
-    //         this._onEnter()
-    //     }
-    // }
-
-    // private _onEnter() {
-    // }
 
 }

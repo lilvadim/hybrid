@@ -1,6 +1,9 @@
 import { CommandFrameRenderer } from "./commandFrame/renderer/commandFrameRenderer"
 import { CommandFrameProvider } from "./commandFrame/provider/commandFrameProvider"
 import { CommandFrameLoader } from "./commandFrame/loader/commandFrameLoader"
+import { tokenize } from "./shell/shellCommand"
+import { isBlank } from "../util/strings"
+import { arraysEq } from "../util/arrays"
 
 export class CommandLineProcessor {
 
@@ -11,27 +14,30 @@ export class CommandLineProcessor {
     ) {}
 
     onCommandLineChange(commandLineOldValue: string, commandLineNewValue: string) {
-        const executable = getCommand(commandLineNewValue)
-        if (!executable || executable === '') {
+        
+        const tokens = tokenize(commandLineNewValue)
+        const executable = tokens[0]
+        
+        if (!executable || isBlank(executable)) {
             this._commandFrameRenderer.renderEmpty()
             return
         }
-        const previousExecutable = getCommand(commandLineOldValue)
-        if (executable == previousExecutable) {
-            return
+
+        const oldTokens = tokenize(commandLineOldValue)
+        const oldExecutable = oldTokens[0]
+
+        if (executable == oldExecutable || arraysEq(tokens, oldTokens)) {
+            return 
         }
+
         const commandFrames = this._commandFrameService.getCommandFrames(executable)
         this._commandFrameRenderer.render(commandFrames)
         for (let frame of commandFrames) {
-            if (frame.isLoaded) {
-                continue
+            if (!frame.isLoaded) {
+                this._commandFrameLoader.load(frame)
             } 
-            this._commandFrameLoader.load(frame)
         }
     }
 
 }
 
-function getCommand(commandLine: string): string | undefined {
-    return commandLine.split(/\s/)[0]?.trim()
-}

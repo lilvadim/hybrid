@@ -124,10 +124,10 @@ export class ShellIntegrationAddon implements ITerminalAddon {
 
     activate(terminal: Terminal) {
         terminal.parser.registerOscHandler(ShellIntegrationOscPs.VSCode, data => {
-			console.log('ShellIntegrationAddon.Osc.VSCode.data', data)
+			console.debug('ShellIntegrationAddon.Osc.VSCode.data', data)
 			return this.handleVsCodeSequence(data)
 		})
-		console.log('ShellIntegrationAddon activated')
+		console.debug('ShellIntegrationAddon activated')
     }
     
     dispose() {}

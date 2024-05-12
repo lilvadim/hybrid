@@ -1,6 +1,6 @@
 import { Terminal } from "@xterm/xterm";
 import { ShellIntegrationAddon } from "./shellIntegrationAddon";
-import {  CommandProcessorType, IShellIntegrationHandler, ShellIntegrationHandler } from "./shellIntegrationHandler";
+import { ShellIntegrationHandler } from "./shellIntegrationHandler";
 import { IShellIntegration } from "./shellIntegration";
 
 export interface ITerminal {

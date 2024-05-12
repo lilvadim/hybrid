@@ -1,7 +1,7 @@
-import { ICommandDescription, IShellCommand, isOption, parseString, tokenize, translateToString } from "./shellCommand"
+import { ICommandDescription, IShellCommand, isOption, shellCommand, tokenize } from "./shellCommand"
 
-test('translateToString ls', () => {
-    const shellCommand: IShellCommand = {
+test('parse ls', () => {
+    const shellCommandLs: IShellCommand = {
         executable: {
             executable: 'ls'
         },
@@ -16,11 +16,11 @@ test('translateToString ls', () => {
         invalidTokens: []
     }
 
-    expect(translateToString(shellCommand)).toEqual('ls -l "Dir Name"')
+    expect(shellCommand.commandLine(shellCommandLs)).toEqual('ls -l "Dir Name"')
 })
 
-test('translateToString git commit', () => {
-    const shellCommand: IShellCommand = {
+test('toString git commit', () => {
+    const shellCommandGit: IShellCommand = {
         executable: {
             executable: 'git',
             subcommand: 'commit'
@@ -29,13 +29,12 @@ test('translateToString git commit', () => {
             index: 2,
             option: '-m',
             value: 'Commit Message',
-            spaceSep: true
         }],
         args: [],
         invalidTokens: []
     }
 
-    expect(translateToString(shellCommand)).toEqual('git commit -m "Commit Message"')
+    expect(shellCommand.commandLine(shellCommandGit)).toEqual('git commit -m "Commit Message"')
 })
 
 const lsDesc: ICommandDescription = {
@@ -43,11 +42,15 @@ const lsDesc: ICommandDescription = {
     options: [{
         optionPatterns: [{ pattern: '-l' }],
         hasValue: false
+    },
+    {
+        optionPatterns: [{ pattern: '-t' }],
+        hasValue: false
     }],
 }
 
-test('parseString ls', () => {
-    const commandLine = 'ls -l "Dir Name"'
+test('parse ls 2 options', () => {
+    const commandLineLs = 'ls -t -l "Dir Name"'
     const expected: IShellCommand = {
         executable: {
             executable: 'ls',
@@ -55,21 +58,25 @@ test('parseString ls', () => {
         },
         options: [{
             index: 1,
+            option: '-t'
+        },
+        {
+            index: 2,
             option: '-l'
         }],
         args: [{
-            index: 2,
+            index: 3,
             value: 'Dir Name'
         }],
         invalidTokens: []
     }
 
-    const actual = parseString(commandLine, lsDesc)
+    const actual = shellCommand.parsed(commandLineLs, lsDesc)
 
     expect(actual).toEqual(expected)
 })
 
-test('parseString ls invalid', () => {
+test('parse ls invalid', () => {
     const commandLine = 'ls -m -l "Dir Name"'
     const expected: IShellCommand = {
         executable: {
@@ -90,12 +97,39 @@ test('parseString ls invalid', () => {
         }]
     }
 
-    const actual = parseString(commandLine, lsDesc)
-    
+    const actual = shellCommand.parsed(commandLine, lsDesc)
+
     expect(actual).toEqual(expected)
 })
 
-test('translateToString ls invalid', () => {
+test('parse ls other', () => {
+    const commandLine = 'ls -m -l -t'
+    const expected: IShellCommand = {
+        executable: {
+            executable: 'ls',
+            subcommand: undefined
+        },
+        options: [{
+            index: 2,
+            option: '-l'
+        },
+        {
+            index: 3,
+            option: '-t'
+        }],
+        args: [],
+        invalidTokens: [{
+            index: 1,
+            value: "-m"
+        }]
+    }
+
+    const actual = shellCommand.parsed(commandLine, lsDesc)
+
+    expect(actual).toEqual(expected)
+})
+
+test('toString ls invalid', () => {
     const command: IShellCommand = {
         executable: {
             executable: 'ls',
@@ -115,8 +149,37 @@ test('translateToString ls invalid', () => {
         }]
     }
     const expected = 'ls -l "Dir Name" -m'
-    const actual = translateToString(command)
+    const actual = shellCommand.commandLine(command)
 
+    expect(actual).toEqual(expected)
+})
+
+test('toString ls not indexed options', () => {
+    const command: IShellCommand = {
+        executable: {
+            executable: 'ls',
+            subcommand: undefined
+        },
+        options: [{
+            index: 2,
+            option: '-l'
+        },
+        {
+            index: undefined,
+            option: '-t'
+        }],
+        args: [{
+            index: 3,
+            value: 'Dir Name'
+        }],
+        invalidTokens: [{
+            index: 1,
+            value: "-m"
+        }]
+    }
+
+    const expected = 'ls -l -t "Dir Name" -m'
+    const actual = shellCommand.commandLine(command)
     expect(actual).toEqual(expected)
 })
 
@@ -129,7 +192,7 @@ const gitCommitDesc: ICommandDescription = {
     }]
 }
 
-test('parseString git commit', () => {
+test('parse git commit', () => {
     const testString = 'git commit -m "Commit Message"'
     const expected: IShellCommand = {
         executable: {
@@ -140,15 +203,35 @@ test('parseString git commit', () => {
             index: 2,
             option: '-m',
             value: 'Commit Message',
-            spaceSep: true
         }],
         args: [],
         invalidTokens: []
     }
 
-    const actual = parseString(testString, gitCommitDesc)
+    const actual = shellCommand.parsed(testString, gitCommitDesc)
 
-    expect(expected).toEqual(actual)
+    expect(actual).toEqual(expected)
+})
+
+test('parse git commit -m without whitespace', () => {
+    const testString = 'git commit -m"Commit Message"'
+    const expected: IShellCommand = {
+        executable: {
+            executable: 'git',
+            subcommand: 'commit'
+        },
+        options: [{
+            index: 2,
+            option: '-m',
+            value: 'Commit Message',
+        }],
+        args: [],
+        invalidTokens: []
+    }
+
+    const actual = shellCommand.parsed(testString, gitCommitDesc)
+
+    expect(actual).toEqual(expected)
 })
 
 test('tokenize', () => {
@@ -161,7 +244,7 @@ test('tokenize', () => {
 
 test('tokenize unclosed quotes', () => {
     const testString = 'ls -l "Dir Name'
-    const expected = ['ls', '-l', '"Dir', 'Name']
+    const expected = ['ls', '-l', 'Dir Name']
     const actual = tokenize(testString)
 
     expect(actual).toEqual(expected)
