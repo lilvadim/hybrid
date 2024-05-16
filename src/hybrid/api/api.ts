@@ -1,7 +1,8 @@
-import { ICommandDescriptor } from "../commandDescriptionRegistry";
+import { ICommandDescriptor } from "../commandDescription/commandDescriptor";
 import { ICommandLineSyncEvent } from "../commandLineSyncEvent";
-import { ICommandDescription, ICommandOption } from "../shell/shellCommand";
-import { ICommandContext } from "../terminalController";
+import { ICommandOption } from "../shellCommand/shellCommand";
+import { ICommandDescription } from "../commandDescription/commandDescription";
+import { ICommandContext } from "./commandContext";
 
 export interface IHybridTerminalApi {
     updateOptions(

@@ -1,4 +1,4 @@
-import { IShellCommand } from "./shell/shellCommand"
+import { IShellCommand } from "./shellCommand/shellCommand"
 
 export interface ICommandLineSyncEvent {
     readonly command: Readonly<IShellCommand>

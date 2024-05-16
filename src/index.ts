@@ -90,6 +90,7 @@ app.on('browser-window-created', (_, window) => {
     window.webContents.ipc.on(ipc.term.resize, (event, { rows, cols }) => {
       ptyProcess.resize(cols, rows)
       window.title = `HybridTerm - ${cols}x${rows}`
+      event.returnValue = true
     })
 
     window.on('close', () => ptyProcess.kill(signals.SIGQUIT))

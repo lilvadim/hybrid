@@ -1,9 +1,5 @@
-import { ICommandDescription } from "./shell/shellCommand";
-
-export interface ICommandDescriptor {
-    command: string 
-    subcommand?: string
-}
+import { ICommandDescriptor } from "./commandDescriptor";
+import { ICommandDescription } from "./commandDescription";
 
 export class CommandDescriptionRegistry {
 

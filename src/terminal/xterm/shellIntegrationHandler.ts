@@ -56,18 +56,22 @@ function promptDecorationOptions(marker: IMarker, promptEndX: number): IDecorati
     }
 }
 
-export type CommandProcessorType = (commandOldValue: string, commandNewValue: string) => any
-
 export class ShellIntegrationHandler implements IShellIntegrationHandler, IShellIntegration {
 
     private readonly _commands: Command[] = []
     private _currentCommand: ICommandProperties | undefined = undefined
     private readonly _event = new EventEmitter()
+    private isInput = false
 
     constructor(
         private readonly _terminal: Terminal,
     ) {
-        _terminal.onWriteParsed(() => setTimeout(() => this._onWriteParsed(), 50))
+        _terminal.onData(() => setTimeout(() => this._onTerminalChange(), 50))
+        // _terminal.onWriteParsed(() => setTimeout(() => this._onWriteParsed(), 50))
+    }
+
+    onCommandsUpdated(listener: () => void): void {
+        this._event.on('commands-updated', listener)
     }
 
     onCommandLineChange(listener: (oldCommandLine: string, newCommandLine: string) => void): void {
@@ -95,7 +99,7 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         this._currentCommand.finishedMarker = marker
         this._currentCommand.exitCode = exitCode
         this._commands.push(new Command(this._terminal, this._currentCommand))
-
+        this._event.emit('commands-updated')
         console.debug('onCommandFinished.currentCommand', this._currentCommand)
     }
 
@@ -131,7 +135,7 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         console.debug('onCommandExecuted')
     }
 
-    private _onWriteParsed() {
+    private _onTerminalChange() {
         if (!this._currentCommand || !this._currentCommand.startX) {
             return
         }

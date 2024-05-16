@@ -1,26 +1,25 @@
 import { Terminal } from "@xterm/xterm";
-import { IShellIntegration } from "../terminal/xterm/shellIntegration";
-import { ITerminal } from "../terminal/xterm/terminalService";
+import { IShellIntegration } from "../../terminal/xterm/shellIntegration";
+import { ITerminal } from "../../terminal/xterm/terminalService";
 import { ipcRenderer } from "electron";
-import { ipc } from "../constants/ipc";
-import { ICommandDescription, ICommandOption, shellCommand, tokenize } from "./shell/shellCommand";
-import { CommandDescriptionRegistry, ICommandDescriptor } from "./commandDescriptionRegistry";
-import { IHybridTerminalApi } from "./api/api";
+import { ipc } from "../../constants/ipc";
+import { ICommandOption, shellCommand } from "../shellCommand/shellCommand";
+import { ICommandDescription } from "../commandDescription/commandDescription";
+import { CommandDescriptionRegistry } from "../commandDescription/commandDescriptionRegistry";
+import { ICommandDescriptor } from "../commandDescription/commandDescriptor";
+import { IHybridTerminalApi } from "../api/api";
 import EventEmitter from "events";
-import { ICommandLineSyncEvent } from "./commandLineSyncEvent";
-import { arraysEq, distinctBy } from "../util/arrays";
-import { isBlank } from "../util/strings";
-
-export interface ICommandContext {
-    readonly descriptor: ICommandDescriptor
-}
+import { ICommandLineSyncEvent } from "../commandLineSyncEvent";
+import { distinctBy } from "../../util/arrays";
+import { count, isBlank } from "../../util/strings";
+import { ICommandContext } from "../api/commandContext";
 
 export class TerminalController implements IHybridTerminalApi {
 
     private readonly _commandDescriptionRegistry: CommandDescriptionRegistry = new CommandDescriptionRegistry()
     private readonly _xterm: Terminal
     private readonly _shellIntegration: IShellIntegration
-    private readonly _event = new EventEmitter()
+    private readonly _event = new EventEmitter().setMaxListeners(0)
     private _commandContext: ICommandContext | undefined = undefined
 
     constructor(
@@ -29,7 +28,9 @@ export class TerminalController implements IHybridTerminalApi {
         this._xterm = _terminal.xterm
         this._shellIntegration = _terminal.shellIntegration
 
-        this._shellIntegration.onCommandLineChange((oldCommandLine, newCommandLine) => this._handleSync(oldCommandLine, newCommandLine))
+        this._shellIntegration.onCommandLineChange(
+            (oldCommandLine, newCommandLine) => this._handleSync(oldCommandLine, newCommandLine, true)
+        )
     } 
 
     setCommandContext(ctx: ICommandContext): void {
@@ -64,16 +65,21 @@ export class TerminalController implements IHybridTerminalApi {
 
         const command = shellCommand.parsed(commandLine, commandDescription)
 
-        const options = command.options
+        const options = [...command.options]
+        console.debug(JSON.stringify(command))
+
         parameters.removeOptions.forEach(option => {
-            const optionIndex = options.findIndex(it => option.option === it.option)
-            delete options[optionIndex]
+            const optionIndex = options.findIndex(it => option.option === it?.option)
+            if (optionIndex >= 0) {
+                delete options[optionIndex]
+            }
         })
         parameters.addOptions.forEach(option => options.push(option))
 
+        console.debug('updated options:', JSON.stringify(options))
         command.options = distinctBy(options, it => JSON.stringify({ 
             option: it.option,
-            value: it.value ?? null
+            value: it.value ?? ""
         }))
 
         const updatedCommandLine = shellCommand.commandLine(command)
@@ -81,6 +87,7 @@ export class TerminalController implements IHybridTerminalApi {
 
         this._replaceCurrentCommand(updatedCommandLine)
 
+        this._handleSync(commandLine, updatedCommandLine, false)
         return true
     }
    
@@ -127,7 +134,7 @@ export class TerminalController implements IHybridTerminalApi {
         ptyWrite(sequence)
     }
 
-    private _handleSync(oldCommandLine: string, newCommandLine: string) {
+    private _handleSync(oldCommandLine: string, newCommandLine: string, onSpace: boolean) {
         const descriptor = this._commandContext?.descriptor
         if (!descriptor) {
             console.warn('No command context set!')
@@ -141,11 +148,10 @@ export class TerminalController implements IHybridTerminalApi {
 
         const oldTokens = oldCommandLine.split(/\s/).filter(it => !isBlank(it))
         const newTokens = newCommandLine.split(/\s/).filter(it => !isBlank(it))
-        const oldSpaceCount = (oldCommandLine.match(/\s/g) || []).length
-        const newSpaceCount = (newCommandLine.match(/\s/g) || []).length
-        console.debug(oldSpaceCount, newSpaceCount)
+        const oldSpaceCount = count(oldCommandLine, /\s/g)
+        const newSpaceCount = count(newCommandLine, /\s/g)
 
-        if (oldTokens.length === newTokens.length && oldSpaceCount === newSpaceCount) {
+        if (onSpace && oldTokens.length === newTokens.length && oldSpaceCount === newSpaceCount) {
             return
         }
 

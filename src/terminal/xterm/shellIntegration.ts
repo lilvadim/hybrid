@@ -5,6 +5,7 @@ export interface IShellIntegration {
     currentCommandProperties(): Readonly<ICommandProperties> | undefined
     currentCursorXPosition(): number | undefined
     onCommandLineChange(listener: (oldCommandLine: string, newCommandLine: string) => void): void
+    onCommandsUpdated(listener: () => void): void
 }
 
 export interface ICommandProperties {

@@ -1,4 +1,5 @@
-import { ICommandDescription, IShellCommand, isOption, shellCommand, tokenize } from "./shellCommand"
+import { IShellCommand, isOption, shellCommand, tokenize } from "./shellCommand"
+import { ICommandDescription } from "../commandDescription/commandDescription"
 
 test('parse ls', () => {
     const shellCommandLs: IShellCommand = {

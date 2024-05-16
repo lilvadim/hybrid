@@ -3,7 +3,7 @@ import { ipc } from "../constants/ipc"
 import { TerminalService } from "../terminal/xterm/terminalService"
 import { CommandFrameProvider } from "./commandFrame/provider/commandFrameProvider"
 import { CommandLineProcessor } from "./commandLineProcessor"
-import { TerminalController } from "./terminalController"
+import { TerminalController } from "./terminalController/terminalController"
 import { initApi } from "./api/api"
 import { CommandFramePathResolver } from "./commandFrame/provider/commandFramePathResolver"
 import { ICommandFrameProviderConfig } from "./commandFrame/provider/commandFrameProviderConfig"
@@ -13,6 +13,7 @@ import { CommandFrameRenderer } from "./commandFrame/renderer/commandFrameRender
 import { CommandFrameLoader } from "./commandFrame/loader/commandFrameLoader"
 import { FitAddon } from "xterm-addon-fit"
 import { setTimeout } from "timers"
+import Split from "split.js"
 
 export class TerminalRenderer {
 
@@ -43,12 +44,18 @@ export class TerminalRenderer {
         setTimeout(() => fitAddon.fit(), 200)
 
         window.onresize = (_: UIEvent) => fitAddon.fit()
-        terminal.xterm.onResize((dimensions, _) => ipcRenderer.send(ipc.term.resize, dimensions))
+        commandFrameContainer.onresize = () => fitAddon.fit()
+        terminal.xterm.onResize((dimensions, _) => ipcRenderer.sendSync(ipc.term.resize, dimensions))
 
         ipcRenderer.on(ipc.term.pty, (_, data) => terminal.xterm.write(data))
-        terminal.xterm.onData(data => ipcRenderer.send(ipc.term.terminal, data))  
+        terminal.xterm.onData(data => ipcRenderer.send(ipc.term.terminal, data))
 
         const controller = new TerminalController(terminal)
+
+        Split([commandFrameContainer, xtermContainer], {
+            gutterSize: 7,
+            onDrag: (_) => fitAddon.fit()
+        })
 
         this._initApi(controller)
     }
@@ -57,5 +64,5 @@ export class TerminalRenderer {
         initApi(controller)
         console.log('hybrid api initialized')
     }
-  
+
 }

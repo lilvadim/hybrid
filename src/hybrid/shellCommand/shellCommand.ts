@@ -1,22 +1,5 @@
-import { deprecate } from "util"
-import { isQuote, isWhitespace, isBlank } from "../../util/strings"
-
-export interface ICommandDescription {
-    command: string,
-    subcommand?: string,
-    options: ICommandOptionDescription[]
-}
-
-export interface ICommandOptionDescription {
-    optionPatterns: IOptionPattern[],
-    hasValue: boolean
-}
-
-export interface IOptionPattern {
-    pattern: string
-}
-
-export const optionArgRegexp = /<[^\s<>]*>/
+import { isBlank } from "../../util/strings"
+import { ICommandDescription, IOptionPattern, ICommandOptionDescription } from "../commandDescription/commandDescription"
 
 export interface IShellCommand {
     executable: ICommandExecutable,
@@ -74,7 +57,7 @@ function translateToCommandLine(shellCommand: IShellCommand): string {
 
     for (let argument of shellCommand.args.sort(byIndex)) {
         const argumentTokensCount = argument.value.split(/\s/).length
-        const quotes = argumentTokensCount > 0 ? '"' : ''
+        const quotes = argumentTokensCount > 1 ? '"' : ''
         buffer += quotes + argument.value + quotes + ' '
     }
 
@@ -85,6 +68,7 @@ function translateToCommandLine(shellCommand: IShellCommand): string {
     return buffer.trimRight()
 }
 
+export const optionArgRegexp = /<[^\s<>]*>/
 export function removeArgs(optionPattern: IOptionPattern): string {
     return optionPattern.pattern.replace(optionArgRegexp, '')
 }
@@ -157,7 +141,7 @@ function parseShellCommand(commandLine: string, commandDescription: ICommandDesc
             }
             options.push(option)
         } else {
-            const argument: ICommandArgument = {
+            const argument: IToken = {
                 index,
                 value: token
             }
@@ -199,4 +183,12 @@ const optionFormat = /(-|--)[^\s<>]+/
 
 export function isOption(token: string): boolean {
     return token.startsWith("-") || token.startsWith("--")
+}
+
+export function isPipe(token: string): boolean {
+    return token === '|'
+}
+
+export function isStreamRedirect(token: string): boolean {
+    return /<|>/.test(token)
 }
