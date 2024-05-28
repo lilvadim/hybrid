@@ -24,7 +24,7 @@ simple_command
       { return { command, precedingArgs: commandArgs, options } } 
       
 env_var_name = [a-zA-Z_][a-zA-Z0-9_]* { return text() }
-command_name = [a-zA-Z_][a-zA-Z0-9_.\-]* { return text() }
+command_name = [a-zA-Z][a-zA-Z0-9_\-]* { return text() }
 
 option_key_value 
     = option:option 
