@@ -59,7 +59,6 @@ export class TerminalController implements IHybridTerminalApi {
         const updatedCommandLine = CommandLineSerializer.getCached().serializeCommandLine(newCommandLine)
 
         this._overwriteCommandLine(updatedCommandLine)
-        this._handleSync(currentCommandLine, updatedCommandLine, parsed, newCommandLine, false)
 
         return true
     }
@@ -81,7 +80,6 @@ export class TerminalController implements IHybridTerminalApi {
         const updatedCommandLine = CommandLineSerializer.getCached().serializeCommandLine(newCommandLine)
 
         this._overwriteCommandLine(updatedCommandLine)
-        this._handleSync(currentCommandLine, updatedCommandLine, parsed, newCommandLine, false)
 
         return true
     }
@@ -147,9 +145,9 @@ export class TerminalController implements IHybridTerminalApi {
         const currentCommandLength = currentCommand.length
         const cursorOffset = Math.max(currentCommandLength - (cursor - start), 0)
 
-        var backspace = '\b \b' 
+        var backspace = '\b \b'
         var cursorRight = '\u001b[1C'
-        var sequence = cursorRight.repeat(cursorOffset) + backspace.repeat(currentCommandLength) + commandLine
+        var sequence = cursorRight.repeat(cursorOffset) + backspace.repeat(currentCommandLength) + commandLine + ' '
 
         directPtyWrite(sequence)
     }
@@ -166,7 +164,7 @@ export class TerminalController implements IHybridTerminalApi {
         const oldSpaceCount = count(oldCommandLine, /\s/g)
         const newSpaceCount = count(newCommandLine, /\s/g)
 
-        if (onSpace && oldTokens.length === newTokens.length && oldSpaceCount === newSpaceCount) {
+        if (onSpace && oldSpaceCount === newSpaceCount && oldTokens.length === newTokens.length) {
             return
         }
 
