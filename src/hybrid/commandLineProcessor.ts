@@ -1,9 +1,7 @@
 import { CommandFrameRenderer } from "./commandFrame/renderer/commandFrameRenderer"
 import { CommandFrameProvider } from "./commandFrame/provider/commandFrameProvider"
 import { CommandFrameLoader } from "./commandFrame/loader/commandFrameLoader"
-import { tokenize } from "./shellCommand/shellCommand"
-import { count, isBlank } from "../util/strings"
-import { arraysEq } from "../util/arrays"
+import { isBlank } from "../util/strings"
 
 export class CommandLineProcessor {
 
@@ -32,11 +30,7 @@ export class CommandLineProcessor {
 
         const commandFrames = this._commandFrameService.getCommandFrames(newExecutable)
         this._commandFrameRenderer.render(commandFrames)
-        for (let frame of commandFrames) {
-            if (!frame.isLoaded) {
-                this._commandFrameLoader.load(frame)
-            } 
-        }
+        commandFrames.filter(it => !it.isLoaded).forEach(it =>  this._commandFrameLoader.load(it))
     }
 
 }

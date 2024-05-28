@@ -2,6 +2,9 @@ import { ICommandFrame } from "../commandFrame";
 
 export class CommandFrameLoader {
 
+    /**
+     * load command frame scripts
+     */
     load(commandFrame: ICommandFrame) {
         const loadableScripts = Array.from(commandFrame.frame.getElementsByTagName('script'))
         if (!loadableScripts || loadableScripts.length === 0) {

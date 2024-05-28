@@ -3,24 +3,23 @@ import { IShellIntegration } from "../../terminal/xterm/shellIntegration";
 import { ITerminal } from "../../terminal/xterm/terminalService";
 import { ipcRenderer } from "electron";
 import { ipc } from "../../constants/ipc";
-import { ICommandOption, shellCommand } from "../shellCommand/shellCommand";
-import { ICommandDescription } from "../commandDescription/commandDescription";
-import { CommandDescriptionRegistry } from "../commandDescription/commandDescriptionRegistry";
-import { ICommandDescriptor } from "../commandDescription/commandDescriptor";
 import { IHybridTerminalApi } from "../api/api";
 import EventEmitter from "events";
 import { ICommandLineSyncEvent } from "../commandLineSyncEvent";
-import { distinctBy } from "../../util/arrays";
 import { count, isBlank } from "../../util/strings";
-import { ICommandContext } from "../api/commandContext";
+import { IAddOption, IRemoveOption, addOptionsToCommand, removeLastArgument, removeOptionsFromCommand } from "../../commandLine/util/options";
+import { CommandParserProvider } from "../../commandLine/parser/commandLineParserProvider";
+import { ICommandLine } from "../../commandLine/commandLine";
+import { insertValueAsLastArgument } from "../../commandLine/util/args";
+import { CommandLineSerializer } from "../../commandLine/serializer/commandLineSerializer";
+import { deepClone } from "../../util/clone";
 
 export class TerminalController implements IHybridTerminalApi {
 
-    private readonly _commandDescriptionRegistry: CommandDescriptionRegistry = new CommandDescriptionRegistry()
+    private readonly _commandParserProvider = new CommandParserProvider()
     private readonly _xterm: Terminal
     private readonly _shellIntegration: IShellIntegration
     private readonly _event = new EventEmitter().setMaxListeners(0)
-    private _commandContext: ICommandContext | undefined = undefined
 
     constructor(
         private readonly _terminal: ITerminal,
@@ -29,123 +28,139 @@ export class TerminalController implements IHybridTerminalApi {
         this._shellIntegration = _terminal.shellIntegration
 
         this._shellIntegration.onCommandLineChange(
-            (oldCommandLine, newCommandLine) => this._handleSync(oldCommandLine, newCommandLine, true)
+            (oldCommandLine, newCommandLine) => this._handleSync(
+                oldCommandLine, 
+                newCommandLine, 
+                this._parse(oldCommandLine), 
+                this._parse(newCommandLine), 
+                true
+            )
         )
     } 
 
-    setCommandContext(ctx: ICommandContext): void {
-        this._commandContext = ctx
+    removeSubcommandArg(subcommand: string): boolean {
+        const currentCommandLine = this._shellIntegration.currentCommandProperties()?.command
+        if (!currentCommandLine || isBlank(currentCommandLine)) {
+            return false
+        }
+
+        const parsed = this._parse(currentCommandLine)
+        if (!parsed) {
+            return false
+        }
+
+        const newCommandLine = deepClone(parsed)
+        const lastArg = removeLastArgument(newCommandLine.command)
+
+        if (lastArg !== subcommand) {
+            return false
+        }
+
+        const updatedCommandLine = CommandLineSerializer.getCached().serializeCommandLine(newCommandLine)
+
+        this._overwriteCommandLine(updatedCommandLine)
+        this._handleSync(currentCommandLine, updatedCommandLine, parsed, newCommandLine, false)
+
+        return true
+    }
+
+    insertLastArg(arg: string): boolean {
+        const currentCommandLine = this._shellIntegration.currentCommandProperties()?.command
+        if (!currentCommandLine || isBlank(currentCommandLine)) {
+            return false
+        }
+
+        const parsed = this._parse(currentCommandLine)
+        if (!parsed) {
+            return false
+        }
+
+        const newCommandLine = deepClone(parsed)
+        insertValueAsLastArgument(newCommandLine.command, arg)
+
+        const updatedCommandLine = CommandLineSerializer.getCached().serializeCommandLine(newCommandLine)
+
+        this._overwriteCommandLine(updatedCommandLine)
+        this._handleSync(currentCommandLine, updatedCommandLine, parsed, newCommandLine, false)
+
+        return true
+    }
+
+    updateOptions(parameters: { addOptions: IAddOption[], removeOptions: IRemoveOption[] }): boolean {
+        console.debug(parameters)
+
+        const currentCommandLine = this._shellIntegration.currentCommandProperties()?.command
+        if (!currentCommandLine || isBlank(currentCommandLine)) {
+            return false
+        }
+
+        const parsed = this._parse(currentCommandLine)
+        if (!parsed) {
+            return false
+        }
+
+        const newCommandLine = deepClone(parsed)
+        removeOptionsFromCommand(newCommandLine.command, parameters.removeOptions)
+        addOptionsToCommand(newCommandLine.command, parameters.addOptions)
+
+        const updatedCommandLine = CommandLineSerializer.getCached().serializeCommandLine(newCommandLine)
+        
+        this._overwriteCommandLine(updatedCommandLine)
+        this._handleSync(currentCommandLine, updatedCommandLine, parsed, newCommandLine, false)
+
+        return true
+    }
+
+    private _parse(commandLine: string): ICommandLine | undefined {
+        return this._commandParserProvider.getParser().parseCommandLine(commandLine)
+    }
+
+    appendCommandLine(toAppend: string): boolean {
+        if (!toAppend) {
+            return true
+        }
+
+        directPtyWrite(toAppend)
+
+        return true
     }
 
     onCommandLineSync(listener: (event: ICommandLineSyncEvent) => void) {
         this._event.on('command-line-sync', listener)
     }
 
-    updateOptions(parameters: { addOptions: ICommandOption[], removeOptions: ICommandOption[] }): boolean {
-        console.debug('TerminalController.updateOptions', parameters)
-        if (!parameters || !this._commandContext) {
-            return false
-        }
-        if (parameters.addOptions.length === 0 && parameters.removeOptions.length === 0) {
-            return true
-        }
-
-        const descriptor = this._commandContext.descriptor
-        const commandDescription = this._commandDescriptionRegistry.getDescription(descriptor)
-        if (!commandDescription) {
-            console.debug('TerminalController.updateOptions', 'command description not found', 'command', descriptor)
-            return false
-        }
-
-        const commandLine = this._shellIntegration.currentCommandProperties()?.command ?? undefined
-        console.debug('TerminalController.updateOptions', { commandLine })
-        if (!commandLine) {
-            return false
-        }
-
-        const command = shellCommand.parsed(commandLine, commandDescription)
-
-        const options = [...command.options]
-        console.debug(JSON.stringify(command))
-
-        parameters.removeOptions.forEach(option => {
-            const optionIndex = options.findIndex(it => option.option === it?.option)
-            if (optionIndex >= 0) {
-                delete options[optionIndex]
-            }
-        })
-        parameters.addOptions.forEach(option => options.push(option))
-
-        console.debug('updated options:', JSON.stringify(options))
-        command.options = distinctBy(options, it => JSON.stringify({ 
-            option: it.option,
-            value: it.value ?? ""
-        }))
-
-        const updatedCommandLine = shellCommand.commandLine(command)
-        console.debug({ updatedCommandLine })
-
-        this._replaceCurrentCommand(updatedCommandLine)
-
-        this._handleSync(commandLine, updatedCommandLine, false)
-        return true
-    }
-   
-    registerCommand(commandDescription: ICommandDescription): boolean {
-        console.debug('TerminalController.registerCommand', { commandDescription })
-        if (!commandDescription) {
-            console.warn('TerminalController.registerCommand', 'command description is undefined')
-            return false
-        }
-        this._commandDescriptionRegistry.registerDescription(commandDescription)
+    clearCommandLine(): boolean {
+        this._overwriteCommandLine('')
         return true
     }
 
-    isRegisteredCommand(commandDescriptor: ICommandDescriptor): boolean {
-        if (!commandDescriptor) {
-            console.warn('TerminalController.isRegisteredCommand', 'command descriptor is undefined')
-            return false
-        }
-        return this._commandDescriptionRegistry.getDescription(commandDescriptor) ? true : false
-    }
-
-    clearCurrentCommand(): boolean {
-        this._replaceCurrentCommand('')
-        return true
-    }
-
-    private _replaceCurrentCommand(command: string) {
+    private _overwriteCommandLine(commandLine: string) {
         const cursor = this._shellIntegration.currentCursorXPosition()
-        const start = this._shellIntegration.currentCommandProperties()?.startX ?? undefined
+        const start = this._shellIntegration.currentCommandProperties()?.startX ?? 0
+        const currentCommand = this._shellIntegration.currentCommandProperties()?.command ?? ""
 
         if (!cursor) {
             console.warn('no cursor')
             return
         }
 
-        const currentCommandLength = cursor - (start ?? 0)
+        const currentCommandLength = currentCommand.length
+        const cursorOffset = Math.max(currentCommandLength - (cursor - start), 0)
 
-        var sequence = ''
-        for (let i = 0; i < currentCommandLength; i++) {
-            sequence += '\b \b'
-        }
-        sequence += command
-    
-        ptyWrite(sequence)
+        var backspace = '\b \b' 
+        var cursorRight = '\u001b[1C'
+        var sequence = cursorRight.repeat(cursorOffset) + backspace.repeat(currentCommandLength) + commandLine
+
+        directPtyWrite(sequence)
     }
 
-    private _handleSync(oldCommandLine: string, newCommandLine: string, onSpace: boolean) {
-        const descriptor = this._commandContext?.descriptor
-        if (!descriptor) {
-            console.warn('No command context set!')
-            return
-        }
-
-        const commandDescription = this._commandDescriptionRegistry.getDescription(descriptor)
-        if (!commandDescription) {
-            return
-        }
-
+    private _handleSync(
+        oldCommandLine: string, 
+        newCommandLine: string, 
+        oldParsedCommandLine: ICommandLine | undefined,
+        newParsedCommandLine: ICommandLine | undefined,
+        onSpace: boolean
+    ) {
         const oldTokens = oldCommandLine.split(/\s/).filter(it => !isBlank(it))
         const newTokens = newCommandLine.split(/\s/).filter(it => !isBlank(it))
         const oldSpaceCount = count(oldCommandLine, /\s/g)
@@ -155,15 +170,13 @@ export class TerminalController implements IHybridTerminalApi {
             return
         }
 
-        const command = shellCommand.parsed(newCommandLine, commandDescription)
-        const event: ICommandLineSyncEvent = { command }
+        const event: ICommandLineSyncEvent = { commandLine: newParsedCommandLine, oldCommandLine: oldParsedCommandLine }
         this._event.emit('command-line-sync', event)
         console.debug('command-line-sync', event)
     }
-
 }
 
-function ptyWrite(data: string) {
+function directPtyWrite(data: string) {
     ipcRenderer.sendSync(ipc.term.terminal, data)
 }
 

@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES6",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "allowJs": true,
     "module": "commonjs",
     "skipLibCheck": true,
@@ -14,8 +16,17 @@
     "strictNullChecks": true,
     "strict": true,
     "paths": {
-      "*": ["node_modules/*"]
-    }
+      "*": [
+        "node_modules/*"
+      ]
+    },
+    "plugins": [
+      {
+        "transform": "typia/lib/transform"
+      }
+    ]
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }

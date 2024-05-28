@@ -4,9 +4,7 @@ import { ICommandFrameProviderConfig } from "./commandFrameProviderConfig";
 
 export class CommandFramePathResolver {
 
-    constructor(readonly config: ICommandFrameProviderConfig) {
-        console.log('CommandPathResolverImpl#init', { config })
-    }
+    constructor(readonly config: ICommandFrameProviderConfig) {}
 
     resolve(command: string): PathLike[] {
         const paths: PathLike[] = []

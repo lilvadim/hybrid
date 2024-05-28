@@ -53,3 +53,7 @@
 .gutter.gutter-horizontal {
   cursor: col-resize;
 }
+
+.invisible {
+  display: none;
+}

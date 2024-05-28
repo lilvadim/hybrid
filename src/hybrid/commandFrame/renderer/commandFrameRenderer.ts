@@ -9,9 +9,7 @@ export class CommandFrameRenderer {
 
     render(frames: ICommandFrame[]): boolean {
         this.renderEmpty()
-        for (let commandFrame of frames) {
-            this.container.appendChild(commandFrame.frame)
-        }
+        frames.forEach(it => this.container.appendChild(it.frame))
         return true
     }
 

@@ -19,7 +19,7 @@ export class TerminalRenderer {
 
     private readonly _terminalService = new TerminalService()
     private readonly _commandFrameProviderConfig: ICommandFrameProviderConfig = {
-        cache: false,
+        cache: true,
         htmlFramesPaths: [join(EnvironmentUtils.resourcePath, 'resources', 'cf')]
     }
     private readonly _commandFramePathResolver = new CommandFramePathResolver(this._commandFrameProviderConfig)

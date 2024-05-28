@@ -66,8 +66,7 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
     constructor(
         private readonly _terminal: Terminal,
     ) {
-        _terminal.onData(() => setTimeout(() => this._onTerminalChange(), 50))
-        // _terminal.onWriteParsed(() => setTimeout(() => this._onWriteParsed(), 50))
+        _terminal.onWriteParsed(() => setTimeout(() => this._onTerminalChange(), 50))
     }
 
     onCommandsUpdated(listener: () => void): void {
@@ -139,13 +138,14 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         if (!this._currentCommand || !this._currentCommand.startX) {
             return
         }
-        const lineY = this._currentCommand?.promptStartMarker?.line
-        if (!lineY) {
+        const lineY = this._currentCommand?.promptStartMarker?.line ?? 0
+        if (lineY !== 0 && !lineY) {
+            console.debug('Line not defined', lineY)
             return
         }
         const line = this._terminal.buffer.active.getLine(lineY)
         if (!line) {
-            console.warn('onWriteParsed', 'Line not found', lineY)
+            console.debug('Line not found', lineY)
             return
         }
         const startX = this._currentCommand.startX
@@ -163,7 +163,7 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         this._currentCommand.command = commandNewValue
 
         this._event.emit('command-line-change', commandOldValue, commandNewValue)
-        console.debug('onWriteParsed.currentCommand', this._currentCommand)
+        console.debug('currentCommand', this._currentCommand)
     }
 
 }
