@@ -13,6 +13,8 @@ import { ICommandLine } from "../../commandLine/commandLine";
 import { insertValueAsLastArgument } from "../../commandLine/util/args";
 import { CommandLineSerializer } from "../../commandLine/serializer/commandLineSerializer";
 import { deepClone } from "../../util/clone";
+import { ITerminalControlConfig } from "./terminalControlConfig";
+import { ux } from "../../log/log";
 
 export class TerminalController implements IHybridTerminalApi {
 
@@ -22,23 +24,29 @@ export class TerminalController implements IHybridTerminalApi {
     private readonly _event = new EventEmitter().setMaxListeners(0)
 
     constructor(
+        private readonly _config: ITerminalControlConfig,
         private readonly _terminal: ITerminal,
     ) {
         this._xterm = _terminal.xterm
         this._shellIntegration = _terminal.shellIntegration
 
         this._shellIntegration.onCommandLineChange(
-            (oldCommandLine, newCommandLine) => this._handleSync(
-                oldCommandLine, 
-                newCommandLine, 
-                this._parse(oldCommandLine), 
-                this._parse(newCommandLine), 
-                true
-            )
+            (oldCommandLine, newCommandLine) => {
+                const oldParsed = this._parse(oldCommandLine)
+                const newParsed = this._parse(newCommandLine)
+                this._handleSync(
+                    oldCommandLine,
+                    newCommandLine,
+                    oldParsed,
+                    newParsed,
+                    _config.syncOnSpace
+                )
+            }
         )
-    } 
+    }
 
     removeSubcommandArg(subcommand: string): boolean {
+        ux.info("Removed Subcommand from GUI", subcommand)
         const currentCommandLine = this._shellIntegration.currentCommandProperties()?.command
         if (!currentCommandLine || isBlank(currentCommandLine)) {
             return false
@@ -59,11 +67,13 @@ export class TerminalController implements IHybridTerminalApi {
         const updatedCommandLine = CommandLineSerializer.getCached().serializeCommandLine(newCommandLine)
 
         this._overwriteCommandLine(updatedCommandLine)
+        this._handleSync(currentCommandLine, updatedCommandLine, parsed, newCommandLine, false)
 
         return true
     }
 
     insertLastArg(arg: string): boolean {
+        ux.log("Add Subcommand from GUI", arg)
         const currentCommandLine = this._shellIntegration.currentCommandProperties()?.command
         if (!currentCommandLine || isBlank(currentCommandLine)) {
             return false
@@ -80,11 +90,13 @@ export class TerminalController implements IHybridTerminalApi {
         const updatedCommandLine = CommandLineSerializer.getCached().serializeCommandLine(newCommandLine)
 
         this._overwriteCommandLine(updatedCommandLine)
+        this._handleSync(currentCommandLine, updatedCommandLine, parsed, newCommandLine, false)
 
         return true
     }
 
     updateOptions(parameters: { addOptions: IAddOption[], removeOptions: IRemoveOption[] }): boolean {
+        ux.info("Update options from GUI", parameters)
         console.debug(parameters)
 
         const currentCommandLine = this._shellIntegration.currentCommandProperties()?.command
@@ -102,7 +114,7 @@ export class TerminalController implements IHybridTerminalApi {
         addOptionsToCommand(newCommandLine.command, parameters.addOptions)
 
         const updatedCommandLine = CommandLineSerializer.getCached().serializeCommandLine(newCommandLine)
-        
+
         this._overwriteCommandLine(updatedCommandLine)
         this._handleSync(currentCommandLine, updatedCommandLine, parsed, newCommandLine, false)
 
@@ -147,18 +159,21 @@ export class TerminalController implements IHybridTerminalApi {
 
         var backspace = '\b \b'
         var cursorRight = '\u001b[1C'
-        var sequence = cursorRight.repeat(cursorOffset) + backspace.repeat(currentCommandLength) + commandLine + ' '
+        var sequence = cursorRight.repeat(cursorOffset) + backspace.repeat(currentCommandLength) + commandLine 
 
         directPtyWrite(sequence)
     }
 
     private _handleSync(
-        oldCommandLine: string, 
-        newCommandLine: string, 
+        oldCommandLine: string,
+        newCommandLine: string,
         oldParsedCommandLine: ICommandLine | undefined,
         newParsedCommandLine: ICommandLine | undefined,
-        onSpace: boolean
+        onSpace: boolean,
     ) {
+        if (newCommandLine !== oldCommandLine) {
+            ux.info("CommandLine", newCommandLine)
+        }
         const oldTokens = oldCommandLine.split(/\s/).filter(it => !isBlank(it))
         const newTokens = newCommandLine.split(/\s/).filter(it => !isBlank(it))
         const oldSpaceCount = count(oldCommandLine, /\s/g)

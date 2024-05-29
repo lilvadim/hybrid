@@ -1,6 +1,7 @@
 import { PathLike, fstatSync, readdirSync, stat, statSync } from "fs";
 import { join } from "path";
 import { ICommandFrameProviderConfig } from "./commandFrameProviderConfig";
+import { BUILTIN_FRAMES_PATH } from "../../../config/paths";
 
 export class CommandFramePathResolver {
 
@@ -9,7 +10,11 @@ export class CommandFramePathResolver {
     resolve(command: string): PathLike[] {
         const paths: PathLike[] = []
 
-        for (let lookupPath of this.config.htmlFramesPaths) {
+        const lookupPaths = this.config.builtinFrames ? 
+            Object.values(this.config.htmlFramesPaths).concat(BUILTIN_FRAMES_PATH)
+            : this.config.htmlFramesPaths
+
+        for (let lookupPath of lookupPaths) {
             const files = readdirSync(lookupPath)
                                 
             for (let file of files) {

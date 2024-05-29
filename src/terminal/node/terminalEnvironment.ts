@@ -1,6 +1,7 @@
 import * as path from "path"
 import * as os from "os"
-import { IProcessEnvironment, IShellLaunchConfig } from "./ptyService"
+import { IProcessEnvironment } from "./ptyService"
+import { IShellLaunchConfig } from "./shellLaunchConfig"
 import { EnvironmentUtils } from "../../util/environment"
 
 export interface IShellIntegrationInjection {

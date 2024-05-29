@@ -2,14 +2,10 @@ import { IPty, IPtyForkOptions, spawn } from "node-pty"
 import * as fs from "fs"
 import * as path from "path"
 import { getShellIntegrationInjection } from "./terminalEnvironment"
+import { IShellLaunchConfig } from "./shellLaunchConfig"
 
 export interface IProcessEnvironment {
     [key: string]: string | undefined
-}
-
-export interface IShellLaunchConfig {
-    executable: string,
-    env: IProcessEnvironment
 }
 
 export class PtyService {

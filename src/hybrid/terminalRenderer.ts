@@ -14,14 +14,13 @@ import { CommandFrameLoader } from "./commandFrame/loader/commandFrameLoader"
 import { FitAddon } from "xterm-addon-fit"
 import { setTimeout } from "timers"
 import Split from "split.js"
+import { ConfigProvider } from "../config/configProvider"
 
 export class TerminalRenderer {
 
     private readonly _terminalService = new TerminalService()
-    private readonly _commandFrameProviderConfig: ICommandFrameProviderConfig = {
-        cache: true,
-        htmlFramesPaths: [join(EnvironmentUtils.resourcePath, 'resources', 'cf')]
-    }
+    private readonly _config = ConfigProvider.getCached().getOverridden()
+    private readonly _commandFrameProviderConfig: ICommandFrameProviderConfig = this._config.commandFrameProvider
     private readonly _commandFramePathResolver = new CommandFramePathResolver(this._commandFrameProviderConfig)
     private readonly _commandFrameProvider = new CommandFrameProvider(this._commandFrameProviderConfig, this._commandFramePathResolver)
     private readonly _commandFrameLoader = new CommandFrameLoader()
@@ -50,7 +49,7 @@ export class TerminalRenderer {
         ipcRenderer.on(ipc.term.pty, (_, data) => terminal.xterm.write(data))
         terminal.xterm.onData(data => ipcRenderer.send(ipc.term.terminal, data))
 
-        const controller = new TerminalController(terminal)
+        const controller = new TerminalController(this._config.terminalControl, terminal)
 
         Split([commandFrameContainer, xtermContainer], {
             gutterSize: 7,

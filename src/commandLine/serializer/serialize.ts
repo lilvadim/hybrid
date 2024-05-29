@@ -1,4 +1,3 @@
-import { Cacheable } from "typescript-cacheable";
 import { IComplexCommand, ICommand, IOption } from "../command";
 import { ICommandLine } from "../commandLine";
 
