@@ -1,0 +1,1 @@
+npm run make -- --arch=universal --platform=darwin
