@@ -66,13 +66,13 @@ function mergeDefaults(target: any, defaults: any): any {
         if (defaults.hasOwnProperty(key)) {
             if (typeof defaults[key] === 'object' && defaults[key] !== null && !Array.isArray(defaults[key])) {
                 if (!target[key] || typeof target[key] !== 'object') {
-                    target[key] = {};
+                    target[key] = {}
                 }
                 mergeDefaults(target[key], defaults[key]);
             } else if (target[key] === undefined) {
-                target[key] = defaults[key];
+                target[key] = defaults[key]
             }
         }
     }
-    return target;
+    return target
 }
