@@ -4,7 +4,7 @@
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
   </head>
   <body>
-    <script>var command_frame_git_id_map = {"-h":"option_103634455","--help":"option_103634455","-m":"option_1689316426","--message":"option_1689316426","--amend":"option_462724580","-f":"option_1066437136","--force":"option_1066437136","-i":"option_1263629143"};
+    <script>var command_frame_git_id_map = {"-h":"option_1102860315","--help":"option_1102860315","-m":"option_218002096","--message":"option_218002096","--amend":"option_318321607","-f":"option_1689316426","--force":"option_1689316426","-i":"option_499770578"};
 var command_frame_git_desc = {"command":"git","subcommands":["commit","push","rebase"],"options":[{"optionSynonyms":["-h","--help"],"hasValue":false},{"optionSynonyms":["-m","--message"],"hasValue":true},{"optionSynonyms":["--amend"],"hasValue":false},{"optionSynonyms":["-f","--force"],"hasValue":false},{"optionSynonyms":["-i"],"hasValue":false}]};
 window.hybrid.terminal.onCommandLineSync((e) => {
     if (!e.commandLine) {
@@ -49,16 +49,46 @@ window.hybrid.terminal.onCommandLineSync((e) => {
         window.hybrid.utils.show(subcommandFrameId);
     }
 });
-function option_103634455_handler(event) {
-    var data = document.getElementById('option_103634455').checked;
+function option_1102860315_handler(event) {
+    var data = document.getElementById('option_1102860315').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-h","value":option_103634455_value(),"delimiter":" ","words":null}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-h","value":option_1102860315_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-h","removeValue":false},{"optionText":"--help","removeValue":false}]});
     }
 }
-function option_103634455_value() {
-    var elem = document.getElementById('option_103634455_value');
+function option_1102860315_value() {
+    var elem = document.getElementById('option_1102860315_value');
+    if (elem) {
+        return elem.value;
+    }
+    return undefined;
+}
+function option_218002096_handler(event) {
+    var data = document.getElementById('option_218002096').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"NON-STD","optionText":"-m","value":option_218002096_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-m","removeValue":true},{"optionText":"--message","removeValue":true}]});
+    }
+}
+function option_218002096_value() {
+    var elem = document.getElementById('option_218002096_value');
+    if (elem) {
+        return elem.value;
+    }
+    return undefined;
+}
+function option_318321607_handler(event) {
+    var data = document.getElementById('option_318321607').checked;
+    if (data) {
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"GNU","optionText":"--amend","value":option_318321607_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+    } else {
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"--amend","removeValue":false}]});
+    }
+}
+function option_318321607_value() {
+    var elem = document.getElementById('option_318321607_value');
     if (elem) {
         return elem.value;
     }
@@ -67,9 +97,9 @@ function option_103634455_value() {
 function option_1689316426_handler(event) {
     var data = document.getElementById('option_1689316426').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"NON-STD","optionText":"-m","value":option_1689316426_value(),"delimiter":" ","words":null}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-f","value":option_1689316426_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
     } else {
-        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-m","removeValue":true},{"optionText":"--message","removeValue":true}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-f","removeValue":false},{"optionText":"--force","removeValue":false}]});
     }
 }
 function option_1689316426_value() {
@@ -79,46 +109,16 @@ function option_1689316426_value() {
     }
     return undefined;
 }
-function option_462724580_handler(event) {
-    var data = document.getElementById('option_462724580').checked;
+function option_499770578_handler(event) {
+    var data = document.getElementById('option_499770578').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"GNU","optionText":"--amend","value":option_462724580_value(),"delimiter":" ","words":null}],"removeOptions":[]});
-    } else {
-        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"--amend","removeValue":false}]});
-    }
-}
-function option_462724580_value() {
-    var elem = document.getElementById('option_462724580_value');
-    if (elem) {
-        return elem.value;
-    }
-    return undefined;
-}
-function option_1066437136_handler(event) {
-    var data = document.getElementById('option_1066437136').checked;
-    if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-f","value":option_1066437136_value(),"delimiter":" ","words":null}],"removeOptions":[]});
-    } else {
-        window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-f","removeValue":false},{"optionText":"--force","removeValue":false}]});
-    }
-}
-function option_1066437136_value() {
-    var elem = document.getElementById('option_1066437136_value');
-    if (elem) {
-        return elem.value;
-    }
-    return undefined;
-}
-function option_1263629143_handler(event) {
-    var data = document.getElementById('option_1263629143').checked;
-    if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-i","value":option_1263629143_value(),"delimiter":" ","words":null}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-i","value":option_499770578_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-i","removeValue":false}]});
     }
 }
-function option_1263629143_value() {
-    var elem = document.getElementById('option_1263629143_value');
+function option_499770578_value() {
+    var elem = document.getElementById('option_499770578_value');
     if (elem) {
         return elem.value;
     }
@@ -143,7 +143,7 @@ function option_1263629143_value() {
           <div class="list-group list-group-flush">
             <div class="list-group-item">
               <div class="form-check">
-                <label class="form-check-label mono-font-bold" for="option_103634455" onclick="option_103634455_handler(event)">-h, --help<input class="form-check-input " id="option_103634455" name="option_toggles_1998931723" type="checkbox" value=""></label>
+                <label class="form-check-label mono-font-bold" for="option_1102860315" onclick="option_1102860315_handler(event)">-h, --help<input class="form-check-input " id="option_1102860315" name="option_toggles_1544390508" type="checkbox" value=""></label>
               </div>
             </div>
           </div>
@@ -159,15 +159,15 @@ function option_1263629143_value() {
               <div class="input-group">
                 <div class="input-group-text">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" onclick="option_1689316426_handler(event)">-m, --message<input class="form-check-input " id="option_1689316426" name="option_toggles_1813403937" type="checkbox" value=""></label>
+                    <label class="form-check-label mono-font-bold" onclick="option_218002096_handler(event)">-m, --message<input class="form-check-input " id="option_218002096" name="option_toggles_955557441" type="checkbox" value=""></label>
                   </div>
                 </div>
-                <input class="form-control" id="option_1689316426_value" placeholder="msg" type="text">
+                <input class="form-control" id="option_218002096_value" onchange="option_218002096_handler(event)" placeholder="msg" type="text">
               </div>
             </div>
             <div class="list-group-item">
               <div class="form-check">
-                <label class="form-check-label mono-font-bold" for="option_462724580" onclick="option_462724580_handler(event)">--amend<input class="form-check-input " id="option_462724580" name="option_toggles_1813403937" type="checkbox" value=""></label>
+                <label class="form-check-label mono-font-bold" for="option_318321607" onclick="option_318321607_handler(event)">--amend<input class="form-check-input " id="option_318321607" name="option_toggles_955557441" type="checkbox" value=""></label>
               </div>
             </div>
           </div>
@@ -181,7 +181,7 @@ function option_1263629143_value() {
           <div class="list-group list-group-flush">
             <div class="list-group-item">
               <div class="form-check">
-                <label class="form-check-label mono-font-bold" for="option_1066437136" onclick="option_1066437136_handler(event)">-f, --force<input class="form-check-input " id="option_1066437136" name="option_toggles_1207644362" type="checkbox" value=""></label>
+                <label class="form-check-label mono-font-bold" for="option_1689316426" onclick="option_1689316426_handler(event)">-f, --force<input class="form-check-input " id="option_1689316426" name="option_toggles_419605775" type="checkbox" value=""></label>
               </div>
             </div>
           </div>
@@ -195,7 +195,7 @@ function option_1263629143_value() {
           <div class="list-group list-group-flush">
             <div class="list-group-item">
               <div class="form-check">
-                <label class="form-check-label mono-font-bold" for="option_1263629143" onclick="option_1263629143_handler(event)">-i<input class="form-check-input " id="option_1263629143" name="option_toggles_2095896921" type="checkbox" value=""></label>
+                <label class="form-check-label mono-font-bold" for="option_499770578" onclick="option_499770578_handler(event)">-i<input class="form-check-input " id="option_499770578" name="option_toggles_1698675708" type="checkbox" value=""></label>
               </div>
             </div>
           </div>

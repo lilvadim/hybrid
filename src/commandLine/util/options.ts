@@ -7,7 +7,8 @@ export interface IAddOption {
     value?: string;
     delimiter?: string;
     words?: string[];
-};
+    unique: boolean;
+}
 
 export interface IRemoveOption {
     optionText: string;
@@ -28,9 +29,34 @@ export function addOptionsToCommand(commandObj: ICommand, options: IAddOption[])
             value: opt.value,
             subsequentArgs: []
         };
+
+        if (opt.unique) {
+            const existingOpt = isOptionPresent(opt.optionText, commandObj.options)
+            if (existingOpt) {
+                existingOpt.value = opt.value
+                return
+            } 
+        }
         
         commandObj.options.push(newOption)
     })
+}
+
+function isOptionPresent(optionText: string, options: IOption[]): IOption | undefined {
+    for (const option of options) {
+        if (option.option.type === 'UNIX' && option.option.words && option.option.prefix) {
+            for (const word of option.option.words) {
+                if (option.option.prefix + word === optionText) {
+                    return option;
+                }
+            }
+        } else {
+            if (option.option.option === optionText) {
+                return option;
+            }
+        }
+    }
+    return undefined;
 }
 
 export function removeOptionsFromCommand(commandObj: ICommand, optionsToRemove: IRemoveOption[]): void {
