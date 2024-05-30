@@ -20,7 +20,8 @@ top_level_command
 simple_command 
     = command:command_name 
       commandArgs:(ws arg:value { return arg })*
-      options:(ws options:option_with_value args:(ws arg:value { return arg })* { return { option: options.option, delimiter: options.delimiter, value: options.value, subsequentArgs: args }})* 
+      options:(ws options:option_with_value args:(ws arg:value { return arg })* 
+        { return { option: options.option, delimiter: options.delimiter, value: options.value, subsequentArgs: args }})* 
       { return { command, precedingArgs: commandArgs, options } } 
       
 env_var_name = [a-zA-Z_][a-zA-Z0-9_]* { return text() }
