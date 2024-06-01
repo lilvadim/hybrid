@@ -7,14 +7,13 @@ import { TerminalController } from "./terminalController/terminalController"
 import { initApi } from "./api/api"
 import { CommandFramePathResolver } from "./commandFrame/provider/commandFramePathResolver"
 import { ICommandFrameProviderConfig } from "./commandFrame/provider/commandFrameProviderConfig"
-import { join } from "path"
-import { EnvironmentUtils } from "../util/environment"
 import { CommandFrameRenderer } from "./commandFrame/renderer/commandFrameRenderer"
 import { CommandFrameLoader } from "./commandFrame/loader/commandFrameLoader"
 import { FitAddon } from "xterm-addon-fit"
 import { setTimeout } from "timers"
 import Split from "split.js"
 import { ConfigProvider } from "../config/configProvider"
+import { CommandLineParserProvider } from "../commandLine/parser/commandLineParserProvider"
 
 export class TerminalRenderer {
 
@@ -24,10 +23,16 @@ export class TerminalRenderer {
     private readonly _commandFramePathResolver = new CommandFramePathResolver(this._commandFrameProviderConfig)
     private readonly _commandFrameProvider = new CommandFrameProvider(this._commandFrameProviderConfig, this._commandFramePathResolver)
     private readonly _commandFrameLoader = new CommandFrameLoader()
+    private readonly _commandLineParserProvider = new CommandLineParserProvider()
 
     render(xtermContainer: HTMLElement, commandFrameContainer: HTMLElement) {
         const commandFrameRenderer = new CommandFrameRenderer(commandFrameContainer)
-        const commandLineProcessor = new CommandLineProcessor(this._commandFrameProvider, commandFrameRenderer, this._commandFrameLoader)
+        const commandLineProcessor = new CommandLineProcessor(
+            this._commandFrameProvider, 
+            commandFrameRenderer, 
+            this._commandFrameLoader,
+            this._commandLineParserProvider
+        )
 
         const terminalId = this._terminalService.createXterm()
         const terminal = this._terminalService.getTerminal(terminalId)
@@ -49,7 +54,11 @@ export class TerminalRenderer {
         ipcRenderer.on(ipc.term.pty, (_, data) => terminal.xterm.write(data))
         terminal.xterm.onData(data => ipcRenderer.send(ipc.term.terminal, data))
 
-        const controller = new TerminalController(this._config.terminalControl, terminal)
+        const controller = new TerminalController(
+            this._config.terminalControl, 
+            terminal,
+            this._commandLineParserProvider
+        )
 
         Split([commandFrameContainer, xtermContainer], {
             gutterSize: 7,

@@ -6,7 +6,7 @@ import { CommandLineParser } from "./commandLineParser";
 import { startRules } from "./startRules";
 import { Cacheable } from "typescript-cacheable";
 
-export class CommandParserProvider {
+export class CommandLineParserProvider {
 
     @Cacheable()
     getParser(): CommandLineParser {

@@ -8,7 +8,7 @@ import EventEmitter from "events";
 import { ICommandLineSyncEvent } from "../commandLineSyncEvent";
 import { count, isBlank } from "../../util/strings";
 import { IAddOption, IRemoveOption, addOptionsToCommand, removeLastArgument, removeOptionsFromCommand } from "../../commandLine/util/options";
-import { CommandParserProvider } from "../../commandLine/parser/commandLineParserProvider";
+import { CommandLineParserProvider } from "../../commandLine/parser/commandLineParserProvider";
 import { ICommandLine } from "../../commandLine/commandLine";
 import { insertValueAsLastArgument } from "../../commandLine/util/args";
 import { CommandLineSerializer } from "../../commandLine/serializer/commandLineSerializer";
@@ -18,14 +18,14 @@ import { ux } from "../../log/log";
 
 export class TerminalController implements IHybridTerminalApi {
 
-    private readonly _commandParserProvider = new CommandParserProvider()
     private readonly _xterm: Terminal
     private readonly _shellIntegration: IShellIntegration
     private readonly _event = new EventEmitter().setMaxListeners(0)
 
-    constructor(
+    constructor(    
         private readonly _config: ITerminalControlConfig,
         private readonly _terminal: ITerminal,
+        private readonly _commandParserProvider: CommandLineParserProvider
     ) {
         this._xterm = _terminal.xterm
         this._shellIntegration = _terminal.shellIntegration

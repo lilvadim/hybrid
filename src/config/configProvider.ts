@@ -3,7 +3,6 @@ import { IConfig, IPartialConfig } from "./config";
 import { dirname, join } from "path";
 import { pathLikeToString } from "../util/path";
 import { Cacheable } from "typescript-cacheable";
-import { isObject } from "../util/objects";
 import { isBlank } from "../util/strings";
 import { HYBRID_DIR } from "./paths";
 import { ux } from "../log/log";

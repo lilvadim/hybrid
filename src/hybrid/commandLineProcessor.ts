@@ -2,6 +2,7 @@ import { CommandFrameRenderer } from "./commandFrame/renderer/commandFrameRender
 import { CommandFrameProvider } from "./commandFrame/provider/commandFrameProvider"
 import { CommandFrameLoader } from "./commandFrame/loader/commandFrameLoader"
 import { isBlank } from "../util/strings"
+import { CommandLineParserProvider } from "../commandLine/parser/commandLineParserProvider"
 
 export class CommandLineProcessor {
 
@@ -9,20 +10,19 @@ export class CommandLineProcessor {
         private readonly _commandFrameService: CommandFrameProvider,
         private readonly _commandFrameRenderer: CommandFrameRenderer,
         private readonly _commandFrameLoader: CommandFrameLoader,
+        private readonly _commandLineParserProvider: CommandLineParserProvider
     ) {}
 
     onCommandLineChange(commandLineOldValue: string, commandLineNewValue: string) {
         
-        const newTokens = commandLineNewValue.split(/\s/).filter(it => !isBlank(it))
-        const newExecutable = newTokens[0]
+        const newExecutable = this._commandLineParserProvider.getParser().parseCommandLine(commandLineNewValue)?.command.command
         
         if (!newExecutable || isBlank(newExecutable)) {
             this._commandFrameRenderer.renderEmpty()
             return
         }
 
-        const oldTokens = commandLineOldValue.split(/\s/).filter(it => !isBlank(it))
-        const oldExecutable = oldTokens[0]
+        const oldExecutable = this._commandLineParserProvider.getParser().parseCommandLine(commandLineOldValue)?.command.command
 
         if (oldExecutable === newExecutable) {
             return
