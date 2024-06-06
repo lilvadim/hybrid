@@ -4,127 +4,134 @@
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
   </head>
   <body>
-    <script>var command_frame_git_id_map = {"-h":"option_1102860315","--help":"option_1102860315","-m":"option_218002096","--message":"option_218002096","--amend":"option_318321607","-f":"option_1689316426","--force":"option_1689316426","-i":"option_499770578"};
+    <script>var command_frame_git_id_map = {"-h":"option_2072030980","--help":"option_2072030980","-m":"option_1111506374","--message":"option_1111506374","--amend":"option_1956763150","-f":"option_1660124157","--force":"option_1660124157","-i":"option_1553141699"};
 var command_frame_git_desc = {"command":"git","subcommands":["commit","push","rebase"],"options":[{"optionSynonyms":["-h","--help"],"hasValue":false},{"optionSynonyms":["-m","--message"],"hasValue":true},{"optionSynonyms":["--amend"],"hasValue":false},{"optionSynonyms":["-f","--force"],"hasValue":false},{"optionSynonyms":["-i"],"hasValue":false}]};
+var command_frame_git_semantic = {"command":"git","options":[{"option":"-h","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-h","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-h","removeValue":false}]}},{"option":"-m","whenAdded":{"add":[{"optionType":"NON-STD","optionText":"-m","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-m","removeValue":true}]}},{"option":"--amend","whenAdded":{"add":[{"optionType":"GNU","optionText":"--amend","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"--amend","removeValue":false}]}},{"option":"-f","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-f","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-f","removeValue":false}]}},{"option":"-i","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-i","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-i","removeValue":false}]}}]};
+window.hybrid.commandInfo.addSyntax(command_frame_git_desc);
+window.hybrid.commandInfo.addSemantic(command_frame_git_semantic);
 window.hybrid.terminal.onCommandLineSync((e) => {
-    if (!e.commandLine) {
+    if (!e.commandLine || e.commandLine.command.command !== command_frame_git_desc.command) {
         return;
     }
     var options = e.commandLine.command.options;
-    Object.values(command_frame_git_id_map).forEach((id) => {
-        var input = document.getElementById(id);
-        window.hybrid.utils.toggleOff(input);
-    });
+    Object.values(command_frame_git_id_map).forEach((id) => window.hybrid.uiUtils.toggleOff(id));
     options.forEach((opt) => {
         if (opt.option.type === 'UNIX' && opt.option.words) {
             opt.option.words?.forEach((w) => {
-                var input = document.getElementById(command_frame_git_id_map[opt.option.prefix + w]);
-                window.hybrid.utils.toggleOn(input);
+                window.hybrid.uiUtils.toggleOn(command_frame_git_id_map[opt.option.prefix + w]);
                 if (opt.value) {
-                    var inputValue = document.getElementById(command_frame_git_id_map[opt.option.prefix + w] + '_value');
-                    window.hybrid.utils.setValue(inputValue, opt.value);
+                    window.hybrid.uiUtils.setValue(
+                        command_frame_git_id_map[opt.option.prefix + w] + '_value',
+                        opt.value
+                    );
                 }
             });
         } else {
-            var input = document.getElementById(command_frame_git_id_map[opt.option.option]);
-            window.hybrid.utils.toggleOn(input);
+            window.hybrid.uiUtils.toggleOn(command_frame_git_id_map[opt.option.option]);
             if (opt.value) {
-                var inputValue = document.getElementById(command_frame_git_id_map[opt.option.option] + '_value');
-                window.hybrid.utils.setValue(inputValue, opt.value);
+                window.hybrid.uiUtils.setValue(
+                    command_frame_git_id_map[opt.option.option] + '_value', 
+                    opt.value
+                );
             }
         }
     });
     
-    var util = window.hybrid.getCommandLineUtil(command_frame_git_desc);
-    var subcommand = util.getSubcommand(e.commandLine.command);
+    var syntaxHelper = window.hybrid.getCommandSyntaxHelper(e.commandLine.command.command);
+    if (!syntaxHelper) {
+        return;
+    }
+    var subcommand = syntaxHelper.getSubcommand(e.commandLine.command);
     var commandFrameId = 'command_frame_' + e.commandLine.command.command;
     if (!subcommand) {
-        window.hybrid.utils.show(commandFrameId);
-        Object.values(command_frame_git_desc.subcommands).forEach((sc) => {
-            window.hybrid.utils.hide('command_frame_' + sc);
-        });
+        window.hybrid.uiUtils.show(commandFrameId);
+        Object.values(command_frame_git_desc.subcommands).forEach((sc) => 
+            window.hybrid.uiUtils.hide('command_frame_' + sc));
     } else {
         var subcommandFrameId = 'command_frame_' + subcommand;
-        window.hybrid.utils.hide(commandFrameId);
-        window.hybrid.utils.show(subcommandFrameId);
+        window.hybrid.uiUtils.hide(commandFrameId);
+        window.hybrid.uiUtils.show(subcommandFrameId);
     }
 });
-function option_1102860315_handler(event) {
-    var data = document.getElementById('option_1102860315').checked;
+function option_2072030980_handler() {
+    var data = document.getElementById('option_2072030980').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-h","value":option_1102860315_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-h","value":option_2072030980_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-h","removeValue":false},{"optionText":"--help","removeValue":false}]});
     }
 }
-function option_1102860315_value() {
-    var elem = document.getElementById('option_1102860315_value');
+function option_2072030980_value() {
+    var elem = document.getElementById('option_2072030980_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_218002096_handler(event) {
-    var data = document.getElementById('option_218002096').checked;
+function option_1111506374_handler() {
+    var data = document.getElementById('option_1111506374').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"NON-STD","optionText":"-m","value":option_218002096_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"NON-STD","optionText":"-m","value":option_1111506374_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-m","removeValue":true},{"optionText":"--message","removeValue":true}]});
     }
 }
-function option_218002096_value() {
-    var elem = document.getElementById('option_218002096_value');
+function option_1111506374_value() {
+    var elem = document.getElementById('option_1111506374_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_318321607_handler(event) {
-    var data = document.getElementById('option_318321607').checked;
+function option_1956763150_handler() {
+    var data = document.getElementById('option_1956763150').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"GNU","optionText":"--amend","value":option_318321607_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"GNU","optionText":"--amend","value":option_1956763150_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"--amend","removeValue":false}]});
     }
 }
-function option_318321607_value() {
-    var elem = document.getElementById('option_318321607_value');
+function option_1956763150_value() {
+    var elem = document.getElementById('option_1956763150_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1689316426_handler(event) {
-    var data = document.getElementById('option_1689316426').checked;
+function option_1660124157_handler() {
+    var data = document.getElementById('option_1660124157').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-f","value":option_1689316426_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-f","value":option_1660124157_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-f","removeValue":false},{"optionText":"--force","removeValue":false}]});
     }
 }
-function option_1689316426_value() {
-    var elem = document.getElementById('option_1689316426_value');
+function option_1660124157_value() {
+    var elem = document.getElementById('option_1660124157_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_499770578_handler(event) {
-    var data = document.getElementById('option_499770578').checked;
+function option_1553141699_handler() {
+    var data = document.getElementById('option_1553141699').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-i","value":option_499770578_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-i","value":option_1553141699_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-i","removeValue":false}]});
     }
 }
-function option_499770578_value() {
-    var elem = document.getElementById('option_499770578_value');
+function option_1553141699_value() {
+    var elem = document.getElementById('option_1553141699_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
 </script>
+    <style>.black-check:checked {
+    background-color: var(--bs-dark);
+}</style>
     <div>
       <div class="container" id="command_frame_git">
         <h2 class="mono-font-bold">git</h2>
@@ -141,9 +148,9 @@ function option_499770578_value() {
         <h3>Options</h3>
         <div class="list-group-item">
           <div class="list-group list-group-flush">
-            <div class="list-group-item">
+            <div class="list-group-item border-0">
               <div class="form-check">
-                <label class="form-check-label mono-font-bold" for="option_1102860315" onclick="option_1102860315_handler(event)">-h, --help<input class="form-check-input " id="option_1102860315" name="option_toggles_1544390508" type="checkbox" value=""></label>
+                <label class="form-check-label mono-font-bold" for="option_2072030980" onclick="option_2072030980_handler()">-h, --help<input class="form-check-input border-dark black-check " id="option_2072030980" name="option_toggles_1769513770" type="checkbox" value=""></label>
               </div>
             </div>
           </div>
@@ -151,23 +158,22 @@ function option_499770578_value() {
       </div>
       <div class="invisible" id="command_frame_commit">
         <h2 class="mono-font-bold">
-          <a href="#" onclick="window.hybrid.terminal.removeSubcommandArg('commit')">git</a> commit
-        </h2>
+          <a href="#" onclick="window.hybrid.terminal.removeSubcommandAndRest('commit')">git</a> commit</h2>
         <div class="list-group-item">
           <div class="list-group list-group-flush">
-            <div class="list-group-item">
+            <div class="list-group-item border-0">
               <div class="input-group">
                 <div class="input-group-text">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" onclick="option_218002096_handler(event)">-m, --message<input class="form-check-input " id="option_218002096" name="option_toggles_955557441" type="checkbox" value=""></label>
+                    <label class="form-check-label mono-font-bold" onclick="option_1111506374_handler()">-m, --message<input class="form-check-input border-dark black-check " id="option_1111506374" name="option_toggles_1242888151" type="checkbox" value=""></label>
                   </div>
                 </div>
-                <input class="form-control" id="option_218002096_value" onchange="option_218002096_handler(event)" placeholder="msg" type="text">
+                <input class="form-control" id="option_1111506374_value" onchange="option_1111506374_handler()" placeholder="msg" type="text">
               </div>
             </div>
-            <div class="list-group-item">
+            <div class="list-group-item border-0">
               <div class="form-check">
-                <label class="form-check-label mono-font-bold" for="option_318321607" onclick="option_318321607_handler(event)">--amend<input class="form-check-input " id="option_318321607" name="option_toggles_955557441" type="checkbox" value=""></label>
+                <label class="form-check-label mono-font-bold" for="option_1956763150" onclick="option_1956763150_handler()">--amend<input class="form-check-input border-dark black-check " id="option_1956763150" name="option_toggles_1242888151" type="checkbox" value=""></label>
               </div>
             </div>
           </div>
@@ -175,13 +181,12 @@ function option_499770578_value() {
       </div>
       <div class="invisible" id="command_frame_push">
         <h2 class="mono-font-bold">
-          <a href="#" onclick="window.hybrid.terminal.removeSubcommandArg('push')">git</a> push
-        </h2>
+          <a href="#" onclick="window.hybrid.terminal.removeSubcommandAndRest('push')">git</a> push</h2>
         <div class="list-group-item">
           <div class="list-group list-group-flush">
-            <div class="list-group-item">
+            <div class="list-group-item border-0">
               <div class="form-check">
-                <label class="form-check-label mono-font-bold" for="option_1689316426" onclick="option_1689316426_handler(event)">-f, --force<input class="form-check-input " id="option_1689316426" name="option_toggles_419605775" type="checkbox" value=""></label>
+                <label class="form-check-label mono-font-bold" for="option_1660124157" onclick="option_1660124157_handler()">-f, --force<input class="form-check-input border-dark black-check " id="option_1660124157" name="option_toggles_1717136460" type="checkbox" value=""></label>
               </div>
             </div>
           </div>
@@ -189,13 +194,12 @@ function option_499770578_value() {
       </div>
       <div class="invisible" id="command_frame_rebase">
         <h2 class="mono-font-bold">
-          <a href="#" onclick="window.hybrid.terminal.removeSubcommandArg('rebase')">git</a> rebase
-        </h2>
+          <a href="#" onclick="window.hybrid.terminal.removeSubcommandAndRest('rebase')">git</a> rebase</h2>
         <div class="list-group-item">
           <div class="list-group list-group-flush">
-            <div class="list-group-item">
+            <div class="list-group-item border-0">
               <div class="form-check">
-                <label class="form-check-label mono-font-bold" for="option_499770578" onclick="option_499770578_handler(event)">-i<input class="form-check-input " id="option_499770578" name="option_toggles_1698675708" type="checkbox" value=""></label>
+                <label class="form-check-label mono-font-bold" for="option_1553141699" onclick="option_1553141699_handler()">-i<input class="form-check-input border-dark black-check " id="option_1553141699" name="option_toggles_22864481" type="checkbox" value=""></label>
               </div>
             </div>
           </div>

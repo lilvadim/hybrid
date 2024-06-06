@@ -68,3 +68,40 @@ export function collectPositionalArgs(commandObj: ICommand, ignoreLastOptionValu
         return args;
     }
 }
+
+export function removeSubcommandAndRest(command: ICommand, subcommandWord: string): boolean {
+
+    if (command.precedingArgs) {
+        for (let i = 0; i < command.precedingArgs.length; i++) {
+            const arg = command.precedingArgs[i]
+            if (arg === subcommandWord) {
+                (command.precedingArgs || []).splice(i)
+                command.options = []
+                return true 
+            }
+        }
+    }
+
+    for (let i = 0; i < command.options.length; i++) {
+        const option = command.options[i]
+        if (option.value === subcommandWord) {
+            option.value = undefined
+            option.subsequentArgs = []
+            command.options.splice(i + 1)
+            return true
+        }
+        if (!option.subsequentArgs) {
+            continue
+        }
+        for (let j = 0; j < option.subsequentArgs.length; j++) {
+            const arg = option.subsequentArgs[j]
+            if (arg === subcommandWord) {
+                (option.subsequentArgs || []).splice(j)
+                command.options = command.options.splice(i + 1)
+                return true
+            }
+        }
+    }
+
+    return false
+}

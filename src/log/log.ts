@@ -4,7 +4,7 @@ import * as log from 'electron-log/main'
 
 const dateTime = new Date(Date.now())
 
-export const ux = log.create({ logId: 'ux' })
-ux.transports.file.level = 'info'
-ux.transports.file.resolvePathFn = () => 
+export const UxLog = log.create({ logId: 'ux' })
+UxLog.transports.file.level = 'info'
+UxLog.transports.file.resolvePathFn = () => 
     join(HYBRID_DIR, 'ux_logs', `ux_${dateTime.getFullYear()}-${dateTime.getMonth()}-${dateTime.getDay()}_T${dateTime.getHours()}-${dateTime.getMinutes()}.log`)

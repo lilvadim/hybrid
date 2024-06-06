@@ -9,7 +9,7 @@ function serializeComplexCommand(complexCommand: IComplexCommand): string {
     return serializeCommand(complexCommand.command) + ' ' + serializeCommand(complexCommand.subcommand)
 }
 
-function serializeCommand(commandObj: ICommand): string {
+export function serializeCommand(commandObj: ICommand): string {
     let result = commandObj.command
 
     if (commandObj.precedingArgs) {
@@ -34,10 +34,8 @@ function serializeOption(optionObj: IOption): string {
         result += optionObj.option.option
     }
 
-    if (optionObj.delimiter && optionObj.value) {
-        result += optionObj.delimiter + serializeArgument(optionObj.value)
-    } else if (optionObj.value) {
-        result += ' ' + serializeArgument(optionObj.value)
+    if (optionObj.value !== undefined && optionObj.value !== null) {
+        result += (optionObj.delimiter ?? '') + serializeArgument(optionObj.value)
     }
 
     if (optionObj.subsequentArgs) {

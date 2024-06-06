@@ -33,7 +33,12 @@ const enum ShellIntegrationOscPs {
 	 */
 	ITerm = 1337,
 	SetCwd = 7,
-	SetWindowsFriendlyCwd = 9
+	SetWindowsFriendlyCwd = 9,
+
+	/**
+	 * Sequences pioneered by Hybrid
+	 */
+	Hybrid = 944
 }
 
 /**
@@ -114,6 +119,11 @@ const enum VSCodeOscPt {
 
 }
 
+const enum HybridOscPt {
+	Input = 'I',
+	Api = 'A'
+}
+
 export class ShellIntegrationAddon implements ITerminalAddon {
 
     private readonly _handlers: IShellIntegrationHandler[] = []
@@ -124,7 +134,6 @@ export class ShellIntegrationAddon implements ITerminalAddon {
 
     activate(terminal: Terminal) {
         terminal.parser.registerOscHandler(ShellIntegrationOscPs.VSCode, data => {
-			console.debug('ShellIntegrationAddon.Osc.VSCode.data', data)
 			return this.handleVsCodeSequence(data)
 		})
 		console.debug('ShellIntegrationAddon activated')

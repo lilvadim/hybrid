@@ -4,488 +4,475 @@
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
   </head>
   <body>
-    <script>var command_frame_ls_id_map = {"-a":"option_1528714086","-A":"option_946651588","-d":"option_778872501","-R":"option_648012542","--author":"option_347864558","--block-size":"option_415052085","-i":"option_1610664551","-s":"option_1453847935","-k":"option_1668107484","-H":"option_1061055491","-L":"option_1959336370","-C":"option_1333479763","-m":"option_1726408169","-l":"option_1470844979","-g":"option_1420395577","-n":"option_1183276974","-o":"option_1127205440","-c":"option_1389405694","-S":"option_426744693","-t":"option_749331034","-f":"option_2109027988","-r":"option_1277188038","-w":"option_787028959"};
+    <script>var command_frame_ls_id_map = {"-a":"option_1787546468","-A":"option_680232547","-d":"option_1142541678","-R":"option_1266421561","--author":"option_456177400","--block-size":"option_1465902810","-i":"option_168549346","-s":"option_248632015","-k":"option_1602310266","-H":"option_2109470512","-L":"option_2085248754","-C":"option_2141622260","-m":"option_795146655","-l":"option_1310785558","-g":"option_1430509568","-n":"option_1491380839","-o":"option_472243888","-c":"option_1560388331","-S":"option_335004005","-t":"option_489519421","-f":"option_1669105202","-r":"option_872422493","-w":"option_933960464"};
 var command_frame_ls_desc = {"command":"ls","subcommands":[],"options":[{"optionSynonyms":["-a"],"hasValue":false},{"optionSynonyms":["-A"],"hasValue":false},{"optionSynonyms":["-d"],"hasValue":false},{"optionSynonyms":["-R"],"hasValue":false},{"optionSynonyms":["--author"],"hasValue":false},{"optionSynonyms":["--block-size"],"hasValue":true},{"optionSynonyms":["-i"],"hasValue":false},{"optionSynonyms":["-s"],"hasValue":false},{"optionSynonyms":["-k"],"hasValue":false},{"optionSynonyms":["-H"],"hasValue":false},{"optionSynonyms":["-L"],"hasValue":false},{"optionSynonyms":["-C"],"hasValue":false},{"optionSynonyms":["-m"],"hasValue":false},{"optionSynonyms":["-l"],"hasValue":false},{"optionSynonyms":["-g"],"hasValue":false},{"optionSynonyms":["-n"],"hasValue":false},{"optionSynonyms":["-o"],"hasValue":false},{"optionSynonyms":["-c"],"hasValue":false},{"optionSynonyms":["-S"],"hasValue":false},{"optionSynonyms":["-t"],"hasValue":false},{"optionSynonyms":["-f"],"hasValue":false},{"optionSynonyms":["-r"],"hasValue":false},{"optionSynonyms":["-w"],"hasValue":true}]};
+var command_frame_ls_semantic = {"command":"ls","options":[{"option":"-a","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-a","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-A","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-a","removeValue":false}]}},{"option":"-A","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-A","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-a","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-A","removeValue":false}]}},{"option":"-d","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-d","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-d","removeValue":false}]}},{"option":"-R","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-R","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-R","removeValue":false}]}},{"option":"--author","whenAdded":{"add":[{"optionType":"GNU","optionText":"--author","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"--author","removeValue":false}]}},{"option":"--block-size","whenAdded":{"add":[{"optionType":"NON-STD","optionText":"--block-size","value":undefined,"delimiter":"=","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"--block-size","removeValue":true}]}},{"option":"-i","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-i","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-i","removeValue":false}]}},{"option":"-s","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-s","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-s","removeValue":false}]}},{"option":"-k","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-k","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-k","removeValue":false}]}},{"option":"-H","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-H","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-H","removeValue":false}]}},{"option":"-L","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-L","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-L","removeValue":false}]}},{"option":"-C","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-C","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false},{"optionText":"-c","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-C","removeValue":false}]}},{"option":"-m","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-m","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-C","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false},{"optionText":"-c","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-m","removeValue":false}]}},{"option":"-l","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-l","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-l","removeValue":false}]}},{"option":"-g","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-g","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-g","removeValue":false}]}},{"option":"-n","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-n","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-o","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-n","removeValue":false}]}},{"option":"-o","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-o","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-o","removeValue":false}]}},{"option":"-c","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-c","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-c","removeValue":false}]}},{"option":"-S","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-S","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-S","removeValue":false}]}},{"option":"-t","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-t","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-t","removeValue":false}]}},{"option":"-f","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-f","value":undefined,"delimiter":"","words":null,"unique":true},{"optionType":"UNIX","optionText":"-a","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-r","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-f","removeValue":false}]}},{"option":"-r","whenAdded":{"add":[{"optionType":"UNIX","optionText":"-r","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[{"optionText":"-f","removeValue":false}]},"whenRemoved":{"add":[],"remove":[{"optionText":"-r","removeValue":false}]}},{"option":"-w","whenAdded":{"add":[{"optionType":"NON-STD","optionText":"-w","value":undefined,"delimiter":"","words":null,"unique":true}],"remove":[]},"whenRemoved":{"add":[],"remove":[{"optionText":"-w","removeValue":true}]}}]};
+window.hybrid.commandInfo.addSyntax(command_frame_ls_desc);
+window.hybrid.commandInfo.addSemantic(command_frame_ls_semantic);
 window.hybrid.terminal.onCommandLineSync((e) => {
-    if (!e.commandLine) {
+    if (!e.commandLine || e.commandLine.command.command !== command_frame_ls_desc.command) {
         return;
     }
     var options = e.commandLine.command.options;
-    Object.values(command_frame_ls_id_map).forEach((id) => {
-        var input = document.getElementById(id);
-        window.hybrid.utils.toggleOff(input);
-    });
+    Object.values(command_frame_ls_id_map).forEach((id) => window.hybrid.uiUtils.toggleOff(id));
     options.forEach((opt) => {
         if (opt.option.type === 'UNIX' && opt.option.words) {
             opt.option.words?.forEach((w) => {
-                var input = document.getElementById(command_frame_ls_id_map[opt.option.prefix + w]);
-                window.hybrid.utils.toggleOn(input);
+                window.hybrid.uiUtils.toggleOn(command_frame_ls_id_map[opt.option.prefix + w]);
                 if (opt.value) {
-                    var inputValue = document.getElementById(command_frame_ls_id_map[opt.option.prefix + w] + '_value');
-                    window.hybrid.utils.setValue(inputValue, opt.value);
+                    window.hybrid.uiUtils.setValue(
+                        command_frame_ls_id_map[opt.option.prefix + w] + '_value',
+                        opt.value
+                    );
                 }
             });
         } else {
-            var input = document.getElementById(command_frame_ls_id_map[opt.option.option]);
-            window.hybrid.utils.toggleOn(input);
+            window.hybrid.uiUtils.toggleOn(command_frame_ls_id_map[opt.option.option]);
             if (opt.value) {
-                var inputValue = document.getElementById(command_frame_ls_id_map[opt.option.option] + '_value');
-                window.hybrid.utils.setValue(inputValue, opt.value);
+                window.hybrid.uiUtils.setValue(
+                    command_frame_ls_id_map[opt.option.option] + '_value', 
+                    opt.value
+                );
             }
         }
     });
     
-    var util = window.hybrid.getCommandLineUtil(command_frame_ls_desc);
-    var subcommand = util.getSubcommand(e.commandLine.command);
+    var syntaxHelper = window.hybrid.getCommandSyntaxHelper(e.commandLine.command.command);
+    if (!syntaxHelper) {
+        return;
+    }
+    var subcommand = syntaxHelper.getSubcommand(e.commandLine.command);
     var commandFrameId = 'command_frame_' + e.commandLine.command.command;
     if (!subcommand) {
-        window.hybrid.utils.show(commandFrameId);
-        Object.values(command_frame_ls_desc.subcommands).forEach((sc) => {
-            window.hybrid.utils.hide('command_frame_' + sc);
-        });
+        window.hybrid.uiUtils.show(commandFrameId);
+        Object.values(command_frame_ls_desc.subcommands).forEach((sc) => 
+            window.hybrid.uiUtils.hide('command_frame_' + sc));
     } else {
         var subcommandFrameId = 'command_frame_' + subcommand;
-        window.hybrid.utils.hide(commandFrameId);
-        window.hybrid.utils.show(subcommandFrameId);
+        window.hybrid.uiUtils.hide(commandFrameId);
+        window.hybrid.uiUtils.show(subcommandFrameId);
     }
 });
-function option_1528714086_handler(event) {
-    var data = document.getElementById('option_1528714086').checked;
+function option_1787546468_handler() {
+    var data = document.getElementById('option_1787546468').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-a","value":option_1528714086_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-A","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-a","value":option_1787546468_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-A","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-a","removeValue":false}]});
     }
 }
-function option_1528714086_value() {
-    var elem = document.getElementById('option_1528714086_value');
+function option_1787546468_value() {
+    var elem = document.getElementById('option_1787546468_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_946651588_handler(event) {
-    var data = document.getElementById('option_946651588').checked;
+function option_680232547_handler() {
+    var data = document.getElementById('option_680232547').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-A","value":option_946651588_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-a","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-A","value":option_680232547_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-a","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-A","removeValue":false}]});
     }
 }
-function option_946651588_value() {
-    var elem = document.getElementById('option_946651588_value');
+function option_680232547_value() {
+    var elem = document.getElementById('option_680232547_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_778872501_handler(event) {
-    var data = document.getElementById('option_778872501').checked;
+function option_1142541678_handler() {
+    var data = document.getElementById('option_1142541678').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-d","value":option_778872501_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-d","value":option_1142541678_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-d","removeValue":false}]});
     }
 }
-function option_778872501_value() {
-    var elem = document.getElementById('option_778872501_value');
+function option_1142541678_value() {
+    var elem = document.getElementById('option_1142541678_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_648012542_handler(event) {
-    var data = document.getElementById('option_648012542').checked;
+function option_1266421561_handler() {
+    var data = document.getElementById('option_1266421561').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-R","value":option_648012542_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-R","value":option_1266421561_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-R","removeValue":false}]});
     }
 }
-function option_648012542_value() {
-    var elem = document.getElementById('option_648012542_value');
+function option_1266421561_value() {
+    var elem = document.getElementById('option_1266421561_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_347864558_handler(event) {
-    var data = document.getElementById('option_347864558').checked;
+function option_456177400_handler() {
+    var data = document.getElementById('option_456177400').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"GNU","optionText":"--author","value":option_347864558_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"GNU","optionText":"--author","value":option_456177400_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"--author","removeValue":false}]});
     }
 }
-function option_347864558_value() {
-    var elem = document.getElementById('option_347864558_value');
+function option_456177400_value() {
+    var elem = document.getElementById('option_456177400_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_415052085_handler(event) {
-    var data = document.getElementById('option_415052085').checked;
+function option_1465902810_handler() {
+    var data = document.getElementById('option_1465902810').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"NON-STD","optionText":"--block-size","value":option_415052085_value(),"delimiter":"=","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"NON-STD","optionText":"--block-size","value":option_1465902810_value(),"delimiter":"=","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"--block-size","removeValue":true}]});
     }
 }
-function option_415052085_value() {
-    var elem = document.getElementById('option_415052085_value');
+function option_1465902810_value() {
+    var elem = document.getElementById('option_1465902810_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1610664551_handler(event) {
-    var data = document.getElementById('option_1610664551').checked;
+function option_168549346_handler() {
+    var data = document.getElementById('option_168549346').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-i","value":option_1610664551_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-i","value":option_168549346_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-i","removeValue":false}]});
     }
 }
-function option_1610664551_value() {
-    var elem = document.getElementById('option_1610664551_value');
+function option_168549346_value() {
+    var elem = document.getElementById('option_168549346_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1453847935_handler(event) {
-    var data = document.getElementById('option_1453847935').checked;
+function option_248632015_handler() {
+    var data = document.getElementById('option_248632015').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-s","value":option_1453847935_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-s","value":option_248632015_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-s","removeValue":false}]});
     }
 }
-function option_1453847935_value() {
-    var elem = document.getElementById('option_1453847935_value');
+function option_248632015_value() {
+    var elem = document.getElementById('option_248632015_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1668107484_handler(event) {
-    var data = document.getElementById('option_1668107484').checked;
+function option_1602310266_handler() {
+    var data = document.getElementById('option_1602310266').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-k","value":option_1668107484_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-k","value":option_1602310266_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-k","removeValue":false}]});
     }
 }
-function option_1668107484_value() {
-    var elem = document.getElementById('option_1668107484_value');
+function option_1602310266_value() {
+    var elem = document.getElementById('option_1602310266_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1061055491_handler(event) {
-    var data = document.getElementById('option_1061055491').checked;
+function option_2109470512_handler() {
+    var data = document.getElementById('option_2109470512').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-H","value":option_1061055491_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-H","value":option_2109470512_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-H","removeValue":false}]});
     }
 }
-function option_1061055491_value() {
-    var elem = document.getElementById('option_1061055491_value');
+function option_2109470512_value() {
+    var elem = document.getElementById('option_2109470512_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1959336370_handler(event) {
-    var data = document.getElementById('option_1959336370').checked;
+function option_2085248754_handler() {
+    var data = document.getElementById('option_2085248754').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-L","value":option_1959336370_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-L","value":option_2085248754_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-L","removeValue":false}]});
     }
 }
-function option_1959336370_value() {
-    var elem = document.getElementById('option_1959336370_value');
+function option_2085248754_value() {
+    var elem = document.getElementById('option_2085248754_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1333479763_handler(event) {
-    var data = document.getElementById('option_1333479763').checked;
+function option_2141622260_handler() {
+    var data = document.getElementById('option_2141622260').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-C","value":option_1333479763_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false},{"optionText":"-c","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-C","value":option_2141622260_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false},{"optionText":"-c","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-C","removeValue":false}]});
     }
 }
-function option_1333479763_value() {
-    var elem = document.getElementById('option_1333479763_value');
+function option_2141622260_value() {
+    var elem = document.getElementById('option_2141622260_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1726408169_handler(event) {
-    var data = document.getElementById('option_1726408169').checked;
+function option_795146655_handler() {
+    var data = document.getElementById('option_795146655').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-m","value":option_1726408169_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false},{"optionText":"-c","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-m","value":option_795146655_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false},{"optionText":"-c","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-m","removeValue":false}]});
     }
 }
-function option_1726408169_value() {
-    var elem = document.getElementById('option_1726408169_value');
+function option_795146655_value() {
+    var elem = document.getElementById('option_795146655_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1470844979_handler(event) {
-    var data = document.getElementById('option_1470844979').checked;
+function option_1310785558_handler() {
+    var data = document.getElementById('option_1310785558').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-l","value":option_1470844979_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-l","value":option_1310785558_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-l","removeValue":false}]});
     }
 }
-function option_1470844979_value() {
-    var elem = document.getElementById('option_1470844979_value');
+function option_1310785558_value() {
+    var elem = document.getElementById('option_1310785558_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1420395577_handler(event) {
-    var data = document.getElementById('option_1420395577').checked;
+function option_1430509568_handler() {
+    var data = document.getElementById('option_1430509568').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-g","value":option_1420395577_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-g","value":option_1430509568_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-n","removeValue":false},{"optionText":"-o","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-g","removeValue":false}]});
     }
 }
-function option_1420395577_value() {
-    var elem = document.getElementById('option_1420395577_value');
+function option_1430509568_value() {
+    var elem = document.getElementById('option_1430509568_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1183276974_handler(event) {
-    var data = document.getElementById('option_1183276974').checked;
+function option_1491380839_handler() {
+    var data = document.getElementById('option_1491380839').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-n","value":option_1183276974_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-o","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-n","value":option_1491380839_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-o","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-n","removeValue":false}]});
     }
 }
-function option_1183276974_value() {
-    var elem = document.getElementById('option_1183276974_value');
+function option_1491380839_value() {
+    var elem = document.getElementById('option_1491380839_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1127205440_handler(event) {
-    var data = document.getElementById('option_1127205440').checked;
+function option_472243888_handler() {
+    var data = document.getElementById('option_472243888').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-o","value":option_1127205440_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-o","value":option_472243888_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false},{"optionText":"-l","removeValue":false},{"optionText":"-g","removeValue":false},{"optionText":"-n","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-o","removeValue":false}]});
     }
 }
-function option_1127205440_value() {
-    var elem = document.getElementById('option_1127205440_value');
+function option_472243888_value() {
+    var elem = document.getElementById('option_472243888_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1389405694_handler(event) {
-    var data = document.getElementById('option_1389405694').checked;
+function option_1560388331_handler() {
+    var data = document.getElementById('option_1560388331').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-c","value":option_1389405694_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-c","value":option_1560388331_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-C","removeValue":false},{"optionText":"-m","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-c","removeValue":false}]});
     }
 }
-function option_1389405694_value() {
-    var elem = document.getElementById('option_1389405694_value');
+function option_1560388331_value() {
+    var elem = document.getElementById('option_1560388331_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_426744693_handler(event) {
-    var data = document.getElementById('option_426744693').checked;
+function option_335004005_handler() {
+    var data = document.getElementById('option_335004005').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-S","value":option_426744693_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-S","value":option_335004005_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-S","removeValue":false}]});
     }
 }
-function option_426744693_value() {
-    var elem = document.getElementById('option_426744693_value');
+function option_335004005_value() {
+    var elem = document.getElementById('option_335004005_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_749331034_handler(event) {
-    var data = document.getElementById('option_749331034').checked;
+function option_489519421_handler() {
+    var data = document.getElementById('option_489519421').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-t","value":option_749331034_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-t","value":option_489519421_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-t","removeValue":false}]});
     }
 }
-function option_749331034_value() {
-    var elem = document.getElementById('option_749331034_value');
+function option_489519421_value() {
+    var elem = document.getElementById('option_489519421_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_2109027988_handler(event) {
-    var data = document.getElementById('option_2109027988').checked;
+function option_1669105202_handler() {
+    var data = document.getElementById('option_1669105202').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-f","value":option_2109027988_value(),"delimiter":" ","words":null,"unique":true},{"optionType":"UNIX","optionText":"-a","value":undefined,"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-r","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-f","value":option_1669105202_value(),"delimiter":"","words":null,"unique":true},{"optionType":"UNIX","optionText":"-a","value":undefined,"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-r","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-f","removeValue":false}]});
     }
 }
-function option_2109027988_value() {
-    var elem = document.getElementById('option_2109027988_value');
+function option_1669105202_value() {
+    var elem = document.getElementById('option_1669105202_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_1277188038_handler(event) {
-    var data = document.getElementById('option_1277188038').checked;
+function option_872422493_handler() {
+    var data = document.getElementById('option_872422493').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-r","value":option_1277188038_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[{"optionText":"-f","removeValue":false}]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"UNIX","optionText":"-r","value":option_872422493_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[{"optionText":"-f","removeValue":false}]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-r","removeValue":false}]});
     }
 }
-function option_1277188038_value() {
-    var elem = document.getElementById('option_1277188038_value');
+function option_872422493_value() {
+    var elem = document.getElementById('option_872422493_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
-function option_787028959_handler(event) {
-    var data = document.getElementById('option_787028959').checked;
+function option_933960464_handler() {
+    var data = document.getElementById('option_933960464').checked;
     if (data) {
-        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"NON-STD","optionText":"-w","value":option_787028959_value(),"delimiter":" ","words":null,"unique":true}],"removeOptions":[]});
+        window.hybrid.terminal.updateOptions({"addOptions":[{"optionType":"NON-STD","optionText":"-w","value":option_933960464_value(),"delimiter":"","words":null,"unique":true}],"removeOptions":[]});
     } else {
         window.hybrid.terminal.updateOptions({"addOptions":[],"removeOptions":[{"optionText":"-w","removeValue":true}]});
     }
 }
-function option_787028959_value() {
-    var elem = document.getElementById('option_787028959_value');
+function option_933960464_value() {
+    var elem = document.getElementById('option_933960464_value');
     if (elem) {
         return elem.value;
     }
     return undefined;
 }
 </script>
+    <style>.black-check:checked {
+    background-color: var(--bs-dark);
+}</style>
     <div id="command_frame_ls">
       <h2 class="mono-font-bold"> ls</h2>
       <div>
         <h3></h3>
         <nav>
           <div class="nav nav-underline" role="tablist">
-            <button aria-controls="sub_entry_1279467050_tab_pane" aria-selected="false" class="nav-link tab-btn" data-bs-target="#sub_entry_1279467050_tab_pane" data-bs-toggle="tab" id="sub_entry_1279467050_tab" role="tab" type="button">Filter</button><button aria-controls="sub_entry_858881318_tab_pane" aria-selected="false" class="nav-link tab-btn" data-bs-target="#sub_entry_858881318_tab_pane" data-bs-toggle="tab" id="sub_entry_858881318_tab" role="tab" type="button">Format</button><button aria-controls="sub_entry_2037727008_tab_pane" aria-selected="false" class="nav-link tab-btn" data-bs-target="#sub_entry_2037727008_tab_pane" data-bs-toggle="tab" id="sub_entry_2037727008_tab" role="tab" type="button">Sort</button>
+            <button aria-controls="sub_entry_1555478555_tab_pane" aria-selected="true" class="nav-link tab-btn active" data-bs-target="#sub_entry_1555478555_tab_pane" data-bs-toggle="tab" id="sub_entry_1555478555_tab" role="tab" type="button">Filter</button><button aria-controls="sub_entry_706067443_tab_pane" aria-selected="false" class="nav-link tab-btn" data-bs-target="#sub_entry_706067443_tab_pane" data-bs-toggle="tab" id="sub_entry_706067443_tab" role="tab" type="button">Format</button><button aria-controls="sub_entry_1187091280_tab_pane" aria-selected="false" class="nav-link tab-btn" data-bs-target="#sub_entry_1187091280_tab_pane" data-bs-toggle="tab" id="sub_entry_1187091280_tab" role="tab" type="button">Sort</button>
           </div>
         </nav>
         <div class="tab-content">
-          <div aria-labelledby="sub_entry_1279467050_tab" class="tab-pane list-group list-group-flush" id="sub_entry_1279467050_tab_pane" role="tabpanel" tabIndex="0">
+          <div aria-labelledby="sub_entry_1555478555_tab" class="tab-pane list-group list-group-flush show active" id="sub_entry_1555478555_tab_pane" role="tabpanel" tabIndex="0">
             <div class="list-group-item">
               <div class="list-group">
-                <div class="list-group-item">
+                <div class="list-group-item border-danger border-3 border-start border-end-0 border-top-0 border-bottom-0 rounded-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_1528714086" onclick="option_1528714086_handler(event)">-a<input class="form-check-input radio-check" id="option_1528714086" name="option_choice_980011038" type="checkbox" value=""></label>
-                  </div>
-                  Show hidden files
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_1787546468" onclick="option_1787546468_handler()">-a<input class="form-check-input border-dark black-check radio-check" id="option_1787546468" name="option_choice_2142914862" type="checkbox" value=""></label>
+                  </div>Show hidden files</div>
+                <div class="list-group-item border-danger border-3 border-start border-end-0 border-top-0 border-bottom-0 rounded-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_946651588" onclick="option_946651588_handler(event)">-A<input class="form-check-input radio-check" id="option_946651588" name="option_choice_980011038" type="checkbox" value=""></label>
-                  </div>
-                  Do not ignore entries starting with '.', except '.' and '..'
-                </div>
+                    <label class="form-check-label mono-font-bold" for="option_680232547" onclick="option_680232547_handler()">-A<input class="form-check-input border-dark black-check radio-check" id="option_680232547" name="option_choice_2142914862" type="checkbox" value=""></label>
+                  </div>Do not ignore entries starting with '.', except '.' and '..'</div>
               </div>
             </div>
             <div class="list-group-item">
               <div class="list-group list-group-flush">
-                <div class="list-group-item">
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_778872501" onclick="option_778872501_handler(event)">-d<input class="form-check-input " id="option_778872501" name="option_toggles_1529529161" type="checkbox" value=""></label>
-                  </div>
-                  List directory entries instead of directory contents. Do not dereference symbolic links
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_1142541678" onclick="option_1142541678_handler()">-d<input class="form-check-input border-dark black-check " id="option_1142541678" name="option_toggles_1861138906" type="checkbox" value=""></label>
+                  </div>List directory entries instead of directory contents. Do not dereference symbolic links</div>
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_648012542" onclick="option_648012542_handler(event)">-R<input class="form-check-input " id="option_648012542" name="option_toggles_1529529161" type="checkbox" value=""></label>
-                  </div>
-                  Recurse into subdirectories
-                </div>
+                    <label class="form-check-label mono-font-bold" for="option_1266421561" onclick="option_1266421561_handler()">-R<input class="form-check-input border-dark black-check " id="option_1266421561" name="option_toggles_1861138906" type="checkbox" value=""></label>
+                  </div>Recurse into subdirectories</div>
               </div>
             </div>
           </div>
-          <div aria-labelledby="sub_entry_858881318_tab" class="tab-pane list-group list-group-flush" id="sub_entry_858881318_tab_pane" role="tabpanel" tabIndex="0">
+          <div aria-labelledby="sub_entry_706067443_tab" class="tab-pane list-group list-group-flush" id="sub_entry_706067443_tab_pane" role="tabpanel" tabIndex="0">
             <div class="list-group-item">
               <div class="list-group list-group-flush">
-                <div class="list-group-item">
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_347864558" onclick="option_347864558_handler(event)">--author<input class="form-check-input " id="option_347864558" name="option_toggles_1967836077" type="checkbox" value=""></label>
-                  </div>
-                  With -l, print the author of each file
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_456177400" onclick="option_456177400_handler()">--author<input class="form-check-input border-dark black-check " id="option_456177400" name="option_toggles_392385841" type="checkbox" value=""></label>
+                  </div>With -l, print the author of each file</div>
+                <div class="list-group-item border-0">
                   <div class="input-group">
                     <div class="input-group-text">
                       <div class="form-check">
-                        <label class="form-check-label mono-font-bold" onclick="option_415052085_handler(event)">--block-size=<input class="form-check-input " id="option_415052085" name="option_toggles_1967836077" type="checkbox" value=""></label>
+                        <label class="form-check-label mono-font-bold" onclick="option_1465902810_handler()">--block-size=<input class="form-check-input border-dark black-check " id="option_1465902810" name="option_toggles_392385841" type="checkbox" value=""></label>
                       </div>
                     </div>
-                    <select class="form-select" id="option_415052085_value" onchange="option_415052085_handler(event)"><option selected></option><option value="K">K</option><option value="M">M</option><option value="G">G</option><option value="T">T</option><option value="KB">KB</option><option value="MB">MB</option><option value="GB">GB</option><option value="TB">TB</option></select>
-                  </div>
-                  Units to use
-                </div>
-                <div class="list-group-item">
+                    <select class="form-select" id="option_1465902810_value" onchange="option_1465902810_handler()"><option selected></option><option value="K">K</option><option value="M">M</option><option value="G">G</option><option value="T">T</option><option value="KB">KB</option><option value="MB">MB</option><option value="GB">GB</option><option value="TB">TB</option></select>
+                  </div>Units to use</div>
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_1610664551" onclick="option_1610664551_handler(event)">-i<input class="form-check-input " id="option_1610664551" name="option_toggles_1967836077" type="checkbox" value=""></label>
-                  </div>
-                  For each file, write the file's file serial number
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_168549346" onclick="option_168549346_handler()">-i<input class="form-check-input border-dark black-check " id="option_168549346" name="option_toggles_392385841" type="checkbox" value=""></label>
+                  </div>For each file, write the file's file serial number</div>
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_1453847935" onclick="option_1453847935_handler(event)">-s<input class="form-check-input " id="option_1453847935" name="option_toggles_1967836077" type="checkbox" value=""></label>
-                  </div>
-                  Indicate the total number of file system blocks consumed by each file displayed
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_248632015" onclick="option_248632015_handler()">-s<input class="form-check-input border-dark black-check " id="option_248632015" name="option_toggles_392385841" type="checkbox" value=""></label>
+                  </div>Indicate the total number of file system blocks consumed by each file displayed</div>
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_1668107484" onclick="option_1668107484_handler(event)">-k<input class="form-check-input " id="option_1668107484" name="option_toggles_1967836077" type="checkbox" value=""></label>
-                  </div>
-                  Assume block size of 1024 bytes
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_1602310266" onclick="option_1602310266_handler()">-k<input class="form-check-input border-dark black-check " id="option_1602310266" name="option_toggles_392385841" type="checkbox" value=""></label>
+                  </div>Assume block size of 1024 bytes</div>
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_1061055491" onclick="option_1061055491_handler(event)">-H<input class="form-check-input " id="option_1061055491" name="option_toggles_1967836077" type="checkbox" value=""></label>
-                  </div>
-                  Evaluate the file information and file type for symbolic links specified on the command line to be those of the file referenced by the link, and not the link itself; however, ls shall write the name of the link itself and not the file referenced by the link 
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_2109470512" onclick="option_2109470512_handler()">-H<input class="form-check-input border-dark black-check " id="option_2109470512" name="option_toggles_392385841" type="checkbox" value=""></label>
+                  </div>Evaluate the file information and file type for symbolic links specified on the command line to be those of the file referenced by the link, and not the link itself; however, ls shall write the name of the link itself and not the file referenced by the link </div>
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_1959336370" onclick="option_1959336370_handler(event)">-L<input class="form-check-input " id="option_1959336370" name="option_toggles_1967836077" type="checkbox" value=""></label>
+                    <label class="form-check-label mono-font-bold" for="option_2085248754" onclick="option_2085248754_handler()">-L<input class="form-check-input border-dark black-check " id="option_2085248754" name="option_toggles_392385841" type="checkbox" value=""></label>
                   </div>
                 </div>
               </div>
@@ -495,74 +482,61 @@ function option_787028959_value() {
                 <h3>Output</h3>
                 <nav>
                   <div class="nav nav-underline" role="tablist">
-                    <button aria-controls="sub_entry_1917668981_tab_pane" aria-selected="false" class="nav-link tab-btn" data-bs-target="#sub_entry_1917668981_tab_pane" data-bs-toggle="tab" id="sub_entry_1917668981_tab" role="tab" type="button">Short</button><button aria-controls="sub_entry_1963864380_tab_pane" aria-selected="false" class="nav-link tab-btn" data-bs-target="#sub_entry_1963864380_tab_pane" data-bs-toggle="tab" id="sub_entry_1963864380_tab" role="tab" type="button">List</button><button aria-controls="sub_entry_410060429_tab_pane" aria-selected="false" class="nav-link tab-btn" data-bs-target="#sub_entry_410060429_tab_pane" data-bs-toggle="tab" id="sub_entry_410060429_tab" role="tab" type="button">Long</button>
+                    <button aria-controls="sub_entry_2134545149_tab_pane" aria-selected="true" class="nav-link tab-btn active" data-bs-target="#sub_entry_2134545149_tab_pane" data-bs-toggle="tab" id="sub_entry_2134545149_tab" role="tab" type="button">Short</button><button aria-controls="sub_entry_1309744648_tab_pane" aria-selected="false" class="nav-link tab-btn" data-bs-target="#sub_entry_1309744648_tab_pane" data-bs-toggle="tab" id="sub_entry_1309744648_tab" role="tab" type="button">List</button><button aria-controls="sub_entry_1041117256_tab_pane" aria-selected="false" class="nav-link tab-btn" data-bs-target="#sub_entry_1041117256_tab_pane" data-bs-toggle="tab" id="sub_entry_1041117256_tab" role="tab" type="button">Long</button>
                   </div>
                 </nav>
                 <div class="tab-content">
-                  <div aria-labelledby="sub_entry_1917668981_tab" class="tab-pane list-group list-group-flush" id="sub_entry_1917668981_tab_pane" role="tabpanel" tabIndex="0">
+                  <div aria-labelledby="sub_entry_2134545149_tab" class="tab-pane list-group list-group-flush show active" id="sub_entry_2134545149_tab_pane" role="tabpanel" tabIndex="0">
                     <div class="list-group-item">
                       <div class="list-group list-group-flush">
-                        <div class="list-group-item">
+                        <div class="list-group-item border-0">
                           <div class="form-check">
-                            <label class="form-check-label mono-font-bold" for="option_1333479763" onclick="option_1333479763_handler(event)">-C<input class="form-check-input " id="option_1333479763" name="option_toggles_1789993936" type="checkbox" value=""></label>
-                          </div>
-                          Multicolumn output (short entries)
-                        </div>
+                            <label class="form-check-label mono-font-bold" for="option_2141622260" onclick="option_2141622260_handler()">-C<input class="form-check-input border-dark black-check " id="option_2141622260" name="option_toggles_2076486718" type="checkbox" value=""></label>
+                          </div>Multicolumn output (short entries)</div>
                       </div>
                     </div>
                   </div>
-                  <div aria-labelledby="sub_entry_1963864380_tab" class="tab-pane list-group list-group-flush" id="sub_entry_1963864380_tab_pane" role="tabpanel" tabIndex="0">
+                  <div aria-labelledby="sub_entry_1309744648_tab" class="tab-pane list-group list-group-flush" id="sub_entry_1309744648_tab_pane" role="tabpanel" tabIndex="0">
                     <div class="list-group-item">
                       <div class="list-group list-group-flush">
-                        <div class="list-group-item">
+                        <div class="list-group-item border-0">
                           <div class="form-check">
-                            <label class="form-check-label mono-font-bold" for="option_1726408169" onclick="option_1726408169_handler(event)">-m<input class="form-check-input " id="option_1726408169" name="option_toggles_1914168853" type="checkbox" value=""></label>
-                          </div>
-                          Comma-separated list of short entries
-                        </div>
+                            <label class="form-check-label mono-font-bold" for="option_795146655" onclick="option_795146655_handler()">-m<input class="form-check-input border-dark black-check " id="option_795146655" name="option_toggles_1346532545" type="checkbox" value=""></label>
+                          </div>Comma-separated list of short entries</div>
                       </div>
                     </div>
                   </div>
-                  <div aria-labelledby="sub_entry_410060429_tab" class="tab-pane list-group list-group-flush" id="sub_entry_410060429_tab_pane" role="tabpanel" tabIndex="0">
+                  <div aria-labelledby="sub_entry_1041117256_tab" class="tab-pane list-group list-group-flush" id="sub_entry_1041117256_tab_pane" role="tabpanel" tabIndex="0">
                     <div class="list-group-item">
                       <div class="list-group">
-                        <div class="list-group-item">
+                        <div class="list-group-item border-danger border-3 border-start border-end-0 border-top-0 border-bottom-0 rounded-0">
                           <div class="form-check">
-                            <label class="form-check-label mono-font-bold" for="option_1470844979" onclick="option_1470844979_handler(event)">-l<input class="form-check-input radio-check" id="option_1470844979" name="option_choice_1981071034" type="checkbox" value=""></label>
+                            <label class="form-check-label mono-font-bold" for="option_1310785558" onclick="option_1310785558_handler()">-l<input class="form-check-input border-dark black-check radio-check" id="option_1310785558" name="option_choice_384156063" type="checkbox" value=""></label>
                           </div>
-                                                      (The letter ell.) Write out in long format.
+                            (The letter ell.) Write out in long format.
                                 Do not follow symbolic links named as operands unless the -H or -L 
                                 options are specified
-                                
-                        </div>
-                        <div class="list-group-item">
+                                </div>
+                        <div class="list-group-item border-danger border-3 border-start border-end-0 border-top-0 border-bottom-0 rounded-0">
                           <div class="form-check">
-                            <label class="form-check-label mono-font-bold" for="option_1420395577" onclick="option_1420395577_handler(event)">-g<input class="form-check-input radio-check" id="option_1420395577" name="option_choice_1981071034" type="checkbox" value=""></label>
-                          </div>
-                          Same as -l but do not list owners name/number
-                        </div>
-                        <div class="list-group-item">
+                            <label class="form-check-label mono-font-bold" for="option_1430509568" onclick="option_1430509568_handler()">-g<input class="form-check-input border-dark black-check radio-check" id="option_1430509568" name="option_choice_384156063" type="checkbox" value=""></label>
+                          </div>Same as -l but do not list owners name/number</div>
+                        <div class="list-group-item border-danger border-3 border-start border-end-0 border-top-0 border-bottom-0 rounded-0">
                           <div class="form-check">
-                            <label class="form-check-label mono-font-bold" for="option_1183276974" onclick="option_1183276974_handler(event)">-n<input class="form-check-input radio-check" id="option_1183276974" name="option_choice_1981071034" type="checkbox" value=""></label>
-                          </div>
-                          Same as -l but use numeric UID/GID
-                        </div>
-                        <div class="list-group-item">
+                            <label class="form-check-label mono-font-bold" for="option_1491380839" onclick="option_1491380839_handler()">-n<input class="form-check-input border-dark black-check radio-check" id="option_1491380839" name="option_choice_384156063" type="checkbox" value=""></label>
+                          </div>Same as -l but use numeric UID/GID</div>
+                        <div class="list-group-item border-danger border-3 border-start border-end-0 border-top-0 border-bottom-0 rounded-0">
                           <div class="form-check">
-                            <label class="form-check-label mono-font-bold" for="option_1127205440" onclick="option_1127205440_handler(event)">-o<input class="form-check-input radio-check" id="option_1127205440" name="option_choice_1981071034" type="checkbox" value=""></label>
-                          </div>
-                          Same as -l but disable group info
-                        </div>
+                            <label class="form-check-label mono-font-bold" for="option_472243888" onclick="option_472243888_handler()">-o<input class="form-check-input border-dark black-check radio-check" id="option_472243888" name="option_choice_384156063" type="checkbox" value=""></label>
+                          </div>Same as -l but disable group info</div>
                       </div>
                     </div>
                     <div class="list-group-item">
                       <div class="list-group list-group-flush">
-                        <div class="list-group-item">
+                        <div class="list-group-item border-0">
                           <div class="form-check">
-                            <label class="form-check-label mono-font-bold" for="option_1389405694" onclick="option_1389405694_handler(event)">-c<input class="form-check-input " id="option_1389405694" name="option_toggles_1723960219" type="checkbox" value=""></label>
-                          </div>
-                          Use the time of last modification of the file status information instead of last modification of the file itself
-                        </div>
+                            <label class="form-check-label mono-font-bold" for="option_1560388331" onclick="option_1560388331_handler()">-c<input class="form-check-input border-dark black-check " id="option_1560388331" name="option_toggles_1495678843" type="checkbox" value=""></label>
+                          </div>Use the time of last modification of the file status information instead of last modification of the file itself</div>
                       </div>
                     </div>
                   </div>
@@ -570,44 +544,34 @@ function option_787028959_value() {
               </div>
             </div>
           </div>
-          <div aria-labelledby="sub_entry_2037727008_tab" class="tab-pane list-group list-group-flush" id="sub_entry_2037727008_tab_pane" role="tabpanel" tabIndex="0">
+          <div aria-labelledby="sub_entry_1187091280_tab" class="tab-pane list-group list-group-flush" id="sub_entry_1187091280_tab_pane" role="tabpanel" tabIndex="0">
             <div class="list-group-item">
               <div class="list-group list-group-flush">
-                <div class="list-group-item">
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_426744693" onclick="option_426744693_handler(event)">-S<input class="form-check-input " id="option_426744693" name="option_toggles_84773680" type="checkbox" value=""></label>
-                  </div>
-                  Sort with the primary key being file size (in decreasing order) and the secondary key being filename in the collating sequence (in increasing order)
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_335004005" onclick="option_335004005_handler()">-S<input class="form-check-input border-dark black-check " id="option_335004005" name="option_toggles_131976509" type="checkbox" value=""></label>
+                  </div>Sort with the primary key being file size (in decreasing order) and the secondary key being filename in the collating sequence (in increasing order)</div>
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_749331034" onclick="option_749331034_handler(event)">-t<input class="form-check-input " id="option_749331034" name="option_toggles_84773680" type="checkbox" value=""></label>
-                  </div>
-                  Sort with the primary key being time modified (most recently modified first) and the secondary key being filename in the collating sequence
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_489519421" onclick="option_489519421_handler()">-t<input class="form-check-input border-dark black-check " id="option_489519421" name="option_toggles_131976509" type="checkbox" value=""></label>
+                  </div>Sort with the primary key being time modified (most recently modified first) and the secondary key being filename in the collating sequence</div>
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_2109027988" onclick="option_2109027988_handler(event)">-f<input class="form-check-input " id="option_2109027988" name="option_toggles_84773680" type="checkbox" value=""></label>
-                  </div>
-                  List the entries in directory operands in the order they appear in the directory. Filter option -a will be turned on automatically. Sort option -r will be ignored
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_1669105202" onclick="option_1669105202_handler()">-f<input class="form-check-input border-dark black-check " id="option_1669105202" name="option_toggles_131976509" type="checkbox" value=""></label>
+                  </div>List the entries in directory operands in the order they appear in the directory. Filter option -a will be turned on automatically. Sort option -r will be ignored</div>
+                <div class="list-group-item border-0">
                   <div class="form-check">
-                    <label class="form-check-label mono-font-bold" for="option_1277188038" onclick="option_1277188038_handler(event)">-r<input class="form-check-input " id="option_1277188038" name="option_toggles_84773680" type="checkbox" value=""></label>
-                  </div>
-                  Reverse the order of the sort to get reverse collating sequence oldest first, or smallest file size first depending on the other options given
-                </div>
-                <div class="list-group-item">
+                    <label class="form-check-label mono-font-bold" for="option_872422493" onclick="option_872422493_handler()">-r<input class="form-check-input border-dark black-check " id="option_872422493" name="option_toggles_131976509" type="checkbox" value=""></label>
+                  </div>Reverse the order of the sort to get reverse collating sequence oldest first, or smallest file size first depending on the other options given</div>
+                <div class="list-group-item border-0">
                   <div class="input-group">
                     <div class="input-group-text">
                       <div class="form-check">
-                        <label class="form-check-label mono-font-bold" onclick="option_787028959_handler(event)">-w<input class="form-check-input " id="option_787028959" name="option_toggles_84773680" type="checkbox" value=""></label>
+                        <label class="form-check-label mono-font-bold" onclick="option_933960464_handler()">-w<input class="form-check-input border-dark black-check " id="option_933960464" name="option_toggles_131976509" type="checkbox" value=""></label>
                       </div>
                     </div>
-                    <input class="form-control" id="option_787028959_value" onchange="option_787028959_handler(event)" placeholder="width" type="text">
-                  </div>
-                  Set output width to the number of columns. 0 means no limit
-                </div>
+                    <input class="form-control" id="option_933960464_value" onchange="option_933960464_handler()" placeholder="width" type="text">
+                  </div>Set output width to the number of columns. 0 means no limit</div>
               </div>
             </div>
           </div>

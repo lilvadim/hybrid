@@ -29,7 +29,7 @@ command_name = [a-zA-Z][a-zA-Z0-9_\-]* { return text() }
 
 option_key_value 
     = option:option 
-      value:(delimiter:delimiter? value:value { return { delimiter: delimiter ?? undefined, value: value ?? undefined } })? 
+      value:(delimiter:delimiter? value:value { return { delimiter: delimiter ?? '', value: value ?? undefined } })? 
       { return { option, delimiter: value?.delimiter, value: value?.value } }
 option_with_value 
     = option:option 
@@ -39,7 +39,7 @@ option = gnu_option / unix_option / non_std_option
 
 unix_option = prefix:"-" words:[a-zA-Z]+ { return { type: 'UNIX', option: text(), prefix, words } }
 gnu_option = "--"[a-z][a-zA-Z\-]* { return { type: 'GNU', option: text() } }
-non_std_option = "-"[a-zA-Z,=\-]* { return { type: 'NON-STD', option: text() } }
+non_std_option = "-"[a-zA-Z,=0-9@\-]* { return { type: 'NON-STD', option: text() } }
 
 value = quoted_argument / unquoted_argument
 

@@ -1,16 +1,16 @@
 import { getFirstOptionWithValueOrArgs, getLastOption, lastOptionHasValue, optionHasValue } from "../../commandLine/util/options";
 import { ICommand } from "../../commandLine/command";
-import { ICommandDescription } from "./commandDescription";
+import { ICommandSyntax } from "../../commandLine/syntax/commandSyntax";
 import { collectPositionalArgs } from "../../commandLine/util/args";
 import { Cacheable } from "typescript-cacheable";
 
-export class CommandLineUtil {
+export class CommandSyntaxHelper {
 
-    constructor(readonly desc: ICommandDescription) {}
+    constructor(readonly desc: ICommandSyntax) {}
 
     @Cacheable()
-    public static getCached(desc: ICommandDescription): CommandLineUtil {
-        return new CommandLineUtil(desc)
+    public static getCached(syntax: ICommandSyntax): CommandSyntaxHelper {
+        return new CommandSyntaxHelper(syntax)
     }
 
     getPositionalArgs(command: ICommand): string[] {

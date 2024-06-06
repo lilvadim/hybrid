@@ -20,7 +20,8 @@ export function getShellIntegrationInjection(
 
     const shell = shellLaunchConfig.executable
     let envMixin: IProcessEnvironment = {
-        'VSCODE_INJECTION': '1'
+        'VSCODE_INJECTION': '1',
+        'LANG': env.LANG ?? 'en_US.UTF-8'
     }
     let args: string[] = []
 
@@ -32,7 +33,6 @@ export function getShellIntegrationInjection(
             envMixin['ZDOTDIR'] = zdotdir
             envMixin['USER_ZDOTDIR'] = env.ZDOTDIR ?? os.homedir()
 
-            console.log(resourcePath)
             const filesToCopy: IShellIntegrationInjection['filesToCopy'] = [
                 {
                     source: path.join(resourcePath, 'sh/shellIntegration-rc.zsh'),

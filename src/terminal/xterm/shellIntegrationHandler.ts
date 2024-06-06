@@ -2,6 +2,7 @@ import { IDecorationOptions, IMarker, Terminal } from "@xterm/xterm";
 import { ICommand, ICommandProperties, IShellIntegration } from "./shellIntegration";
 import { setTimeout } from "timers";
 import EventEmitter from "events";
+import Logger from "electron-log";
 
 export interface IShellIntegrationHandler {
     onPromptStart(): void
@@ -17,7 +18,7 @@ class Command implements ICommand {
         private readonly _properties: ICommandProperties,
     ) {
         if (!_properties || !_terminal) {
-            console.error('Cannot initialize command', { properties: _properties, _terminal })
+            Logger.error('Cannot initialize command', { properties: _properties, _terminal })
             throw Error('Cannot initialize command')
         }
     }
@@ -61,7 +62,8 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
     private readonly _commands: Command[] = []
     private _currentCommand: ICommandProperties | undefined = undefined
     private readonly _event = new EventEmitter()
-    private isInput = false
+    private _lastBufferState: string[] | undefined
+    private _lastCursorX: number | undefined
 
     constructor(
         private readonly _terminal: Terminal,
@@ -93,24 +95,19 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         if (!this._currentCommand) {
             return
         }
-        console.debug('onCommandFinished.cursorY', this._terminal.buffer.active.cursorY)
         const marker = this._terminal.registerMarker(0)
         this._currentCommand.finishedMarker = marker
         this._currentCommand.exitCode = exitCode
         this._commands.push(new Command(this._terminal, this._currentCommand))
         this._event.emit('commands-updated')
-        console.debug('onCommandFinished.currentCommand', this._currentCommand)
     }
 
     onPromptStart(): void {
-        console.debug('onPromptStart.cursorY', this._terminal.buffer.active.cursorY)
         const marker = this._terminal.registerMarker(0)
-        console.debug('onPromptStart.lineY', marker.line)
         this._currentCommand = {
             promptStartMarker: marker,
             command: ""
         }
-        console.debug('onPromptStart.currentCommand', this._currentCommand)
     }
 
     onCommandStart(): void {
@@ -123,7 +120,6 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
             this._terminal.registerDecoration(promptDecorationOptions(this._currentCommand.promptStartMarker, cursorX)) 
         }
         this._currentCommand.startX = cursorX
-        console.debug('onCommandStart.currentCommand', this._currentCommand)
     }
 
     onCommandExecuted(): void {
@@ -131,21 +127,26 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
             return
         }
         this._currentCommand.executedMarker = this._terminal.registerMarker(0)
-        console.debug('onCommandExecuted')
     }
 
     private _onTerminalChange() {
+        const currentBufferState = this._getBufferState()
+        const cursorX = this.currentCursorXPosition()
+
+        if (JSON.stringify(this._lastBufferState) === JSON.stringify(currentBufferState) && this._lastCursorX === cursorX) {
+            return
+        }
         if (!this._currentCommand || !this._currentCommand.startX) {
             return
         }
         const lineY = this._currentCommand?.promptStartMarker?.line ?? 0
         if (lineY !== 0 && !lineY) {
-            console.debug('Line not defined', lineY)
+            Logger.debug('Line not defined', lineY)
             return
         }
         const line = this._terminal.buffer.active.getLine(lineY)
         if (!line) {
-            console.debug('Line not found', lineY)
+            Logger.debug('Line not found', lineY)
             return
         }
         const startX = this._currentCommand.startX
@@ -153,7 +154,6 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
             true, 
             this._currentCommand.startX
         )
-        const cursorX = this._terminal.buffer.normal.cursorX 
 
         const trimmedCommandText = commandText.trimEnd()
         const trimmedToCursorCommandText = commandText.substring(0, cursorX - startX)
@@ -162,8 +162,26 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         const commandOldValue = this._currentCommand.command
         this._currentCommand.command = commandNewValue
 
-        this._event.emit('command-line-change', commandOldValue, commandNewValue)
-        console.debug('currentCommand', this._currentCommand)
+        if (commandOldValue === commandNewValue) {
+            return
+        }
+
+        Logger.debug('command-line-change', { commandOldValue, commandNewValue })
+        const that = this
+        that._event.emit('command-line-change', commandOldValue, commandNewValue)
+        this._lastBufferState = currentBufferState
+        this._lastCursorX = cursorX
+    }
+
+    private _getBufferState(): string[] {
+        const state = []
+        const len = this._terminal.buffer.active.length
+        const buffer = this._terminal.buffer.active
+        for (let i = 0; i < len; i++) {
+            state.push(buffer.getLine(i)?.translateToString(true) || "")
+        }
+
+        return state
     }
 
 }

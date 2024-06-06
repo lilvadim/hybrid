@@ -1,4 +1,4 @@
-import { ICommandDescription } from "../../hybrid/api/commandDescription";
+import { ICommandSyntax } from "../syntax/commandSyntax";
 import { ICommand, IOption } from "../command";
 
 export interface IAddOption {
@@ -30,9 +30,9 @@ export function addOptionsToCommand(commandObj: ICommand, options: IAddOption[])
         }
 
         if (opt.unique) {
-            const existingOpt = isOptionPresent(opt.optionText, commandObj.options)
+            const existingOpt = presentedOption(opt.optionText, commandObj.options)
             if (existingOpt) {
-                existingOpt.value = opt.value
+                existingOpt.value = opt.value || existingOpt.value
                 return
             } 
         }
@@ -41,7 +41,7 @@ export function addOptionsToCommand(commandObj: ICommand, options: IAddOption[])
     })
 }
 
-function isOptionPresent(optionText: string, options: IOption[]): IOption | undefined {
+function presentedOption(optionText: string, options: IOption[]): IOption | undefined {
     for (const option of options) {
         if (option.option.type === 'UNIX' && option.option.words && option.option.prefix) {
             for (const word of option.option.words) {
@@ -111,7 +111,7 @@ function processRemoval(commandObj: ICommand, index: number, removeValue: boolea
     }
 }
 
-export function lastOptionHasValue(commandObj: ICommand, commandDescription: ICommandDescription): boolean {
+export function lastOptionHasValue(commandObj: ICommand, syntax: ICommandSyntax): boolean {
     if (commandObj.options.length === 0) {
         return false
     }
@@ -122,17 +122,17 @@ export function lastOptionHasValue(commandObj: ICommand, commandDescription: ICo
     if (lastOption.option.type === 'UNIX' && lastOption.option.words && lastOption.option.prefix) {
         for (let i = lastOption.option.words.length - 1; i >= 0; i--) {
             const word = lastOption.option.prefix + lastOption.option.words[i]
-            for (const optionDesc of commandDescription.options) {
-                if (optionDesc.optionSynonyms.includes(word)) {
-                    return optionDesc.hasValue
+            for (const optionSyntax of syntax.options) {
+                if (optionSyntax.optionSynonyms.includes(word)) {
+                    return optionSyntax.hasValue
                 }
             }
         }
     } else {
         // Handle other options
-        for (const optionDesc of commandDescription.options) {
-            if (optionDesc.optionSynonyms.includes(lastOption.option.option)) {
-                return optionDesc.hasValue
+        for (const optionSyntax of syntax.options) {
+            if (optionSyntax.optionSynonyms.includes(lastOption.option.option)) {
+                return optionSyntax.hasValue
             }
         }
     }
@@ -140,22 +140,22 @@ export function lastOptionHasValue(commandObj: ICommand, commandDescription: ICo
     return false // Default to false if no match found
 }
 
-export function optionHasValue(option: IOption, commandDesc: ICommandDescription): boolean {
+export function optionHasValue(option: IOption, syntax: ICommandSyntax): boolean {
     // Handle UNIX combined options
     if (option.option.type === 'UNIX' && option.option.words && option.option.prefix) {
         for (const word of option.option.words) {
             const prefixedWord = option.option.prefix + word;
-            for (const optionDesc of commandDesc.options) {
-                if (optionDesc.optionSynonyms.includes(prefixedWord)) {
-                    return optionDesc.hasValue
+            for (const optionSyntax of syntax.options) {
+                if (optionSyntax.optionSynonyms.includes(prefixedWord)) {
+                    return optionSyntax.hasValue
                 }
             }
         }
     } else {
         // Handle other options
-        for (const optionDesc of commandDesc.options) {
-            if (optionDesc.optionSynonyms.includes(option.option.option)) {
-                return optionDesc.hasValue
+        for (const optionSyntax of syntax.options) {
+            if (optionSyntax.optionSynonyms.includes(option.option.option)) {
+                return optionSyntax.hasValue
             }
         }
     }

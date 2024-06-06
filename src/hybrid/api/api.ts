@@ -1,12 +1,12 @@
 import { ICommandLineSyncEvent } from "../commandLineSyncEvent";
-import { ICommandDescription } from "./commandDescription";
 import { IAddOption, IRemoveOption } from "../../commandLine/util/options";
-import { CommandLineUtil } from "./commandLineUtil";
+import { CommandSyntaxHelper } from "./commandSyntaxHelper";
+import { CommandInfoRegistry } from "../commandInfo/commandInfoRegistry";
 
 export interface IHybridTerminalApi {
     updateOptions(parameters: { addOptions: IAddOption[], removeOptions: IRemoveOption[] }): boolean
     insertLastArg(arg: string): boolean
-    removeSubcommandArg(subcommand: string): boolean
+    removeSubcommandAndRest(subcommand: string): boolean
     appendCommandLine(toAppend: string): boolean
     clearCommandLine(): boolean
     onCommandLineSync(listener: (event: ICommandLineSyncEvent) => void): void
@@ -16,8 +16,15 @@ export function initApi(terminalApiImpl: IHybridTerminalApi) {
     // @ts-ignore
     window.hybrid = {
         terminal: terminalApiImpl,
-        getCommandLineUtil: (commandDescription: ICommandDescription) => CommandLineUtil.getCached(commandDescription),
-        utils: {
+        commandInfo: CommandInfoRegistry.getCached(),
+        getCommandSyntaxHelper: (command: string) => {
+            const syntax = CommandInfoRegistry.getCached().getInfo(command)?.syntax
+            if (syntax) {
+                return CommandSyntaxHelper.getCached(syntax)
+            }
+            return undefined
+        },
+        uiUtils: {
             hide: (id: string) => {
                 var toHide = document.getElementById(id)
                 if (toHide) {
@@ -30,17 +37,16 @@ export function initApi(terminalApiImpl: IHybridTerminalApi) {
                     toShow.classList.remove('invisible')
                 }
             },
-            toggleOn: (input: HTMLInputElement) => {
-                if (input) {
-                    input.checked = true;
-                }
-            },
-            toggleOff: (input: HTMLInputElement) => {
-                if (input) {
-                    input.checked = false;
-                }
-            },
-            setValue: (input: HTMLInputElement, value: string) => {
+            toggleOn: (...inputIds: string[]) => Array.from(inputIds)
+                .map(inputId => document.getElementById(inputId) as HTMLInputElement)
+                .filter(input => input)
+                .forEach(input => input.checked = true),
+            toggleOff: (...inputIds: string[]) => Array.from(inputIds)
+                .map(inputId => document.getElementById(inputId) as HTMLInputElement)
+                .filter(input => input)
+                .forEach(input => input.checked = false),
+            setValue: (inputId: string, value: string) => {
+                const input = document.getElementById(inputId) as HTMLInputElement
                 if (input) {
                     input.value = value
                 }

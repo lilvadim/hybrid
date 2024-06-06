@@ -5,7 +5,7 @@ import { pathLikeToString } from "../util/path";
 import { Cacheable } from "typescript-cacheable";
 import { isBlank } from "../util/strings";
 import { HYBRID_DIR } from "./paths";
-import { ux } from "../log/log";
+import { UxLog } from "../log/log";
 
 export class ConfigProvider {
 
@@ -37,6 +37,7 @@ export class ConfigProvider {
         return {
             terminalControl: {
                 syncOnSpace: true,
+                autoCorrect: true
             },
             commandFrameProvider: {
                 htmlFramesPaths: [],
@@ -53,8 +54,7 @@ export class ConfigProvider {
     @Cacheable()
     getOverridden(): IConfig {
         const config: IConfig = mergeDefaults(this.getExternalConfig(), this.getDefault())
-        console.info('Config:', config)
-        ux.info("Config", config)
+        UxLog.info("Config", config)
         return config
     }
 

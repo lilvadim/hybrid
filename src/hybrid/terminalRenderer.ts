@@ -2,7 +2,7 @@ import { ipcRenderer } from "electron"
 import { ipc } from "../constants/ipc"
 import { TerminalService } from "../terminal/xterm/terminalService"
 import { CommandFrameProvider } from "./commandFrame/provider/commandFrameProvider"
-import { CommandLineProcessor } from "./commandLineProcessor"
+import { CommandFrameActivator } from "./commandFrameActivator"
 import { TerminalController } from "./terminalController/terminalController"
 import { initApi } from "./api/api"
 import { CommandFramePathResolver } from "./commandFrame/provider/commandFramePathResolver"
@@ -14,6 +14,9 @@ import { setTimeout } from "timers"
 import Split from "split.js"
 import { ConfigProvider } from "../config/configProvider"
 import { CommandLineParserProvider } from "../commandLine/parser/commandLineParserProvider"
+import { CommandInfoRegistry } from "./commandInfo/commandInfoRegistry"
+import EventEmitter from "events"
+import Logger from "electron-log"
 
 export class TerminalRenderer {
 
@@ -27,11 +30,12 @@ export class TerminalRenderer {
 
     render(xtermContainer: HTMLElement, commandFrameContainer: HTMLElement) {
         const commandFrameRenderer = new CommandFrameRenderer(commandFrameContainer)
-        const commandLineProcessor = new CommandLineProcessor(
+        const commandLineProcessor = new CommandFrameActivator(
+            this._config.terminalControl,
             this._commandFrameProvider, 
             commandFrameRenderer, 
             this._commandFrameLoader,
-            this._commandLineParserProvider
+            this._commandLineParserProvider,
         )
 
         const terminalId = this._terminalService.createXterm()
@@ -52,12 +56,22 @@ export class TerminalRenderer {
         terminal.xterm.onResize((dimensions, _) => ipcRenderer.sendSync(ipc.term.resize, dimensions))
 
         ipcRenderer.on(ipc.term.pty, (_, data) => terminal.xterm.write(data))
-        terminal.xterm.onData(data => ipcRenderer.send(ipc.term.terminal, data))
+
+        terminal.xterm.onData(data => {
+            const event = { data, ignore: false }
+            Logger.debug('PRE EMIT', event)
+            terminal.xtermInputEvents.emit('data', event)
+            Logger.debug('EMITTED', event)
+            if (!event.ignore) {
+                ipcRenderer.send(ipc.term.terminal, event.data, 'input')
+            }
+        })
 
         const controller = new TerminalController(
             this._config.terminalControl, 
             terminal,
-            this._commandLineParserProvider
+            this._commandLineParserProvider,
+            CommandInfoRegistry.getCached()
         )
 
         Split([commandFrameContainer, xtermContainer], {
@@ -70,7 +84,7 @@ export class TerminalRenderer {
 
     private _initApi(controller: TerminalController) {
         initApi(controller)
-        console.log('hybrid api initialized')
+        console.log('hybrid.terminal api initialized')
     }
 
 }

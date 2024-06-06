@@ -1,5 +1,6 @@
-import { collectAllArgsFromComplexCommand } from "./args";
-import { IComplexCommand } from "../command";
+import { collectAllArgsFromComplexCommand, removeSubcommandAndRest } from "./args";
+import { ICommand, IComplexCommand } from "../command";
+import { serializeCommand } from "../serializer/serialize";
 
 test('collect args', () => {
     // Example usage
@@ -45,4 +46,39 @@ test('collect args', () => {
     console.log(allArgsWithoutValues);  // Output: ["arg1", "subArg1", "subArg2", "subArg3", "arg2", "subArg4"]
     
 
+})
+
+test('removeSubcommandAndRest', () => {
+    const command: ICommand = {
+        command: "git",
+        precedingArgs: undefined,
+        options: [{
+            option: {
+                type: "UNIX",
+                option: "-i",
+                prefix: "-",
+                words: ["i"]
+            },
+            delimiter: " ",
+            value: "commit",
+            subsequentArgs: []
+        },
+        {
+            option: {
+                type: "UNIX",
+                option: "-m",
+                prefix: "-",
+                words: ["m"]
+            },
+            delimiter: " ",
+            value: "Msg",
+            subsequentArgs: []
+        }]
+    }
+
+    removeSubcommandAndRest(command, "commit")
+
+    const actual = serializeCommand(command)
+    const expected = 'git -i '
+    expect(actual).toEqual(expected)
 })

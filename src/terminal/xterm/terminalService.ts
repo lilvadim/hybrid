@@ -2,10 +2,12 @@ import { Terminal } from "@xterm/xterm";
 import { ShellIntegrationAddon } from "./shellIntegrationAddon";
 import { ShellIntegrationHandler } from "./shellIntegrationHandler";
 import { IShellIntegration } from "./shellIntegration";
+import EventEmitter from "events";
 
 export interface ITerminal {
     xterm: Terminal, 
-    shellIntegration: IShellIntegration
+    shellIntegration: IShellIntegration,
+    xtermInputEvents: EventEmitter
 }
 
 export class TerminalService {
@@ -19,7 +21,8 @@ export class TerminalService {
         const xterm = new Terminal({
             allowProposedApi: true,
             rows: 24,
-            cols: 80
+            cols: 80,
+            
         })
 
         const shellIntegration = new ShellIntegrationHandler(xterm)
@@ -28,7 +31,8 @@ export class TerminalService {
 
         this._xtermById.set(id, {
             xterm,
-            shellIntegration
+            shellIntegration,
+            xtermInputEvents: new EventEmitter()
         })
         return id
     }
