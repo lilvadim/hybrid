@@ -1,5 +1,6 @@
 import { ICommandSyntax } from "../syntax/commandSyntax";
 import { ICommand, IOption } from "../command";
+import Logger from "electron-log";
 
 export interface IAddOption {
     optionType: 'UNIX' | 'GNU' | 'NON-STD'
@@ -15,7 +16,9 @@ export interface IRemoveOption {
     removeValue: boolean
 }
 
-export function addOptionsToCommand(commandObj: ICommand, options: IAddOption[]): void {
+export function addOptionsToCommand(commandObj: ICommand, options: IAddOption[], subcommand?: string): void {
+    const subcommandStartIndex = commandObj.options
+            .findIndex(opt => subcommand && (opt.value === subcommand || opt.subsequentArgs?.includes(subcommand)))
     options.forEach(opt => {
         const newOption: IOption = {
             option: {
@@ -30,14 +33,15 @@ export function addOptionsToCommand(commandObj: ICommand, options: IAddOption[])
         }
 
         if (opt.unique) {
-            const existingOpt = presentedOption(opt.optionText, commandObj.options)
+            const existingOpt = presentedOption(opt.optionText, commandObj.options.slice(subcommandStartIndex + 1))
             if (existingOpt) {
                 existingOpt.value = opt.value || existingOpt.value
+                existingOpt.delimiter = opt.delimiter || existingOpt.delimiter
                 return
             } 
         }
         
-        commandObj.options.push(newOption)
+        commandObj.options.splice(subcommandStartIndex + 1, 0, newOption)
     })
 }
 
@@ -58,10 +62,24 @@ function presentedOption(optionText: string, options: IOption[]): IOption | unde
     return undefined
 }
 
-export function removeOptionsFromCommand(commandObj: ICommand, optionsToRemove: IRemoveOption[]): void {
+export function removeOptionsFromCommand(
+    commandObj: ICommand, 
+    optionsToRemove: IRemoveOption[], 
+    optionsEnd?: number,
+    subcommand?: string
+): void {
+    const subcommandStartIndex = commandObj.options
+            .findIndex(opt => subcommand && (opt.value === subcommand || opt.subsequentArgs?.includes(subcommand)))
+
     optionsToRemove.forEach(({ optionText, removeValue }) => {
 
         commandObj.options.forEach((option, index) => {
+            if (optionsEnd && index >= optionsEnd) {
+                return
+            }
+            if (index <= subcommandStartIndex) {
+                return
+            }
             if (option.option.option === optionText) {
                 // Exact match for option
                 processRemoval(commandObj, index, removeValue)

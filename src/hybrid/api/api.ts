@@ -2,6 +2,8 @@ import { ICommandLineSyncEvent } from "../commandLineSyncEvent";
 import { IAddOption, IRemoveOption } from "../../commandLine/util/options";
 import { CommandSyntaxHelper } from "./commandSyntaxHelper";
 import { CommandInfoRegistry } from "../commandInfo/commandInfoRegistry";
+import * as bootstrap from 'bootstrap'
+import { ICommandSyntax } from "../../commandLine/syntax/commandSyntax";
 
 export interface IHybridTerminalApi {
     updateOptions(parameters: { addOptions: IAddOption[], removeOptions: IRemoveOption[] }): boolean
@@ -17,22 +19,28 @@ export function initApi(terminalApiImpl: IHybridTerminalApi) {
     window.hybrid = {
         terminal: terminalApiImpl,
         commandInfo: CommandInfoRegistry.getCached(),
-        getCommandSyntaxHelper: (command: string) => {
-            const syntax = CommandInfoRegistry.getCached().getInfo(command)?.syntax
-            if (syntax) {
-                return CommandSyntaxHelper.getCached(syntax)
-            }
-            return undefined
-        },
+        getCommandSyntaxHelper: (commandSyntax: ICommandSyntax) => CommandSyntaxHelper.getCached(commandSyntax),
         uiUtils: {
+            showTab(tabId: string | undefined | null) {
+                if (!tabId) {
+                    return
+                }
+                const tabBtn = document.getElementById(tabId)
+                if (tabBtn) {
+                    const tab = bootstrap.Tab.getInstance(tabBtn) || new bootstrap.Tab(tabBtn)
+                    tab.show()
+                    const parentTabId = tabBtn.closest('div[role="tabpanel"]')?.getAttribute('aria-labelledby')
+                    this.showTab(parentTabId)
+                }
+            },
             hide: (id: string) => {
-                var toHide = document.getElementById(id)
+                const toHide = document.getElementById(id)
                 if (toHide) {
                     toHide.classList.add('invisible')
                 }
             },
             show: (id: string) => {
-                var toShow = document.getElementById(id)
+                const toShow = document.getElementById(id)
                 if (toShow) {
                     toShow.classList.remove('invisible')
                 }

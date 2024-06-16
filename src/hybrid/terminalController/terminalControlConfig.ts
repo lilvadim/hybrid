@@ -1,5 +1,5 @@
 
 export interface ITerminalControlConfig {
-    syncOnSpace: boolean,
+    activeSpace: boolean,
     autoCorrect: boolean
 }

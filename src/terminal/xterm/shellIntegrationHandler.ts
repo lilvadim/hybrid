@@ -136,6 +136,10 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         if (JSON.stringify(this._lastBufferState) === JSON.stringify(currentBufferState) && this._lastCursorX === cursorX) {
             return
         }
+
+        this._lastBufferState = currentBufferState
+        this._lastCursorX = cursorX
+
         if (!this._currentCommand || !this._currentCommand.startX) {
             return
         }
@@ -144,7 +148,7 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
             Logger.debug('Line not defined', lineY)
             return
         }
-        const line = this._terminal.buffer.active.getLine(lineY)
+        const line = this._terminal.buffer.normal.getLine(lineY)
         if (!line) {
             Logger.debug('Line not found', lineY)
             return
@@ -162,15 +166,9 @@ export class ShellIntegrationHandler implements IShellIntegrationHandler, IShell
         const commandOldValue = this._currentCommand.command
         this._currentCommand.command = commandNewValue
 
-        if (commandOldValue === commandNewValue) {
-            return
-        }
-
         Logger.debug('command-line-change', { commandOldValue, commandNewValue })
-        const that = this
-        that._event.emit('command-line-change', commandOldValue, commandNewValue)
-        this._lastBufferState = currentBufferState
-        this._lastCursorX = cursorX
+        this._event.emit('command-line-change', commandOldValue, commandNewValue)
+        
     }
 
     private _getBufferState(): string[] {

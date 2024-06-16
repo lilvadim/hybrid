@@ -4,6 +4,7 @@ import { CommandFrameLoader } from "./commandFrame/loader/commandFrameLoader"
 import { count, isBlank } from "../util/strings"
 import { CommandLineParserProvider } from "../commandLine/parser/commandLineParserProvider"
 import { ITerminalControlConfig } from "./terminalController/terminalControlConfig"
+import Logger from "electron-log"
 
 export class CommandFrameActivator {
 
@@ -16,11 +17,12 @@ export class CommandFrameActivator {
     ) {}
 
     onCommandLineChange(commandLineOldValue: string, commandLineNewValue: string) {
+        Logger.debug({ commandLineNewValue })
         if (isBlank(commandLineNewValue)) {
             this._commandFrameRenderer.renderEmpty()
             return 
         }
-        
+
         const parsed = this._commandLineParserProvider.getParser().parseCommandLine(commandLineNewValue)
 
         if (!parsed) {
@@ -39,11 +41,11 @@ export class CommandFrameActivator {
         const oldSpaceCount = count(commandLineOldValue, /\s/g)
         const newSpaceCount = count(commandLineNewValue, /\s/g)
 
-        if (this._terminalControlConfig.syncOnSpace && oldSpaceCount === newSpaceCount) {
+        if (this._terminalControlConfig.activeSpace && oldSpaceCount === newSpaceCount) {
             return
         }
 
-        if (!this._terminalControlConfig.syncOnSpace && oldExecutable == newExecutable) {
+        if (!this._terminalControlConfig.activeSpace && oldExecutable == newExecutable) {
             return
         }
 

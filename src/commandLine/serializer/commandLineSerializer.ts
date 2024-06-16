@@ -10,7 +10,9 @@ export class CommandLineSerializer {
     }
 
     @Cacheable()
-    serializeCommandLine(commandLine: ICommandLine): string {
+    serializeCommandLine(
+        commandLine: ICommandLine
+    ): string {
         return serializeCommandLine(commandLine)
     }
 }

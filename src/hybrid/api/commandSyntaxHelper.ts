@@ -1,7 +1,7 @@
 import { getFirstOptionWithValueOrArgs, getLastOption, lastOptionHasValue, optionHasValue } from "../../commandLine/util/options";
 import { ICommand } from "../../commandLine/command";
 import { ICommandSyntax } from "../../commandLine/syntax/commandSyntax";
-import { collectPositionalArgs } from "../../commandLine/util/args";
+import { collectAllArgs, collectPositionalArgs } from "../../commandLine/util/args";
 import { Cacheable } from "typescript-cacheable";
 
 export class CommandSyntaxHelper {
@@ -19,30 +19,11 @@ export class CommandSyntaxHelper {
     }
 
     getSubcommand(command: ICommand): string | undefined {
-        if (command.precedingArgs && command.precedingArgs.length > 0) {
-            const possibleSubcommand = command.precedingArgs[0]
-            if (this.desc.subcommands.includes(possibleSubcommand)) {
-                return possibleSubcommand
-            } else {
-                return undefined
+        for (let arg of collectAllArgs(command)) {
+            if (this.desc.subcommands.includes(arg)) {
+                return arg
             }
         }
-        const firstOptionWithValueOrArgs = getFirstOptionWithValueOrArgs(command)
-        if (firstOptionWithValueOrArgs) {
-            const hasValue = optionHasValue(firstOptionWithValueOrArgs, this.desc)
-            if (hasValue) {
-                return undefined
-            } else {
-                const possibleSubcommand = firstOptionWithValueOrArgs.value
-                if (!possibleSubcommand) {
-                    return undefined
-                }
-                if (this.desc.subcommands.includes(possibleSubcommand)) {
-                    return possibleSubcommand
-                } else {
-                    return undefined
-                }
-            }
-        }
+        return undefined
     }
 }

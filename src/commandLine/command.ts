@@ -16,7 +16,7 @@ export interface IOption {
         prefix?: string | undefined
         words?: string[] | undefined
     }
-    delimiter: string | undefined
-    value: string | undefined
+    delimiter?: string | undefined
+    value?: string | undefined
     subsequentArgs: string[] | undefined
 }

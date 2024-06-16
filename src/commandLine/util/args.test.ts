@@ -79,6 +79,6 @@ test('removeSubcommandAndRest', () => {
     removeSubcommandAndRest(command, "commit")
 
     const actual = serializeCommand(command)
-    const expected = 'git -i '
+    const expected = 'git -i'
     expect(actual).toEqual(expected)
 })

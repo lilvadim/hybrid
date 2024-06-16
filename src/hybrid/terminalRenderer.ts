@@ -15,7 +15,6 @@ import Split from "split.js"
 import { ConfigProvider } from "../config/configProvider"
 import { CommandLineParserProvider } from "../commandLine/parser/commandLineParserProvider"
 import { CommandInfoRegistry } from "./commandInfo/commandInfoRegistry"
-import EventEmitter from "events"
 import Logger from "electron-log"
 
 export class TerminalRenderer {

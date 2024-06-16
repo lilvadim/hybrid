@@ -36,7 +36,7 @@ export class ConfigProvider {
     getDefault(): IConfig {
         return {
             terminalControl: {
-                syncOnSpace: true,
+                activeSpace: true,
                 autoCorrect: true
             },
             commandFrameProvider: {
