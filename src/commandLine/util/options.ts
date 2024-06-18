@@ -35,7 +35,7 @@ export function addOptionsToCommand(commandObj: ICommand, options: IAddOption[],
         if (opt.unique) {
             const existingOpt = presentedOption(opt.optionText, commandObj.options.slice(subcommandStartIndex + 1))
             if (existingOpt) {
-                existingOpt.value = opt.value || existingOpt.value
+                existingOpt.value = opt.value === '' ? '' : opt.value || existingOpt.value
                 existingOpt.delimiter = opt.delimiter || existingOpt.delimiter
                 return
             } 
