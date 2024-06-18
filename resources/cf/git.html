@@ -1513,7 +1513,7 @@ commit with an empty commit message without using plumbing commands like git-com
                           <label class="form-check-label mono-font-bold" onclick="option_1868532012_handler()">--cleanup-mode=<input class="form-check-input border-dark black-check " id="option_1868532012" name="option_toggles_1320590989" type="checkbox" value=""></label>
                         </div>
                       </div>
-                      <select class="form-select" id="option_1868532012_value" onchange="option_1868532012_handler()"><option selected></option><option value="strip">strip</option><option value="whitespace">whitespace</option><option value="verbatim">verbatim</option><option value="scissors">scissors</option><option value="default">default</option></select>
+                      <select class="form-select" id="option_1868532012_value" onchange="option_1868532012_handler()"><option onclick="console.log('CLICKED')" selected>Choose...</option><option value="strip">strip</option><option value="whitespace">whitespace</option><option value="verbatim">verbatim</option><option value="scissors">scissors</option><option value="default">default</option></select>
                     </div>This option determines how the supplied commit message should be cleaned up before committing. The &lt;mode&gt; can be
 strip, whitespace, verbatim, scissors or default.
 
@@ -1578,7 +1578,7 @@ Git about are not affected.</div>
                           <label class="form-check-label mono-font-bold" onclick="option_155934691_handler()">-u, --untracked-files=<input class="form-check-input border-dark black-check " id="option_155934691" name="option_toggles_886499748" type="checkbox" value=""></label>
                         </div>
                       </div>
-                      <select class="form-select" id="option_155934691_value" onchange="option_155934691_handler()"><option selected></option><option value="no">no</option><option value="normal">normal</option><option value="all">all</option></select>
+                      <select class="form-select" id="option_155934691_value" onchange="option_155934691_handler()"><option onclick="console.log('CLICKED')" selected>Choose...</option><option value="no">no</option><option value="normal">normal</option><option value="all">all</option></select>
                     </div>Show untracked files.
 
 The mode parameter is optional (defaults to all), and is used to specify the handling of untracked files; when -u is

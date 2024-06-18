@@ -160,7 +160,9 @@ export class TerminalController implements IHybridTerminalApi {
 
         const updatedCommandLineString = this._serialize(updatedCommandLine)
 
-        this._overwriteCommandLine(updatedCommandLineString)
+        const cursorOffset = (updatedCommandLine.operations?.length || updatedCommandLine.redirect) ? 0 
+            : updatedCommandLineString.length - this._cursorInCommandPosition()
+        this._overwriteCommandLine(updatedCommandLineString, cursorOffset)
         this._handleSync(this._currentCommandLine(), updatedCommandLineString, updatedCommandLine, true)
 
         return true
